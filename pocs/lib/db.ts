@@ -3,7 +3,8 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 
 // One Postgres dialect everywhere (DECISIONS D1): `pg` against DATABASE_URL (Neon) when it is set, otherwise
-// PGlite in data/pglite, in /tmp/pglite on Vercel (lost on cold start), or in memory with MAPLE_DB=memory (tests).
+// PGlite in data/pglite, in /tmp/pglite on Vercel (one per instance: not shared between instances, lost on cold
+// start), or in memory with MAPLE_DB=memory (tests).
 
 export type Row = Record<string, unknown>;
 export type Query = <T = Row>(sql: string, params?: unknown[]) => Promise<T[]>;

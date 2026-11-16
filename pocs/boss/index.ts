@@ -1,4 +1,4 @@
-// Public interface of the boss PoC. Owner: boss agent.
+// The 60 bosses (data.ts) and lookups over them.
 import type { Boss } from "@/lib/types";
 import { BOSSES } from "./data.ts";
 import { searchBosses } from "./search.ts";

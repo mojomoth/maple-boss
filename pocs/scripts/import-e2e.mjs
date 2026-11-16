@@ -136,7 +136,7 @@ try {
   const alert = page.locator("p[role=alert]");
   await alert.waitFor();
   const scouter = page.getByRole("link", { name: "maplescouter에서 결과 열기" });
-  check("/pocs/character without crawler: 501 message + maplescouter link", /바로 불러올 수 없어요/.test(await alert.innerText()) &&
+  check("/pocs/character without crawler: 501 message + maplescouter link", /바로 불러오지 못해요/.test(await alert.innerText()) &&
     (await scouter.getAttribute("href")) === `https://maplescouter.com/ko/result?name=${encodeURIComponent(A)}`, await alert.innerText());
   check("no uncaught errors in the page", errors.length === 0, errors.join(" | "));
   await ctx.close();

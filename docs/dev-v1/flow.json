@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T03:30:00+09:00",
+  "updatedAt": "2026-11-17T07:00:00+09:00",
   "gates": [
     {
       "id": "G0",
@@ -177,17 +177,57 @@
         {
           "id": "G3-build",
           "kind": "build",
-          "title": "디자인 비교·수정, 문구 검토, 정리",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "title": "디자인 비교·수정, 문구 검토, P2, 정리",
+          "status": "pass",
+          "agent": "build:design · build:copy+p2 · build:cleanup · Opus 5.5",
+          "note": "시안 대비 FIX 목록 반영, 문구 해요체 통일, P2 17/18 처리, 미사용 코드 제거, 키 노출 없음",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/design-diff.md",
+            "docs/dev-v1/evidence/G3/copy-review.md",
+            "docs/dev-v1/evidence/G3/p2-resolution.md",
+            "docs/dev-v1/evidence/G3/cleanup.md",
+            "docs/dev-v1/evidence/G3/secrets-scan.txt"
+          ]
+        },
+        {
+          "id": "G3-critic-local",
+          "kind": "critic",
+          "title": "독립 검증 (로컬, 디자인·기능·보안)",
+          "status": "fail",
+          "agent": "critic:design-copy · critic:function-security · Opus 5.5",
+          "note": "P1 3건: 저장한 파티 삭제 UI 없음, 보스 칸 이름 잘림, 뒤로/앞으로 때 검색 상태 어긋남. P2 14건",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/critic-design-copy/",
+            "docs/dev-v1/evidence/G3/critic-function-security/"
+          ]
+        },
+        {
+          "id": "G3-fix-local",
+          "kind": "fix",
+          "title": "P1 3건 수정",
+          "status": "pass",
+          "agent": "fix:r1 · Opus 5.5",
+          "note": "파티 삭제 버튼, 보스 칸 너비, 검색 상태 동기화",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/fix-round-1.txt"
+          ]
+        },
+        {
+          "id": "G3-recheck-local",
+          "kind": "recheck",
+          "title": "재검증 (로컬)",
+          "status": "pass",
+          "agent": "recheck:r1 · Opus 5.5",
+          "note": "P1 해결, 회귀 없음",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/recheck-1/"
+          ]
         },
         {
           "id": "G3-deploy",
           "kind": "build",
-          "title": "Vercel 배포",
-          "status": "todo",
+          "title": "P2 정리, 영구 DB, Vercel 배포",
+          "status": "running",
           "agent": "",
           "note": "",
           "evidence": []
@@ -226,8 +266,8 @@
     },
     {
       "id": "B3",
-      "title": ".env 없음 (OpenAI 등 키)",
-      "status": "open"
+      "title": ".env 확인됨 (2026-11-17 00:49, 키 7개: JEV/GOOGLE/OPENAI/CLAUDE/VERCEL/RENDER/OPENROUTER)",
+      "status": "closed"
     }
   ]
 }

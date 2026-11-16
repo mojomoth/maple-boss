@@ -1,0 +1,4 @@
+ok   1440: / 200 page 1440x1086, dialog 640x476 at 400,305
+ok   375: / 200 page 375x2194, dialog 337x475 at 19,169
+ok   compare-main.png
+ok   compare-modal.png

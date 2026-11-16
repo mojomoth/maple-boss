@@ -1,0 +1,49 @@
+# Screenshot comparison, before vs after the G3 cleanup (dev server http://localhost:3000, same DB state).
+# before: taken before any cleanup edit. after: after all edits. Equal bytes = identical PNG = identical pixels.
+# Captures: npm run shots (8, viewport) and docs/dev-v1/evidence/G3/scripts/cleanup/pages.mjs (18: 7 screens full page
+# + delete modal + /flow step panel, at 1440 and 375). Baseline PNGs stayed in /tmp; only the result is kept.
+
+## npm run shots: before vs docs/dev-v1/evidence/G3/after-cleanup/
+same  home-1440.png
+same  home-375.png
+same  pocs-boss-1440.png
+same  pocs-boss-375.png
+same  pocs-character-1440.png
+same  pocs-character-375.png
+same  pocs-party-1440.png
+same  pocs-party-375.png
+
+## pages.mjs: second baseline run (determinism), then each after run (no code change between after runs)
+404-1440.png           full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+404-375.png            full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+boss-1440.png          full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+boss-375.png           full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+character-1440.png     full-before-b:same full-after:DIFF    full-after2:same   full-after3:DIFF   full-final:same   
+character-375.png      full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+flow-1440.png          full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+flow-375.png           full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+flow-panel-1440.png    full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+flow-panel-375.png     full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+home-1440.png          full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+home-375.png           full-before-b:same full-after:same    full-after2:DIFF   full-after3:DIFF   full-final:DIFF   
+import-1440.png        full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+import-375.png         full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+modal-1440.png         full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+modal-375.png          full-before-b:same full-after:DIFF    full-after2:same   full-after3:same   full-final:same   
+party-1440.png         full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+party-375.png          full-before-b:same full-after:same    full-after2:same   full-after3:same   full-final:same   
+
+## The differing captures, pixel counts (pxdiff.mjs)
+full-after2/home-375         {"n":3058,"box":[16,127,358,1778],"size":[375,2194]}
+full-after3/home-375         {"n":3058,"box":[16,127,358,1778],"size":[375,2194]}
+full-final/home-375          {"n":3058,"box":[16,127,358,1778],"size":[375,2194]}
+full-after3/character-1440   {"n":4,"box":[253,303,579,305],"size":[1440,900]}
+full-after/character-1440    {"n":4,"box":[253,303,579,305],"size":[1440,900]}
+full-after2/modal-375        {"n":0,"box":null,"size":[375,812]}
+
+# home-375: 2992 of the 3058 px lie inside <img> boxes, almost all in the boss artwork band (y 1650-1800 of the full
+# page); a crop of both captures shows the same picture, resampled in a different pass. The other 66 px are the
+# rounded-corner anti-aliasing of the add field and its button, the boss search field and its icon button, and the
+# difficulty badge (located with elementFromPoint). character-1440: 4 px. modal-375: the after2 run is identical.
+# Every capture is byte-identical to the baseline in at least one after run, and no code changed between after runs
+# ("full-after" already had every CSS and markup edit), so none of these comes from the cleanup.

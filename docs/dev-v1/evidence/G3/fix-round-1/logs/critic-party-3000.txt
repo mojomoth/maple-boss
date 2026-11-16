@@ -1,0 +1,23 @@
+import 파티App7p: 201
+import 파티Bpp7p: 201
+ok   request 파티App7p  | 파티App7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+ok   request 파티Bpp7p  | 파티Bpp7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+     duplicate request message: 파티App7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+     1440 sum line: 2/2명 합계 176.7% 공략 가능
+ok   1440 formation message  | #117 파티를 편성했어요. 합계 176.7%로 공략 가능해요.
+ok   1440 saved list shows the new party
+ok   1440 saved party has a delete control in the UI  | controls in the saved row: 1, buttons in 편성된 파티: 3
+ok   1440 no page errors
+ok   request 파티App7p  | 파티App7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+ok   request 파티Bpp7p  | 파티Bpp7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+     duplicate request message: 파티App7p 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+     375 sum line: 2/2명 합계 176.7% 공략 가능
+ok   375 formation message  | #118 파티를 편성했어요. 합계 176.7%로 공략 가능해요.
+ok   375 saved list shows the new party
+ok   375 saved party has a delete control in the UI  | controls in the saved row: 1, buttons in 편성된 파티: 4
+ok   375 no page errors
+cleanup party 117: 204
+cleanup party 118: 204
+cleanup 파티App7p: 204
+cleanup 파티Bpp7p: 204
+# all passed

@@ -1,26 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Character, ClearRate } from "@/lib/types";
 import { pct } from "@/character/format";
 import { formatKorean } from "@/boss/search";
+import { CRAWLING, errorText } from "../../messages";
+import { PinIcon, Sprite } from "../../ui";
 
 const num = (n: number) => n.toLocaleString("ko-KR");
 
-function Sprite({ c, size }: { c: Character; size: number }) {
-  if (!c.imageUrl)
-    return (
-      <div style={{ width: size, height: size }} className="flex items-center justify-center rounded bg-neutral-800 text-xs text-neutral-500">
-        이미지 없음
-      </div>
-    );
-  // eslint-disable-next-line @next/next/no-img-element -- remote sprite host, no next/image config needed for a PoC
-  return <img src={c.imageUrl} alt={c.name} width={size} height={size} className="object-contain" />;
-}
-
 export default function CharacterPage() {
-  const [name, setName] = useState("");
+  const field = useRef<HTMLInputElement>(null); // uncontrolled: hydration keeps what was typed before it
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [importUrl, setImportUrl] = useState(""); // 501: no crawler on this server
@@ -50,7 +41,8 @@ export default function CharacterPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim() || loading) return;
+    const name = field.current?.value.trim() ?? "";
+    if (!name || loading) return;
     setLoading(true);
     setError("");
     setImportUrl("");
@@ -58,107 +50,139 @@ export default function CharacterPage() {
       const res = await fetch("/api/character", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: name.trim() }),
+        body: JSON.stringify({ name }),
       });
       const data = await res.json().catch(() => null);
       if (res.status === 501 && data?.importUrl) setImportUrl(data.importUrl);
-      if (!res.ok) throw new Error(data?.error ?? `오류 (${res.status})`);
+      if (!res.ok) throw new Error(data?.error ?? `캐릭터를 등록하지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
       setResult(data);
       refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(errorText(err));
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="mx-auto max-w-2xl space-y-6 p-6">
-      <h1 className="text-2xl font-bold">캐릭터 등록</h1>
-
-      <form onSubmit={submit} className="flex gap-2">
-        <input
-          id="character-name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="캐릭터 닉네임"
-          aria-label="캐릭터 닉네임"
-          className="flex-1 rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2"
-        />
-        <button disabled={loading} className="rounded-lg bg-neutral-100 px-4 py-2 font-semibold text-neutral-900 disabled:opacity-50">
-          {loading ? "불러오는 중…" : "등록"}
-        </button>
-      </form>
-
-      {loading && (
-        <p className="text-sm text-neutral-400" role="status">
-          maplescouter에서 불러오는 중이에요. 브라우저 창이 열리면 &apos;사람인지 확인&apos; 체크박스를 눌러주세요. (최대 3분)
-        </p>
-      )}
-      {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
-      {importUrl && (
-        <p className="text-sm text-neutral-400">
-          <a href={importUrl} target="_blank" rel="noopener noreferrer" className="underline">
-            maplescouter에서 결과 열기
-          </a>{" "}
-          뒤 <Link href="/" className="underline">메인 화면</Link>의 캐릭터 검색 안내대로 북마크나 붙여넣기로 가져와요.
-        </p>
-      )}
-
-      {result && (
-        <section className="flex gap-4 rounded-xl border border-neutral-700 bg-neutral-900 p-4">
-          <Sprite c={result} size={96} />
-          <dl className="grid flex-1 grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-            <dt className="col-span-2 text-lg font-bold">{result.name}</dt>
-            <dt className="text-neutral-400">레벨 / 직업</dt>
-            <dd>Lv.{result.level} {result.job}</dd>
-            <dt className="text-neutral-400">월드</dt>
-            <dd>{result.world}</dd>
-            <dt className="text-neutral-400">전투력</dt>
-            <dd>{formatKorean(result.combatPower)}</dd>
-            <dt className="text-neutral-400">보스300 환산</dt>
-            <dd>{num(result.boss300Stat)}</dd>
-            <dt className="text-neutral-400">보스380 환산</dt>
-            <dd>{num(result.boss380Stat)}</dd>
-          </dl>
-        </section>
-      )}
-
-      {result && (
-        <section>
-          <h2 className="mb-2 font-semibold">
-            보스 배율 ({rates.length}) <span className="text-xs font-normal text-neutral-500">어려운 보스부터</span>
-          </h2>
-          {rates.length === 0 ? (
-            <p className="text-sm text-neutral-400">배율 데이터가 없어요.</p>
-          ) : (
-            <ul className="grid gap-x-6 text-sm sm:grid-cols-2">
-              {rates.map((r) => (
-                <li key={r.bossId} className="flex justify-between gap-2 border-b border-neutral-800 py-1">
-                  <span>{r.label}</span>
-                  <span className="text-right tabular-nums">
-                    {pct(r.clearRate)} <span className="text-neutral-500">· {r.analytics}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+    <main className="shell main">
+      <section aria-labelledby="character-title">
+        <div className="section-head">
+          <h1 id="character-title">캐릭터 등록</h1>
+        </div>
+        <form onSubmit={submit} className="form-row">
+          <input
+            ref={field}
+            id="character-name"
+            name="name"
+            placeholder="캐릭터 닉네임"
+            aria-label="캐릭터 닉네임"
+            className="field field--wide"
+          />
+          <button disabled={loading} aria-busy={loading} className="btn btn--primary">
+            {loading ? "불러오는 중…" : "등록"}
+          </button>
+          {loading && (
+            <p className="msg" role="status">
+              {CRAWLING}
+            </p>
           )}
+          {error && (
+            <p className="msg is-error" role="alert">
+              {error}
+            </p>
+          )}
+          {importUrl && (
+            <p className="msg">
+              가져오는 방법은 <Link href="/">메인 화면</Link>에서 닉네임을 넣고 ‘추가’를 누르면 나와요.{" "}
+              <a href={importUrl} target="_blank" rel="noopener noreferrer">
+                maplescouter에서 결과 열기<span className="visually-hidden"> (새 탭)</span>
+              </a>
+            </p>
+          )}
+        </form>
+      </section>
+
+      {result && (
+        <section className="panel" aria-labelledby="result-title">
+          <div className="panel-head">
+            <Sprite c={result} size="member" />
+            <div className="pick-text">
+              <h2 id="result-title">{result.name}</h2>
+              <span className="meta">
+                <span className="num">Lv.{result.level}</span>
+                <span>{result.job}</span>
+              </span>
+            </div>
+          </div>
+          <dl className="facts">
+            <div>
+              <dt>월드</dt>
+              <dd>{result.world}</dd>
+            </div>
+            <div>
+              <dt>전투력</dt>
+              <dd className="num">{formatKorean(result.combatPower)}</dd>
+            </div>
+            <div>
+              <dt>보스300 환산</dt>
+              <dd className="num">{num(result.boss300Stat)}</dd>
+            </div>
+            <div>
+              <dt>보스380 환산</dt>
+              <dd className="num">{num(result.boss380Stat)}</dd>
+            </div>
+          </dl>
+          <div>
+            <div className="section-head">
+              <h2>보스 배율</h2>
+              <span className="count num">{rates.length}</span>
+              <p className="section-help section-help--end">어려운 보스부터</p>
+            </div>
+            {rates.length === 0 ? (
+              <p className="section-help">배율 데이터가 없어요.</p>
+            ) : (
+              <ul className="rates">
+                {rates.map((r) => (
+                  <li key={r.bossId}>
+                    <span>{r.label}</span>
+                    <strong className="num">
+                      {pct(r.clearRate)} <span className="rate-basis">{r.analytics}</span>
+                    </strong>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </section>
       )}
 
-      <section>
-        <h2 className="mb-2 font-semibold">등록된 캐릭터 ({list.length})</h2>
-        <ul className="divide-y divide-neutral-800 rounded-xl border border-neutral-700">
+      <section aria-labelledby="list-title">
+        <div className="section-head">
+          <h2 id="list-title">등록한 캐릭터</h2>
+          <span className="count num">{list.length}</span>
+        </div>
+        <ul className="picks">
           {list.map((c) => (
             <li key={c.name}>
-              <button onClick={() => setResult(c)} className="flex w-full items-center gap-3 p-3 text-left hover:bg-neutral-900">
-                <Sprite c={c} size={40} />
-                <span className="flex-1">
-                  <span className="font-medium">{c.name}</span>
-                  <span className="ml-2 text-sm text-neutral-400">Lv.{c.level} {c.job} · {c.world}</span>
+              <button type="button" onClick={() => setResult(c)} className="pick-row" aria-current={result?.name === c.name ? "true" : undefined}>
+                <Sprite c={c} size="row" />
+                <span className="pick-text">
+                  <span className="pick-name">
+                    <strong>{c.name}</strong>
+                    <span className="chip">
+                      <PinIcon />
+                      {c.world}
+                    </span>
+                  </span>
+                  <span className="meta">
+                    <span className="num">Lv.{c.level}</span>
+                    <span>{c.job}</span>
+                  </span>
                 </span>
-                <span className="text-sm text-neutral-300">{num(c.boss300Stat)}</span>
+                <span className="pick-stat">
+                  보스300 환산 <strong className="num">{num(c.boss300Stat)}</strong>
+                </span>
               </button>
             </li>
           ))}

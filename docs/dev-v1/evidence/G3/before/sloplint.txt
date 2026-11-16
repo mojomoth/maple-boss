@@ -1,0 +1,35 @@
+# Before the G3 fixes (2026-11-17 01:5x KST), same command as design/sloplint.txt, run in two parts (sources, then URLs).
+# node .claude/skills/hallmark/scripts/sloplint.mjs app --genre modern-minimal --scope app
+app/flow/flow.css
+  FAIL 20 :1 no Hallmark stamp on the first non-empty line of any CSS
+  REFLEX 38iii :44 accented word inside a heading (.flow-lane-head h3 span)
+  WARN F3 :109 no text-wrap: balance on any display head (1 head rule(s), e.g. .flow-panel h2)
+app/pocs/party/PartyClient.tsx
+  FAIL 63 :164 middle-dot meta string "/ 명 · 합계 · 공략 가능 공략 불가 ( 부족)"
+  WARN 74 :161 default palette instead of theme tokens: 9 distinct palette classes (text-neutral-400 border-neutral-800 bg-neutral-800…
+app/pocs/boss/page.tsx
+  WARN 74 :29 default palette instead of theme tokens: 9 distinct palette classes (bg-neutral-950 text-neutral-100 border-neutral-700…
+app/pocs/character/page.tsx
+  WARN 74 :89 default palette instead of theme tokens: 11 distinct palette classes (bg-neutral-800 text-neutral-500 border-neutral-70…
+app/pocs/party/page.tsx
+  WARN 74 :25 default palette instead of theme tokens: 9 distinct palette classes (bg-neutral-950 text-neutral-100 border-neutral-800…
+app/home.css
+  DISMISSED F4 :98 2 filled primary-button recipes: .btn--primary + .btn--danger
+sloplint: 2 FAIL, 1 REFLEX, 5 WARN, 1 DISMISSED across 20 file(s).
+
+# node .claude/skills/hallmark/scripts/sloplint.mjs --genre modern-minimal --scope app --url / /flow /import /pocs/character /pocs/boss?q=카링 /pocs/party
+http://localhost:3000/pocs/boss?q=카링
+  FAIL 40 :1 [1440px] a field's edge is under 3:1 against what surrounds it: input.flex-1 1.91:1
+http://localhost:3000/pocs/character
+  FAIL 40 :1 [1440px] a field's edge is under 3:1 against what surrounds it: input.flex-1 1.74:1
+  REFLEX 39b :1 [1440px] control height outside 32 to 52px: button.flex 64px, button.flex 64px, button.flex 64px
+http://localhost:3000/pocs/party
+  FAIL 40 :1 [1280px] contrast 3.78:1 against the pixels behind < 4.5:1 on span.text-xs.text-neutral-500 "2026. 11. 17. 오전 12:20:1"
+  FAIL 40 :1 [1440px] a field's edge is under 3:1 against what surrounds it: select.max-w-full 1.73:1, select.max-w-full 1.73:1, sel…
+http://localhost:3000/
+  REFLEX 39b :1 [1440px] control height outside 32 to 52px: button.card 162px, button.card 162px, button.card 162px   (waived in home.css; URL-only runs do not read the CSS waivers)
+http://localhost:3000/flow
+  REFLEX 39b :1 [1440px] control height outside 32 to 52px: button.flow-node 120px, button.flow-node 120px, button.flow-node 120px
+  REFLEX 72 :1 [1440px] text crowds the edge of its box: button.flow-node right 4px
+  REFLEX 80 :1 [1440px] drawn illustration: div.flow-board (1296x1008, 21 shapes)
+sloplint: 4 FAIL, 5 REFLEX, 0 WARN across 0 file(s) and 6 URL(s).

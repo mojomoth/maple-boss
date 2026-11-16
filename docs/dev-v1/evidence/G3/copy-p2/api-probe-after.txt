@@ -1,0 +1,45 @@
+# api-probe http://localhost:3000 tag=3ubh
+ok   import name '..' -> 400 {"error":"‘..’은 캐릭터 이름으로 쓸 수 없어요."}
+ok   import name '.' -> 400 {"error":"‘.’은 캐릭터 이름으로 쓸 수 없어요."}
+ok   import name 'a.b' still fine -> 201 {"name":"a.b3ubh","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplesto
+ok   import clearRate 1e308 -> 400 {"error":"calc.bossCuts[0].clearRate 값이 올바르지 않아요."}
+ok   import clearRate 2e6 -> 400 {"error":"calc.bossCuts[0].clearRate 값이 올바르지 않아요."}
+ok   import clearRate 17832.188 (노말 스우) kept -> 201 {"name":"swoo3ubh","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplest
+ok   import name with NUL -> 400 {"error":"info.character_name 값에 쓸 수 없는 문자가 있어요."}
+ok   import name with lone surrogate -> 400 {"error":"info.character_name 값에 쓸 수 없는 문자가 있어요."}
+ok   import world_name with NUL -> 400 {"error":"info.world_name 값에 쓸 수 없는 문자가 있어요."}
+ok   import analytics with NUL -> 400 {"error":"calc.bossCuts[0].analytics 값에 쓸 수 없는 문자가 있어요."}
+ok   import emoji name (well-formed pair) fine -> 201 {"name":"🐉3ubh","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestor
+ok   POST /api/character name with NUL (refused before the crawler) -> 400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   GET /api/character/rates?name=<NUL> -> 404 {"error":"등록되지 않은 캐릭터예요."}
+ok   DELETE /api/character/<NUL> -> 404 {"error":"등록되지 않은 캐릭터예요."}
+ok   GET /api/party/requests?bossId=<NUL> -> 200 []
+ok   POST /api/party/requests partySize="2" -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize=true -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize=[2] -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize=null -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize=2.5 -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize="abc" -> 400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests partySize=2 -> 201 {"ok":true}
+ok   POST /api/party members with non-strings -> 400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party invalid JSON -> 400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party/requests invalid JSON -> 400 {"error":"요청 본문이 JSON 객체가 아니에요."}
+ok   POST /api/character invalid JSON -> 400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character/import invalid JSON -> 400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+ok   PUT /api/party -> 405 {"error":"이 주소는 PUT 요청을 받지 않아요."}
+ok   PATCH /api/character -> 405 {"error":"이 주소는 PATCH 요청을 받지 않아요."}
+ok   DELETE /api/boss/normal-lotus -> 405 {"error":"이 주소는 DELETE 요청을 받지 않아요."}
+ok   GET /api/character/import -> 405 {"error":"이 주소는 GET 요청을 받지 않아요."}
+ok   POST /api/health -> 405 {"error":"이 주소는 POST 요청을 받지 않아요."}
+ok   PUT /api/party/1 -> 405 {"error":"이 주소는 PUT 요청을 받지 않아요."}
+ok   POST /api/boss -> 405 {"error":"이 주소는 POST 요청을 받지 않아요."}
+ok   GET /api/character/x -> 405 {"error":"이 주소는 GET 요청을 받지 않아요."}
+ok   DELETE /api/party/requests -> 405 {"error":"이 주소는 DELETE 요청을 받지 않아요."}
+ok   PATCH /api/character/rates -> 405 {"error":"이 주소는 PATCH 요청을 받지 않아요."}
+ok   GET /api/nope -> 404 {"error":"없는 API 주소예요."}
+ok   GET /api -> 404 {"error":"없는 API 주소예요."}
+ok   GET /api/character/a/b -> 404 {"error":"없는 API 주소예요."}
+ok   GET /api/character/.. -> 404 {"error":"없는 API 주소예요."}
+ok   DELETE /api/character/%E0%A4%A (bad percent-encoding) -> 400 {"error":"주소에 잘못된 % 인코딩이 있어요."}
+cleanup: 3 temp characters
+# all passed

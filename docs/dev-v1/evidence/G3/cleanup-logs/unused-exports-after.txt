@@ -1,0 +1,16 @@
+$ node docs/dev-v1/evidence/G3/scripts/cleanup/exports.mjs pocs   # exports with 0 users outside their own file
+0	1	app/error.tsx	ErrorPage	
+0	1	app/import/layout.tsx	ImportLayout	
+0	1	app/not-found.tsx	NotFound	
+0	1	app/pocs/character/layout.tsx	CharacterLayout	
+0	1	proxy.ts	proxy	
+0	1	app/flow/page.tsx	FlowPage	
+0	1	app/import/page.tsx	ImportPage	
+0	1	app/layout.tsx	RootLayout	
+0	1	app/page.tsx	Home	
+0	1	app/pocs/boss/page.tsx	BossPage	
+0	1	app/pocs/character/page.tsx	CharacterPage	
+0	1	app/pocs/layout.tsx	PocsLayout	
+0	1	app/pocs/party/page.tsx	PartyPage	
+0	2	lib/types.ts	StatBasis	
+0	2	lib/types.ts	Difficulty	

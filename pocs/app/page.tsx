@@ -6,23 +6,22 @@ import { listCharacters, listClearRates } from "@/character";
 import { crawlerAvailable } from "@/character/crawl";
 import { pct } from "@/character/format";
 import { findBosses, getBoss, listBosses } from "@/boss";
-import { bossLabel, DIFFICULTY_LABEL, formatKorean } from "@/boss/search";
-import { rankParties, shownSum, suggestParty, sumRatios } from "@/party/ratio";
+import { bossLabel, DIFFICULTY_LABEL, FORCE_LABEL, formatKorean } from "@/boss/search";
+import { rankParties, shortfall, suggestParty, sumRatios } from "@/party/ratio";
 import { dbInfo } from "@/lib/db";
 import { CLEAR_THRESHOLD, type Character } from "@/lib/types";
 import logo from "@/public/maple-boss-logo.png";
 import AddCharacter from "./AddCharacter";
 import BossSearch from "./BossSearch";
 import CharacterGrid from "./CharacterGrid";
-import { CrownIcon, Sprite } from "./ui";
+import { BoltIcon, CrownIcon, HeartIcon, LevelIcon, PeopleIcon, ShieldIcon, Sprite } from "./ui";
 
 export const metadata: Metadata = {
-  title: "Maple Boss 파티 추천",
+  title: "파티 추천 · Maple Boss", // the layout's "%s · Maple Boss" template skips the page in its own segment
   description: "보스를 고르면 등록한 캐릭터로 잡을 수 있는 파티 조합을 보여줘요.",
 };
 
 const DEFAULT_BOSS = "extreme-kaling"; // nobody solos it, so the real data shows 2-member parties
-const FORCE = { arcane: "아케인", authentic: "어센틱" } as const;
 const THRESHOLD = `${Math.round(CLEAR_THRESHOLD * 100)}%`;
 
 type Member = Character & { clearRate: number };
@@ -65,12 +64,12 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
   const best = parties.length ? [] : suggestParty(pool, boss.maxParty, CLEAR_THRESHOLD);
   const bestSum = sumRatios(best.map((m) => m.clearRate));
 
-  const stats: [string, string][] = [
-    ["레벨", String(boss.level)],
-    ["HP", formatKorean(boss.hp)],
-    ["방어율", `${boss.defenseRate}%`],
-    ["포스", boss.forceType ? `${FORCE[boss.forceType]} ${boss.forceRequired}` : "없음"],
-    ["최대 인원", `${boss.maxParty}명`],
+  const stats: [React.ReactNode, string, string][] = [
+    [<LevelIcon key="i" />, "레벨", String(boss.level)],
+    [<HeartIcon key="i" />, "HP", formatKorean(boss.hp)],
+    [<ShieldIcon key="i" />, "방어율", `${boss.defenseRate}%`],
+    [<BoltIcon key="i" />, "포스", boss.forceType ? `${FORCE_LABEL[boss.forceType]} ${boss.forceRequired}` : "없음"],
+    [<PeopleIcon key="i" size={20} />, "최대 인원", `${boss.maxParty}명`],
   ];
 
   return (
@@ -78,7 +77,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
       <header className="topbar">
         <div className="shell topbar-row">
           <h1 className="logo">
-            <Link href="/" aria-label="Maple Boss 처음으로">
+            <Link href="/" aria-label="Maple Boss 메인 화면">
               <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
             </Link>
           </h1>
@@ -88,6 +87,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
             value={q && !found ? q : bossLabel(boss)}
             bossId={boss.id}
             missing={q && !found ? q : ""}
+            rendered={crypto.randomUUID()}
           />
         </div>
       </header>
@@ -109,14 +109,16 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
             )}
           </div>
           {!dbInfo.persistent && (
-            <p className="section-help">임시 저장소를 쓰고 있어요. 서버가 다시 시작되면 등록한 캐릭터와 파티가 지워져요.</p>
+            // Vercel without DATABASE_URL: PGlite in /tmp, one per instance, so a later request may land on one
+            // that never saw the data. Restarts are only part of it.
+            <p className="section-help">임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요.</p>
           )}
           {characters.length ? (
             <CharacterGrid characters={characters} />
           ) : (
             <div className="empty">
               <p className="empty-title">아직 등록한 캐릭터가 없어요.</p>
-              <p>위쪽 캐릭터 검색에 닉네임을 넣고 추가를 누르면 maplescouter 배율과 함께 카드가 생겨요.</p>
+              <p>위쪽 캐릭터 검색에 닉네임을 넣고 ‘추가’를 누르면 maplescouter 배율과 함께 카드가 생겨요.</p>
             </div>
           )}
         </section>
@@ -136,9 +138,12 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
                 <img src={boss.imageUrl} alt="" width={400} height={250} />
               </div>
               <dl className="stats">
-                {stats.map(([k, v]) => (
+                {stats.map(([icon, k, v]) => (
                   <div key={k}>
-                    <dt>{k}</dt>
+                    <dt>
+                      {icon}
+                      {k}
+                    </dt>
                     <dd className="num">{v}</dd>
                   </div>
                 ))}
@@ -167,7 +172,10 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
                       <span className="sum">
                         합계 <strong className="num">{pct(p.sum)}</strong>
                       </span>
-                      <span className="badge">{p.members.length}인 파티</span>
+                      <span className="badge">
+                        <PeopleIcon />
+                        {p.members.length}인 파티
+                      </span>
                     </div>
                   </li>
                 ))}
@@ -187,8 +195,8 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
                   <>
                     <p className="empty-title">등록한 캐릭터로는 공략 가능한 조합이 없어요.</p>
                     <p>
-                      가장 센 {best.length}인 조합도 합계 <strong className="num">{pct(shownSum(bestSum, CLEAR_THRESHOLD))}</strong>로,{" "}
-                      {THRESHOLD}까지 <strong className="num">{pct(Math.ceil((CLEAR_THRESHOLD - bestSum) * 1000) / 1000)}</strong>{" "}
+                      가장 센 {best.length}인 조합도 합계 <strong className="num">{pct(bestSum)}</strong>로,{" "}
+                      {THRESHOLD}까지 <strong className="num">{pct(shortfall(bestSum, CLEAR_THRESHOLD))}</strong>{" "}
                       모자라요.
                     </p>
                     <Members members={best} />
@@ -200,7 +208,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         </div>
       </main>
 
-      <footer className="foot">
+      <footer>
         <div className="shell foot-row">
           <strong>Maple Boss</strong>
           <span>

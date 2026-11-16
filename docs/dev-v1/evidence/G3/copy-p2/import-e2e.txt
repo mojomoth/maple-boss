@@ -1,0 +1,24 @@
+# import e2e http://localhost:3191, mock maplescouter http://127.0.0.1:60390, characters 아델e2ejxw07 고딩e2ejxw07
+ok   server has no crawler: POST /api/character -> 501
+ok   storage notice shown (persistent: false)
+ok   guide opens for the nickname
+ok   guide heading has focus
+ok   step 1 opens maplescouter's result page in a new tab  https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8e2ejxw07
+ok   step 2 is a javascript: bookmarklet for this origin  1240 chars
+ok   clicking it here only explains to drag it to the bookmarks bar
+ok   bookmarklet -> /import#<payload> -> /  http://localhost:3191/import#%7B%22v%22%3A1%2C%22info%22%3A% -> http://localhost:3191/import#%7B%22v%22%3A1%2C%22info%22%3A% -> http://localhost:3191/import -> http://localhost:3191/
+ok   payload in the fragment is the trimmed one  15071 chars vs 224219 in the store
+ok   card 아델e2ejxw07 is on /
+ok   no hash left in the address bar
+ok   paste of non-JSON shows the server's Korean message  JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+ok   paste imports 고딩e2ejxw07, closes the guide and shows its card
+ok   …with a confirmation under the field  ‘고딩e2ejxw07’ 캐릭터를 가져왔어요.
+ok   /import no fragment: Korean error, fragment cleared  가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요.
+ok   /import broken fragment: Korean error, fragment cleared  받은 데이터가 깨져 있어요. maplescouter 결과 페이지에서 다시 보내 주세요.
+ok   /import not a character (400): Korean error, fragment cleared  maplescouter 캐릭터 데이터가 아니에요.
+ok   /import over 1 MB (413): Korean error, fragment cleared  데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요.
+ok   /pocs/character without crawler: 501 message + maplescouter link  이 서버는 닉네임으로 바로 불러오지 못해요. maplescouter 결과 페이지에서 가져와 주세요.
+ok   no uncaught errors in the page
+ok   cleanup DELETE 아델e2ejxw07  204
+ok   cleanup DELETE 고딩e2ejxw07  204
+# all passed

@@ -1,7 +1,13 @@
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom (operator draft dark-v2, the tokens and controls of home.css) · idea: "the development gates as an n8n board: lanes, nodes, wires" · nav: the main screen's top bar, logo left, one way back right · footer: the main screen's quiet row · hero: none, an app screen opens on its work · posture: restrained · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, a board this wide only scrolls at 375, so the lanes stay legible and the page itself never scrolls sideways */
+/* Hallmark · waive 39b · button.flow-node is the whole 192x120 step card · each step opens its detail panel, n8n style, so the node is the control and its height is the node's */
+/* Hallmark · waive 80 · div.flow-board, 1296x1008, lanes, nodes and wires built from flow.json, every node and wire labelled · the board is the page's subject, a labelled diagram (imagery.md § 7), not decoration */
+/* Hallmark · waive 72 · the -2px edge is .flow-node-agent's hidden tail (build:import+harness · Opus 5.5, 180px in 166px) · the agent line clips with an ellipsis inside the node's 12px padding on purpose, so the node keeps its fixed size and the wires stay put */
+/* Hallmark · answered F3 · base.css sets text-wrap: balance on h1, h2 and h3 for every page, .flow-panel h2 included */
 /* /flow: the development gates as an n8n-style board, in the main screen's dark tokens (tokens.css, home.css).
  * Geometry (node size, lane offsets) comes from Canvas.tsx as custom properties on .flow-board. */
 
-.flow-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-xs) var(--space-lg); padding-block: var(--space-2xs); }
+.flow-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-xs) var(--space-lg); min-height: calc(80px - var(--rule-hair)); }
 
 /* Sync state and legend */
 .flow-meta { display: grid; gap: var(--space-sm); margin-top: var(--space-md); }
@@ -41,7 +47,6 @@
 .flow-lane--running { border-color: color-mix(in oklab, var(--color-mint) 55%, transparent); }
 .flow-lane-head { display: flex; align-items: center; gap: var(--space-sm); height: var(--head); padding-inline: var(--lane-x); }
 .flow-lane-head h3 { font-size: var(--text-lg); font-weight: 700; line-height: 1.2; }
-.flow-lane-head h3 span { color: var(--color-ink-2); }
 
 /* Wires sit between the lanes and the nodes */
 .flow-wires { position: absolute; inset: 0; z-index: 1; pointer-events: none; }

@@ -1,0 +1,12 @@
+✔ an invalid flow.json exits 1 with the problem's path and leaves both files alone (127.835459ms)
+✔ a missing marker exits 1 without writing (36.720458ms)
+✔ parseFlow takes only an updatedAt the STATUS.md stamp can carry and /flow can read back (1.894125ms)
+✔ parseFlow rejects unsafe evidence paths and duplicate ids (0.633333ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1154.309792

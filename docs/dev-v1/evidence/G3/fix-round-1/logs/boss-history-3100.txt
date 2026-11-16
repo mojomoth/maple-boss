@@ -1,0 +1,19 @@
+ok   start            boss='익스트림카링' field='익스트림 카링' url=/ len=2
+ok   search 하스우       boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=3
+ok   search 노말 카링     boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=4
+ok   search 노말 카링     boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=4
+ok   search 카링 노말     boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=5
+ok   search zzz       boss='노말카링' field='zzz' url=/?boss=normal-kaling&q=zzz len=6
+ok   search 카링        boss='이지카링' field='이지 카링' url=/?boss=easy-kaling len=7
+     pushes: push /?boss=extreme-kaling&q=하스우 | push /?boss=hard-lotus&q=노말+카링 | push /?boss=normal-kaling&q=카링+노말 | push /?boss=normal-kaling&q=zzz | push /?boss=normal-kaling&q=카링
+ok   history.length 7 (want 7: blank, start, 하스우, 노말 카링, 카링 노말, zzz, 카링; the repeated exact label adds none)
+ok   back             boss='노말카링' field='zzz' url=/?boss=normal-kaling&q=zzz len=7
+ok   back             boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=7
+ok   back             boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=7
+ok   back             boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=7
+ok   back             boss='익스트림카링' field='익스트림 카링' url=/ len=7
+ok   forward          boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=7
+ok   forward          boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=7
+ok   reload           boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=7
+ok   refresh while typing keeps "세렌" (server answered: true)
+# all passed

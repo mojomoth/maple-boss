@@ -1,0 +1,46 @@
+
+> pocs@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 37ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.7s
+  Running TypeScript ...
+  Finished TypeScript in 1707ms ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/15) ...
+  Generating static pages using 11 workers (3/15) 
+  Generating static pages using 11 workers (7/15) 
+  Generating static pages using 11 workers (11/15) 
+✓ Generating static pages using 11 workers (15/15) in 174ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/[[...path]]
+├ ƒ /api/boss
+├ ƒ /api/boss/[id]
+├ ƒ /api/character
+├ ƒ /api/character/[name]
+├ ƒ /api/character/import
+├ ƒ /api/character/rates
+├ ƒ /api/health
+├ ƒ /api/party
+├ ƒ /api/party/[id]
+├ ƒ /api/party/requests
+├ ○ /flow
+├ ○ /import
+├ ƒ /pocs/boss
+├ ○ /pocs/character
+└ ƒ /pocs/party
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+exit 0

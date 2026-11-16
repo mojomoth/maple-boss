@@ -102,6 +102,22 @@ test("a missing marker exits 1 without writing", () => {
   assert.equal(read(dir, "STATUS.md"), status);
 });
 
+test("parseFlow takes only an updatedAt the STATUS.md stamp can carry and /flow can read back", () => {
+  const base = parseFlow(readFileSync(path.join(docs, "flow.json"), "utf8"));
+  // Date.parse accepts every one of these, but the stamp is one whitespace-free token: they would read as never synced.
+  for (const bad of ["2026-11-17 03:30:00", "2026-11-17T03:30:00+09:00 ", " 2026-11-17T03:30:00Z", "Nov 17 2026", "2026-11-17", "2026-11-17T03:30:00", "2026-13-01T00:00:00Z"]) {
+    const f = structuredClone(base);
+    f.updatedAt = bad;
+    assert.throws(() => parseFlow(JSON.stringify(f)), /updatedAt: 2026-11-17T03:30:00\+09:00 형식/, bad);
+  }
+  for (const good of ["2026-11-17T03:30:00+09:00", "2026-11-17T03:30Z", "2026-11-16T18:30:00.123Z"]) {
+    const f = structuredClone(base);
+    f.updatedAt = good;
+    const stamp = readStamp(`<!-- flow:sync updatedAt=${good} hash=${flowHash(f)} -->`);
+    assert.deepEqual(stamp, { updatedAt: good, hash: flowHash(parseFlow(JSON.stringify(f))) }, good);
+  }
+});
+
 test("parseFlow rejects unsafe evidence paths and duplicate ids", () => {
   const base = parseFlow(readFileSync(path.join(docs, "flow.json"), "utf8"));
   for (const bad of ["/etc/passwd", "https://example.com/x", "a/../../b", "javascript:alert(1)", " docs/x"]) {

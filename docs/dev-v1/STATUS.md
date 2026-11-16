@@ -3,48 +3,44 @@
 게이트 표는 `flow.json`에서 만든다 (G2에서 `npm run flow:sync`로 자동화). 그 아래는 사람이 관리한다.
 
 <!-- flow:start -->
-<!-- flow:sync updatedAt=2026-11-17T03:30:00+09:00 hash=c5c8e79a05ed -->
-`flow.json` 2026-11-17T03:30:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
+<!-- flow:sync updatedAt=2026-11-17T07:00:00+09:00 hash=358d22d56194 -->
+`flow.json` 2026-11-17T07:00:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
 
 | 게이트 | 상태 | 단계 | 근거 |
 |---|---|---|---|
 | G0 준비 | 통과 | 계획 → 구현 → 검증 → 판정 | [`PLAN.md`](PLAN.md), [`DECISIONS.md`](DECISIONS.md), [`evidence/G0/foundation.txt`](evidence/G0/foundation.txt), [`evidence/G0/tests.txt`](evidence/G0/tests.txt), [`evidence/G0/pg-path.txt`](evidence/G0/pg-path.txt), [`evidence/G0/build.txt`](evidence/G0/build.txt), [`evidence/G1/critic-api/`](evidence/G1/critic-api/) |
 | G1 PoC | 통과 | 구현 → 검증 실패 → 수정 → 재검증 → 판정 · 수정 루프 1회 | [`evidence/G1/`](evidence/G1/), [`evidence/G1/critic-ui/`](evidence/G1/critic-ui/), [`evidence/G1/fix-round-1.txt`](evidence/G1/fix-round-1.txt), [`evidence/G1/recheck-1/`](evidence/G1/recheck-1/), [`STATUS.md`](STATUS.md) |
 | G2 통합 | 통과 | 구현 → 검증 → 판정 | [`evidence/G2/flow-shots.txt`](evidence/G2/flow-shots.txt), [`evidence/G2/nav-walk.txt`](evidence/G2/nav-walk.txt), [`evidence/G2/flow-sync.txt`](evidence/G2/flow-sync.txt), [`evidence/G2/critic/`](evidence/G2/critic/), [`STATUS.md`](STATUS.md) |
-| G3 완성·배포 | 진행 중 | 구현 → 구현 대기 → 구현 대기 → 검증 대기 → 판정 대기 | [`evidence/G3/spike.txt`](evidence/G3/spike.txt) |
+| G3 완성·배포 | 진행 중 | 구현 → 구현 → 검증 실패 → 수정 → 재검증 → 구현 진행 중 → 검증 대기 → 판정 대기 · 수정 루프 1회 | [`evidence/G3/spike.txt`](evidence/G3/spike.txt), [`evidence/G3/design-diff.md`](evidence/G3/design-diff.md), [`evidence/G3/copy-review.md`](evidence/G3/copy-review.md), [`evidence/G3/p2-resolution.md`](evidence/G3/p2-resolution.md), [`evidence/G3/cleanup.md`](evidence/G3/cleanup.md), [`evidence/G3/secrets-scan.txt`](evidence/G3/secrets-scan.txt), [`evidence/G3/critic-design-copy/`](evidence/G3/critic-design-copy/), [`evidence/G3/critic-function-security/`](evidence/G3/critic-function-security/), [`evidence/G3/fix-round-1.txt`](evidence/G3/fix-round-1.txt), [`evidence/G3/recheck-1/`](evidence/G3/recheck-1/) |
 
 차단
 
 - B1 Neon 약관 동의 필요 (사용자). 그 전까지 배포 저장소는 요청 사이에도 데이터가 사라질 수 있음 · 열림
 - B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 · 열림
-- B3 .env 없음 (OpenAI 등 키) · 열림
+- B3 .env 확인됨 (2026-11-17 00:49, 키 7개: JEV/GOOGLE/OPENAI/CLAUDE/VERCEL/RENDER/OPENROUTER) · 해결
 <!-- flow:end -->
 
-## P2 백로그 (G1 Critic, 2026-11-17)
+## P2 백로그
 
-기능에는 영향이 없어 기록하고 넘어간 항목. G3 정리 단계에서 처리하거나 사유를 남긴다.
+- G1·G2 Critic P2 18건: 17건 처리, 1건(SPIKE)은 배포 설정에서 다룬다 → [`evidence/G3/p2-resolution.md`](evidence/G3/p2-resolution.md)
+- G3 로컬 Critic P2 14건 (G3b에서 정리):
 
-| ID | 내용 | 파일 |
-|---|---|---|
-| API-1, P2-5 | 이름이 `.`/`..`인 캐릭터는 가져올 수 있지만 지울 수 없다 | `character/parse.ts`, `app/api/character/[name]` |
-| API-2 | clearRate 상한이 없어 합계가 Infinity → `sum: null` | `character/parse.ts` |
-| API-3 | NUL 문자·짝 없는 서로게이트가 400이 아니라 500 | `character/parse.ts` |
-| API-4, P2-7 | 파티 오류·PoC 화면 문구가 합쇼체, 같은 조건에 문구 두 가지. `/import` 제목이 'Maple Boss PoC' | `party/index.ts`, `app/pocs/*`, `app/import`, `app/layout.tsx` |
-| API-5 | pg 경로 이중 편성 테스트가 순서에 따라 흔들린다 | `lib/db.test.ts` |
-| API-7 | 일부 오류 응답이 `{ error }`가 아니다(프레임워크 기본값) | `app/api` |
-| API-8 | 흔한 보스 별칭 일부를 못 찾는다 | `boss/data.ts`, `boss/search.ts` |
-| API-9 | partySize를 느슨하게 변환한다 | `app/api/party/requests` |
-| API-10 | DB가 죽으면 `/`, `/pocs/party`가 기본 500 화면 | `app/page.tsx`, `app/pocs/party/page.tsx` |
-| P2-1 | 삭제 모달이 서버에 못 닿으면 영어 'Failed to fetch' | `app/CharacterGrid.tsx` |
-| P2-2 | 하이드레이션 전에 친 글자가 사라진다 | `app/BossSearch.tsx`, `app/AddCharacter.tsx` |
-| P2-3 | 파티 편성 버튼 두 번 클릭 시 저장 후 오류 표시 | `app/pocs/party/PartyClient.tsx` |
-| P2-4 | 붙여넣기 가져오기 성공 뒤 포커스가 body로 간다 | `app/AddCharacter.tsx` |
-| P2-6 | 반올림한 멤버 배율과 내림한 합계가 어긋날 수 있다 | `app/pocs/party/*` |
-| P2-8 | 이미 보이는 보스를 검색하면 `?q=`와 입력값이 남는다 | `app/BossSearch.tsx` |
-| G2-P2-1 | `updatedAt`에 공백이 있으면 검사는 통과하지만 /flow가 계속 '반영 안 됨' | `app/flow/flow.mjs` |
-| G2-P2-2 | 앱 404 페이지가 없어 `/pocs` 등 잘못된 주소에서 영어 기본 404, 돌아갈 링크 없음 | `app/not-found.tsx` |
-| G2-P2-4 | 화면 전환 내비에 현재 페이지 표시가 없다 | `app/pocs/layout.tsx` |
-| SPIKE | `/tmp` PGlite 콜드 스타트 6~9초, 함수 리전 iad1 (Neon 연결 시 리전 맞춤) | 배포 설정 |
+| ID | 내용 |
+|---|---|
+| D3 | 961~1225px에서 상단 로고가 좁아진다 |
+| D4 | 보스 검색 칸에 Chrome 기본 ×·▾ 표시가 보인다 |
+| D5 | 본문 안 링크가 주변 글자와 구분되지 않는다 |
+| D6 | 삭제 모달 보조 문구가 시안보다 작다 |
+| D7 | /flow, /pocs 문구 다듬기 |
+| FN-3 | 이름이 `import`, `rates`인 캐릭터는 가져올 수 있지만 지울 수 없다 |
+| FN-4 | /pocs/boss에 q가 두 번 오면 오류 화면 |
+| FN-5 | /pocs/character가 불러오기 실패를 숨긴다 |
+| FN-6 | /pocs/party 오류 문구가 성공 문구처럼 보이고 읽힌다 |
+| FN-7 | 로컬 크롤러가 이름을 정리하지 않고 samples 파일을 쓴다. POST /api/character를 다른 사이트에서 부를 수 있다 |
+| FN-8 | 하네스 목록의 G2 회귀 스크립트가 낡았다 |
+| FN-9 | B3 기록이 낡았다 → 해결 |
+| FN-10 | 넓은 영문 12자 닉네임이 카드에서 말줄임 없이 잘린다 |
+| FN-11 | 개발 콘솔 로고 경고 |
 
 ## 알려진 제약
 

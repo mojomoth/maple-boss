@@ -1,4 +1,5 @@
 @import "tailwindcss";
-/* Hallmark tokens and base rules sit in the base layer so the PoC pages' Tailwind utilities still win over them. */
+/* Tailwind supplies only its reset (preflight): no page relies on a utility class. Tokens and base rules sit in the
+ * same base layer after it, so every page stylesheet (unlayered) wins over both. */
 @import "./tokens.css" layer(base);
 @import "./base.css" layer(base);

@@ -1,0 +1,13 @@
+
+> pocs@0.1.0 shots
+> node scripts/shots.mjs ../docs/dev-v1/evidence/G3/after-cleanup/
+
+ok   / 1440x900 -> ../docs/dev-v1/evidence/G3/after-cleanup/home-1440.png  200
+ok   /pocs/character 1440x900 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-character-1440.png  200
+ok   /pocs/boss 1440x900 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-boss-1440.png  200
+ok   /pocs/party 1440x900 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-party-1440.png  200
+ok   / 375x812 -> ../docs/dev-v1/evidence/G3/after-cleanup/home-375.png  200
+ok   /pocs/character 375x812 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-character-375.png  200
+ok   /pocs/boss 375x812 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-boss-375.png  200
+ok   /pocs/party 375x812 -> ../docs/dev-v1/evidence/G3/after-cleanup/pocs-party-375.png  200
+shots exit 0

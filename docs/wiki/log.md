@@ -36,3 +36,7 @@
 
 - Karpathy LLM Wiki 방식으로 `docs/wiki/` 8쪽을 만들었다. 코드 근거는 커밋 `62727d2` 기준.
 - 원본끼리 어긋난 곳: CONTEXT·POC_PLAN의 SQLite와 Next.js 15는 DECISIONS D1·D6로 바뀌었다. PLAN이 말하는 `STATUS.md`와 D2의 `character/parse.ts`는 아직 없다.
+
+## [2026-11-17] lint | G3 정리와 키 노출 검사
+
+- 안 쓰는 CSS·토큰·분기·설정, 낡은 주석, 템플릿 README·favicon을 지웠고, 키 노출은 없었다([cleanup](../dev-v1/evidence/G3/cleanup.md), [secrets-scan](../dev-v1/evidence/G3/secrets-scan.txt)).

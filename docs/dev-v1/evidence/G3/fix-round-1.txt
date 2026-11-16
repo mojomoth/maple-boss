@@ -1,0 +1,132 @@
+G3 fix round 1 (2026-11-17), defects D1, D2, FN-1, FN-2 from the Gate 3 critics
+=============================================================================
+
+Scope: pocs/** only. Nothing committed, nothing deployed.
+Servers: the one `next dev` on :3000 (it kept running the whole time). For the prod check, `npm run build` and then
+`next start -p 3100` with MAPLE_DB=/tmp/fix1/pglite (a throwaway PGlite). That server was stopped afterwards (killed
+by its port with -sTCP:LISTEN) and its DB was deleted.
+Scripts: docs/dev-v1/evidence/G3/fix-round-1/*.mjs. Logs: fix-round-1/logs/. Screenshots: fix-round-1/shots/.
+
+Files changed
+  pocs/app/BossSearch.tsx              FN-2
+  pocs/app/page.tsx                    FN-2 (passes `rendered` to BossSearch)
+  pocs/app/home.css                    D2
+  pocs/app/pocs/party/PartyClient.tsx  D1/FN-1 (new DeleteParty)
+  pocs/app/pocs/party/page.tsx         D1/FN-1 (one DeleteParty per saved party)
+  pocs/app/pocs/pocs.css               D1/FN-1 (puts the button at the row's end)
+
+
+D1 + FN-1 (P1): no way to delete a saved party on /pocs/party
+-----------------------------------------------------------
+Root cause: the saved-party list is server-rendered and has no control at all. DELETE /api/party/[id] existed, but
+only scripts called it.
+Fix: each saved row ends in a "삭제" button (btn--quiet, 44px). Its accessible name is "#<id> <보스> 파티 삭제" (a
+visually hidden prefix, so the name still contains the visible word). Pressing it calls DELETE /api/party/<id>.
+  - 204, or 404 (already gone): router.refresh(). The row leaves the list, and the button reads "삭제 중…"
+    (disabled, aria-busy) until then.
+  - Other errors: the API's Korean { error }, or "파티를 삭제하지 못했어요 (<status>). 잠시 뒤 다시 시도해 주세요."
+    when the answer is not JSON. If the server cannot be reached, it shows the shared offline text from
+    messages.ts. The message goes in a role="alert" line under the row and the button comes back. A retry clears
+    the line.
+Before: critic-design/party.txt, "FAIL ... controls in the saved row: 0, buttons in 편성된 파티: 0" at 1440 and 375.
+After:
+  critic-design/scripts/party.mjs (unchanged) -> logs/critic-party-3000.txt: "controls in the saved row: 1", # all passed
+  fix-round-1/party-delete.mjs on dev and prod -> logs/party-delete-3000.txt, logs/party-delete-3100.txt: 22/22 ok each.
+    It covers request -> formation -> saved list -> button name -> 500 error text -> button usable again -> offline
+    text -> busy state ("삭제 중…", disabled, aria-busy, error line cleared) -> row leaves the list -> a second
+    DELETE gets 404, at 1440 and 375, with no page errors.
+  shots/party-saved-delete-1440.png, party-saved-delete-375.png, party-delete-error-1440.png, party-delete-error-375.png
+
+
+D2 (P1): the header boss field clipped 20 of 60 labels at 1440/1920
+--------------------------------------------------------------------
+Root cause, measured in Chrome: the text box was 15rem minus 12px left and 64px right padding. Inside that, Chrome
+keeps about 20px for the type=search clear (x) glyph even while the glyph is hidden. The 44px icon button sits on
+top of the padding, so the padding's last 20px were empty as well. Turning off the datalist indicator changed
+nothing (it takes no room), so it stays.
+Measured variants (60 labels; the number clipped at 1440, 1920, 1024 and 961):
+  current 20 | padding 44px 8 | clear glyph off 12 | both 1 (카오스 가디언 엔젤 슬라임, 174.5px) | both + 16rem 0
+Fix: .field-wrap .field { width: 16rem; padding-right: 44px } and ::-webkit-search-cancel-button { display: none }.
+Esc still clears a search field, and the draft (maple-boss-main-dark-v2.png) shows only the magnifier in this field.
+The field is 256px; the draft's is about 241px.
+After:
+  critic-design/scripts/labels.mjs (unchanged) -> "60 labels; 0 clipped at 1440"
+  fix-round-1/labels.mjs on dev and prod -> logs/labels-3000.txt, labels-3100.txt: 0 clipped at 1440, 1920 and 375,
+    at rest and hovered. Focused and hovered with the datalist ▼ showing, also 0
+    (shots/long-boss-focused-1440.png, 카오스 가디언 엔젤 슬라임). /?boss=extreme-first-adversary shows
+    "익스트림 최초의 대적자" in full, and typing "카칼" writes back "카오스 감시자 칼로스" in full.
+  shots/long-boss-1440.png, long-boss-1920.png, long-boss-375.png, header-1440.png
+Side effect: the known P2 (logo squeezed in the 961..~1225px band, critic-design/design-compare.txt) now reaches
+~1245px: logo box 268px at 1240, 272px from 1280. At 1280 and above, and at 960 and below, nothing changes.
+
+
+FN-2 (P1): after Back/Forward the boss field shows a different boss than the page; a dead history entry
+--------------------------------------------------------------------------------------------------------
+I found three causes:
+ 1. The field update was keyed on useSearchParams(). On Back/Forward Next commits the new URL one render before the
+    page's props arrive. The effect therefore wrote the previous page's label and marked that URL as done. When the
+    real props came, the effect skipped them, so the field stayed one step behind. With stale props it could also
+    call history.replaceState with the old boss. In the pre-fix run, Back from 이지 카링 to the "zzz" entry rewrote
+    that entry's URL to /?boss=easy-kaling.
+ 2. The dead entry: typing a full label fires onInput, which submits at once (the datalist-pick shortcut), and the
+    Enter that follows submits again. A trace of history.pushState showed two pushes for one search
+    ("push /?boss=hard-lotus&q=노말+카링 | push /?boss=normal-kaling&q=노말+카링"). The result depends on timing,
+    which is why the critics saw 2->3->5.
+ 3. Found while fixing: history.replaceState("/?boss=<id>") changed the URL but left Next's router tree on the ?q=
+    page. A second identical search ("카링 익스" twice, the P2-8 case) fetched the RSC, but Next reused the
+    page as it was. A probe showed the same render token twice (f1f36422), and the field and URL kept "카링 익스".
+Fix (BossSearch.tsx, page.tsx):
+  - page.tsx passes rendered={crypto.randomUUID()}, which is new on every server render. The field effect is keyed
+    on props only (rendered, value, bossId, missing), so it always matches the page on screen.
+  - The field is rewritten only when a search was submitted or a popstate happened (ref `moved`). A refresh after
+    adding a character renders the page too, and no longer touches what is being typed.
+  - onSubmit skips a search that is already on its way (ref `sent`, cleared by any edit) and one whose text already
+    names what is on screen (q === value). So the auto-submit + Enter pair pushes one entry.
+  - The ?q= -> /?boss=<id> clean-up uses router.replace(..., { scroll: false }) instead of history.replaceState, so
+    the router's tree matches the URL. It costs one extra RSC request per matched search.
+  - Focus stays in the field. The field is still not remounted.
+Before:
+  critic-function/back.log: len 2->3->5; Back showed 하드스우 with field '노말 카링'; Forward showed 노말카링 with field
+  '하드 스우'.
+  The pre-fix run of the extended walk (same steps minus "카링 노말") on :3000 failed 7 of 7 Back/Forward steps:
+    FAIL back    boss='노말카링' field='이지 카링' url=/?boss=easy-kaling   (the zzz entry's URL rewritten)
+    FAIL back    boss='노말카링' field='zzz' url=/?boss=normal-kaling
+    FAIL back    boss='노말카링' field='zzz' url=/?boss=normal-kaling
+    FAIL back    boss='하드스우' field='노말 카링' url=/?boss=hard-lotus
+    FAIL back    boss='익스트림카링' field='하드 스우' url=/
+    FAIL forward boss='하드스우' field='익스트림 카링' url=/?boss=hard-lotus
+    FAIL forward boss='노말카링' field='하드 스우' url=/?boss=normal-kaling
+After:
+  critic-function/scripts/back.mjs (unchanged), dev and prod: len 2->3->4; every Back/Forward step shows the field
+    equal to the boss (logs/critic-back-3000.txt; the prod run printed the same lines).
+  fix-round-1/boss-history.mjs: 하스우, 노말 카링 (fill = auto-submit, then Enter), 노말 카링 again, 카링 노말, zzz
+    (missing), 카링. It checks focus after each search and history.length (7, no dead entry; the repeated exact
+    label adds none). Then 5x Back, 2x Forward and a reload, each checking the boss and the field. Then a router
+    refresh while "세렌" is typed, which must keep "세렌".
+    logs/boss-history-3000.txt, boss-history-3000-cpu6x.txt (CPU throttled 6x), boss-history-3100.txt: all passed.
+  The earlier P2 UI pass, copy-p2/scripts/ui-pass.mjs, run unchanged with its screenshots sent to /tmp ->
+    logs/p2-ui-pass-3000.txt, # all passed. It includes P2-2 (boss text typed before hydration still searches),
+    P2-8 rounds 1 and 2 ("카링 익스" twice -> ?boss=extreme-kaling, field "익스트림 카링", focus kept) and the
+    API-8 main searches.
+  shots/back-field-matches-boss-1440.png (after Back: field 하드 스우, 보스 정보 하드 스우)
+Behaviour notes:
+  - Enter on a field that already names what is on screen does nothing. There is no new request and no new history
+    entry. A different text that resolves to the same boss ("카링 노말" while 노말 카링 shows) is a new search and
+    gets its own entry, as P2-8 decided.
+
+
+Harness
+-------
+  npm test                      40/40 pass (logs/npm-test.txt)
+  npx tsc --noEmit              exit 0 (logs/tsc.txt)
+  npm run lint                  exit 0 (logs/lint.txt)
+  npm run smoke  :3000          # all passed (logs/smoke-3000.txt)
+  npm run smoke  :3100 (prod)   # all passed (logs/smoke-3100.txt)
+  npm run build                 ok (logs/build.txt)
+  nav walk                      critic-function/scripts/nav-walk-g3labels.mjs: all ok (logs/nav-walk-g3labels-3000.txt).
+                                The G2 nav-walk.mjs still times out at hop 8 because it clicks the pre-G3 label
+                                "메인 화면으로" in the /pocs header. This was already the case
+                                (critic-function/navwalk-3000.log notes it) and these fixes do not cause it.
+
+Data: every character and party the scripts created was deleted (each cleanup line shows 204). Parties that were
+already in the dev DB (#34, #1 and the others) were left alone.

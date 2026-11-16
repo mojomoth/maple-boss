@@ -1,0 +1,7 @@
+start   boss='익스트림카링' field='익스트림 카링' url=/ len=2
+search 하스우 boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=3
+search 노말 카링 boss='노말카링' field='노말 카링' url=/?boss=normal-kaling len=4
+back    boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=4
+back    boss='익스트림카링' field='익스트림 카링' url=/ len=4
+forward boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=4
+reload  boss='하드스우' field='하드 스우' url=/?boss=hard-lotus len=4

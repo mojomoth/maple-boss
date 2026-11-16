@@ -16,6 +16,7 @@ export const KIND_LABEL = { plan: "계획", build: "구현", critic: "검증", f
 export const STATUS_LABEL = { todo: "대기", running: "진행 중", pass: "통과", fail: "실패", blocked: "막힘" };
 export const BLOCKER_LABEL = { open: "열림", closed: "해결" };
 
+const ISO_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/;
 const isObject = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 // Evidence is a repo-relative path (a trailing "/" marks a folder). It becomes a GitHub link, so no scheme, no
 // absolute path and no way out of the repo.
@@ -55,7 +56,10 @@ export function parseFlow(raw) {
 
   if (!isObject(data)) throw new Error("flow.json 최상위는 객체여야 해요");
   text(data.updatedAt, "updatedAt");
-  if (typeof data.updatedAt === "string" && Number.isNaN(Date.parse(data.updatedAt))) errors.push("updatedAt: ISO 8601 날짜여야 해요");
+  // Strict, because the STATUS.md stamp stores it as one token: a value with a space (which Date.parse accepts)
+  // would never read back, and /flow would show '반영 안 됨' forever.
+  if (typeof data.updatedAt === "string" && !(ISO_TIME.test(data.updatedAt) && !Number.isNaN(Date.parse(data.updatedAt))))
+    errors.push(`updatedAt: 2026-11-17T03:30:00+09:00 형식의 날짜·시간이어야 해요 (지금 ${JSON.stringify(data.updatedAt)})`);
   list(data.gates, "gates", true).forEach((g, i) => {
     const at = `gates[${i}]`;
     if (!isObject(g)) return errors.push(`${at}: 객체여야 해요`);

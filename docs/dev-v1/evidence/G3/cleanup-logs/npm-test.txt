@@ -1,0 +1,53 @@
+
+> pocs@0.1.0 test
+> node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs "**/*.test.ts"
+
+✔ toImportUrl trims the store to the payload parse.ts accepts, field for field (3.452208ms)
+✔ toImportUrl throws without a maplescouter result (1.266375ms)
+✔ the bookmarklet navigates to /import with the trimmed payload (3.321208ms)
+✔ the bookmarklet stays on the page and explains itself when there is nothing to send (0.492041ms)
+✔ scouterUrl encodes the nickname (0.073917ms)
+✔ maplescouter bossCuts resolve 1:1 (0.684583ms)
+✔ seed integrity (0.153917ms)
+✔ search (1.165584ms)
+✔ search: shorthand players use (0.60725ms)
+✔ formatKorean (0.13525ms)
+✔ pct (17.842709ms)
+✔ every accepted shape maps to the same character and trimmed payload (8.202458ms)
+✔ relative character_image gets the maplescouter origin (0.48075ms)
+✔ rejects the maplescouter placeholder with a clear message (0.157667ms)
+✔ rejects malformed input (1.72575ms)
+✔ accepts the edges (0.30825ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ driver (1.280792ms)
+✔ seeds load once into an empty database (27.835834ms)
+✔ upsert replaces the character and all its rates (3.753292ms)
+✔ party requests: one open request per character and boss (6.850167ms)
+✔ formParty sums the rates, saves the party and closes the requests (15.356791ms)
+✔ formParty rejects double booking inside the transaction (6.315625ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (1.960542ms)
+✔ seeds do not come back after everyone is deleted (2.225125ms)
+✔ threshold: exactly 110% clears, even with float error (1.827375ms)
+✔ shown rates, sums and shortfalls agree with isClearable and with each other (247.185667ms)
+✔ suggestParty returns the smallest clearable set, strongest first (0.175125ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.079625ms)
+✔ suggestParty does not mutate input (0.193375ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (0.274333ms)
+✔ rankParties: a solo-clearable member ranks first (0.109666ms)
+✔ rankParties: size limit, result limit, empty pool (0.073917ms)
+✔ rankParties does not mutate input (0.10475ms)
+✔ rewrites only the marker blocks, and a second run changes nothing (82.024792ms)
+✔ checks a gate in PLAN.md once it passes and keeps its description (63.683625ms)
+✔ the stamp matches the hash /flow computes, and goes stale when flow.json changes (84.989917ms)
+✔ an invalid flow.json exits 1 with the problem's path and leaves both files alone (114.832042ms)
+✔ a missing marker exits 1 without writing (39.924333ms)
+✔ parseFlow takes only an updatedAt the STATUS.md stamp can carry and /flow can read back (1.789917ms)
+✔ parseFlow rejects unsafe evidence paths and duplicate ids (0.610583ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1167.90625

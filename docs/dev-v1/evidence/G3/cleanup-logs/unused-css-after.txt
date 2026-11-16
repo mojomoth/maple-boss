@@ -1,0 +1,23 @@
+$ node docs/dev-v1/evidence/G3/scripts/cleanup/css.mjs pocs   # class selectors no app source mentions (flow-*--/sprite--* are built from template strings)
+app/flow/flow.css	.flow-badge--running
+app/flow/flow.css	.flow-badge--todo
+app/flow/flow.css	.flow-badge--blocked
+app/flow/flow.css	.flow-lane--running
+app/flow/flow.css	.flow-wire--done
+app/flow/flow.css	.flow-wire--todo
+app/flow/flow.css	.flow-wire--fail
+app/flow/flow.css	.flow-wire--loop
+app/flow/flow.css	.flow-arrow--done
+app/flow/flow.css	.flow-arrow--todo
+app/flow/flow.css	.flow-arrow--fail
+app/flow/flow.css	.flow-arrow--loop
+app/flow/flow.css	.flow-wire-label--fail
+app/flow/flow.css	.flow-wire-label--loop
+app/flow/flow.css	.flow-node--running
+app/flow/flow.css	.flow-node--fail
+app/flow/flow.css	.flow-node--blocked
+app/flow/flow.css	.flow-node--todo
+app/home.css	.sprite--card
+app/home.css	.sprite--member
+app/home.css	.sprite--preview
+app/home.css	.sprite--row

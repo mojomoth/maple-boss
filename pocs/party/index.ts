@@ -31,11 +31,12 @@ const fail = (msg: string): never => {
   throw new PartyError(msg);
 };
 
-export async function createRequest(characterName: string, bossId: string, partySize: number) {
-  if (!(await getCharacter(characterName))) fail("등록되지 않은 캐릭터입니다.");
-  const boss = getBoss(bossId) ?? fail("존재하지 않는 보스입니다.");
-  if (!Number.isInteger(partySize) || partySize < 1 || partySize > boss.maxParty)
-    fail(`인원은 1~${boss.maxParty}명이어야 합니다.`);
+// partySize comes straight from the JSON body: only an integer number passes ("2", true and [2] do not).
+export async function createRequest(characterName: string, bossId: string, partySize: unknown) {
+  if (!(await getCharacter(characterName))) fail("등록되지 않은 캐릭터예요.");
+  const boss = getBoss(bossId) ?? fail("없는 보스예요.");
+  if (typeof partySize !== "number" || !Number.isInteger(partySize) || partySize < 1 || partySize > boss.maxParty)
+    fail(`희망 인원은 1~${boss.maxParty} 사이의 정수여야 해요.`);
   // One open request per character per boss (unique index): re-registering updates the size.
   await query(
     `INSERT INTO party_requests (character_name, boss_id, party_size) VALUES ($1, $2, $3)
@@ -45,6 +46,7 @@ export async function createRequest(characterName: string, bossId: string, party
 }
 
 export async function listSeekers(bossId?: string): Promise<Seeker[]> {
+  if (bossId !== undefined && !getBoss(bossId)) return []; // an unknown boss has no seekers (and never reaches SQL)
   const [characters, clearRates, rows] = await Promise.all([
     listCharacters(),
     listClearRates(bossId),
@@ -72,16 +74,16 @@ export async function listSeekers(bossId?: string): Promise<Seeker[]> {
 }
 
 export async function formParty(bossId: string, memberNames: string[]) {
-  const boss = getBoss(bossId) ?? fail("존재하지 않는 보스입니다.");
+  const boss = getBoss(bossId) ?? fail("없는 보스예요.");
   const names = [...new Set(memberNames)];
-  if (names.length < 1 || names.length > boss.maxParty) fail(`파티 인원은 1~${boss.maxParty}명이어야 합니다.`);
+  if (names.length < 1 || names.length > boss.maxParty) fail(`파티 인원은 1~${boss.maxParty}명이어야 해요.`);
   const seekers = new Map((await listSeekers(bossId)).map((s) => [s.character.name, s]));
   const missing = names.filter((n) => !seekers.has(n));
-  if (missing.length) fail(`이 보스에 구직 중이 아닌 캐릭터: ${missing.join(", ")}`);
+  if (missing.length) fail(`${missing.join(", ")} 캐릭터는 이 보스에 구직 중이 아니에요.`);
   const noRate = names.filter((n) => seekers.get(n)!.clearRate === null);
-  if (noRate.length) fail(`이 보스의 배율이 없는 캐릭터: ${noRate.join(", ")}`);
+  if (noRate.length) fail(`${noRate.join(", ")} 캐릭터는 이 보스 배율이 없어요.`);
   const tooBig = names.filter((n) => seekers.get(n)!.partySize < names.length);
-  if (tooBig.length) fail(`희망 인원보다 큰 파티입니다: ${tooBig.join(", ")}`);
+  if (tooBig.length) fail(`${tooBig.join(", ")} 캐릭터의 희망 인원보다 큰 파티예요.`);
 
   const ratios = names.map((n) => seekers.get(n)!.clearRate!); // snapshot at formation
   const id = await tx(async (q) => {
@@ -92,7 +94,7 @@ export async function formParty(bossId: string, memberNames: string[]) {
       [bossId, names],
     );
     const taken = names.filter((n) => !closed.some((r) => r.character_name === n));
-    if (taken.length) fail(`이미 다른 파티에 편성된 캐릭터: ${taken.join(", ")}`);
+    if (taken.length) fail(`${taken.join(", ")} 캐릭터는 이미 다른 파티에 편성됐어요.`);
     const [{ id }] = await q<{ id: number }>("INSERT INTO parties (boss_id) VALUES ($1) RETURNING id", [bossId]);
     await q("INSERT INTO party_members (party_id, character_name, ratio) SELECT $1, * FROM unnest($2::text[], $3::float8[])", [id, names, ratios]);
     return id;

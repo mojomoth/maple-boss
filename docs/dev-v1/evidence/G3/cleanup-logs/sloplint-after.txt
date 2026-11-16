@@ -1,0 +1,9 @@
+app/flow/flow.css
+  ANSWERED F3 :114 no text-wrap: balance on any display head (1 head rule(s), e.g. .flow-panel h2)
+app/pocs/pocs.css
+  ANSWERED F3 :19 no text-wrap: balance on any display head (1 head rule(s), e.g. .panel h2)
+app/home.css
+  ANSWERED F24 :243 a hairline border under a wide soft shadow on .confirm
+  DISMISSED 40 :101 4.17:1 < 4.5:1 on .btn--danger
+  DISMISSED F4 :101 2 filled primary-button recipes: .btn--primary + .btn--danger
+sloplint: 0 FAIL, 0 WARN, 3 ANSWERED, 2 DISMISSED across 27 file(s).

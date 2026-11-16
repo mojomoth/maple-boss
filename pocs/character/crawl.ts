@@ -16,22 +16,25 @@ export class CrawlError extends Error {
 // Local dev only: never on Vercel, and only where the crawler's venv was set up.
 export const crawlerAvailable = () => !process.env.VERCEL && existsSync(PY);
 
-// Spawns the headful crawler (local only); a human may need to click the Turnstile check in the window it opens.
+// Spawns the headful crawler (local only; the one caller, POST /api/character, checks crawlerAvailable() first and
+// answers 501 itself); a human may need to click the Turnstile check in the window it opens.
 // stdout is the raw searchResult, mapped by parse.ts like any import.
 export function crawlCharacter(name: string): Promise<ReturnType<typeof parseCharacter>> {
-  if (!crawlerAvailable())
-    return Promise.reject(new CrawlError("이 서버에서는 닉네임으로 불러올 수 없어요. maplescouter 결과 페이지에서 가져오기를 써 주세요.", 501));
   return new Promise((resolve, reject) => {
     execFile(PY, [SCRIPT, name], { timeout: 200_000, maxBuffer: 64 * 1024 * 1024 }, (err, stdout, stderr) => {
+      // The user sees a short Korean reason; the crawler's own output goes to the server log only.
       if (err) {
-        if (err.code === 2) return reject(new CrawlError(`캐릭터를 찾을 수 없어요: ${name}`, 404));
-        if (err.killed || /timeout/i.test(stderr)) return reject(new CrawlError("HIL 확인 필요/시간초과", 504));
-        return reject(new CrawlError(`크롤러 실패: ${stderr.trim().split("\n").pop() ?? err.message}`, 502));
+        if (err.code === 2) return reject(new CrawlError(`maplescouter에서 ‘${name}’ 캐릭터를 찾지 못했어요. 닉네임을 확인해 주세요.`, 404));
+        if (err.killed || /timeout/i.test(stderr))
+          return reject(new CrawlError("3분 안에 불러오지 못했어요. 새 창에서 ‘사람인지 확인’을 누른 뒤 다시 시도해 주세요.", 504));
+        console.error("crawler:", stderr.trim().split("\n").pop() ?? err.message);
+        return reject(new CrawlError("maplescouter에서 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.", 502));
       }
       try {
         resolve(parseCharacter(stdout));
       } catch (e) {
-        reject(new CrawlError(e instanceof ParseError ? `크롤러 출력이 올바르지 않아요: ${e.message}` : "크롤러 출력 파싱 실패", 502));
+        console.error("crawler output:", e instanceof ParseError ? e.message : e);
+        reject(new CrawlError("maplescouter에서 받은 데이터를 읽지 못했어요. 잠시 뒤 다시 시도해 주세요.", 502));
       }
     });
   });

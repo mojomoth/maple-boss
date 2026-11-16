@@ -1,5 +1,4 @@
-// Pure party math over maplescouter clearRates (no imports, so `node --test` can load this file);
-// callers pass CLEAR_THRESHOLD in.
+// Pure party math over maplescouter clearRates; callers pass CLEAR_THRESHOLD in.
 
 const EPS = 1e-9; // 0.7 + 0.4 === 1.0999999999999999 in floats; a party at exactly 110% must clear
 
@@ -7,8 +6,10 @@ export const sumRatios = (ratios: number[]) => ratios.reduce((a, b) => a + b, 0)
 
 export const isClearable = (sum: number, threshold: number) => sum >= threshold - EPS;
 
-// Sum to display at pct()'s 0.1%: an unclearable 109.96% would round up to "110.0% · 공략 불가", so floor it.
-export const shownSum = (sum: number, threshold: number) => (isClearable(sum, threshold) ? sum : Math.floor(sum * 1000) / 1000);
+// What is missing to reach the threshold, at pct()'s 0.1%: threshold minus the shown (cut) sum, so the two add up
+// on screen ("109.9% … 0.1% 부족"). 0 once clearable.
+export const shortfall = (sum: number, threshold: number) =>
+  isClearable(sum, threshold) ? 0 : Math.ceil((threshold - sum) * 1000 - 1e-6) / 1000;
 
 // Strongest-first greedy. The top-k seekers by clearRate have the largest sum of any k-member set, so the
 // first k whose top-k reaches the threshold is the smallest clearable party (fewer members = bigger share).

@@ -1,0 +1,89 @@
+# lib/db.test.ts through pg (the Neon code path) against a throwaway PostgreSQL 18.6 (embedded-postgres in /tmp, not a project dependency), 8 runs, each on a fresh empty database
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_1 node --test ... lib/db.test.ts
+✔ driver (0.909791ms)
+✔ seeds load once into an empty database (12.924375ms)
+✔ upsert replaces the character and all its rates (3.046375ms)
+✔ party requests: one open request per character and boss (24.317709ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.501458ms)
+✔ formParty rejects double booking inside the transaction (23.943166ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.023459ms)
+✔ seeds do not come back after everyone is deleted (2.574208ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_2 node --test ... lib/db.test.ts
+✔ driver (0.819375ms)
+✔ seeds load once into an empty database (12.47425ms)
+✔ upsert replaces the character and all its rates (2.68775ms)
+✔ party requests: one open request per character and boss (24.657167ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.250042ms)
+✔ formParty rejects double booking inside the transaction (24.57825ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.188542ms)
+✔ seeds do not come back after everyone is deleted (2.9725ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_3 node --test ... lib/db.test.ts
+✔ driver (0.656083ms)
+✔ seeds load once into an empty database (12.30925ms)
+✔ upsert replaces the character and all its rates (2.699958ms)
+✔ party requests: one open request per character and boss (24.878ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.689375ms)
+✔ formParty rejects double booking inside the transaction (23.880167ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.395208ms)
+✔ seeds do not come back after everyone is deleted (2.675125ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_4 node --test ... lib/db.test.ts
+✔ driver (0.7215ms)
+✔ seeds load once into an empty database (11.897ms)
+✔ upsert replaces the character and all its rates (2.998417ms)
+✔ party requests: one open request per character and boss (25.341917ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.487917ms)
+✔ formParty rejects double booking inside the transaction (24.423959ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.224209ms)
+✔ seeds do not come back after everyone is deleted (2.956125ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_5 node --test ... lib/db.test.ts
+✔ driver (0.744583ms)
+✔ seeds load once into an empty database (12.709791ms)
+✔ upsert replaces the character and all its rates (2.491916ms)
+✔ party requests: one open request per character and boss (24.911125ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.644916ms)
+✔ formParty rejects double booking inside the transaction (24.038959ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.619959ms)
+✔ seeds do not come back after everyone is deleted (2.635042ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_6 node --test ... lib/db.test.ts
+✔ driver (0.677791ms)
+✔ seeds load once into an empty database (11.868833ms)
+✔ upsert replaces the character and all its rates (2.826625ms)
+✔ party requests: one open request per character and boss (25.817625ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.525083ms)
+✔ formParty rejects double booking inside the transaction (24.952125ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.45725ms)
+✔ seeds do not come back after everyone is deleted (3.832417ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_7 node --test ... lib/db.test.ts
+✔ driver (0.782708ms)
+✔ seeds load once into an empty database (12.549334ms)
+✔ upsert replaces the character and all its rates (3.060375ms)
+✔ party requests: one open request per character and boss (24.970833ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.584458ms)
+✔ formParty rejects double booking inside the transaction (24.754292ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.199583ms)
+✔ seeds do not come back after everyone is deleted (3.051125ms)
+ℹ pass 8
+ℹ fail 0
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54393/g3_8 node --test ... lib/db.test.ts
+✔ driver (0.680458ms)
+✔ seeds load once into an empty database (11.92675ms)
+✔ upsert replaces the character and all its rates (2.674625ms)
+✔ party requests: one open request per character and boss (25.049042ms)
+✔ formParty sums the rates, saves the party and closes the requests (6.441958ms)
+✔ formParty rejects double booking inside the transaction (24.295667ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.266584ms)
+✔ seeds do not come back after everyone is deleted (4.832917ms)
+ℹ pass 8
+ℹ fail 0

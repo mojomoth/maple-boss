@@ -10,9 +10,10 @@ import logo from "@/public/maple-boss-logo.png";
 // Where the "Maple Boss로 보내기" bookmarklet lands: /import#<encoded payload>. The fragment never reaches the
 // server; this page posts it to /api/character/import and goes back to the main screen.
 
+// For answers without our { error } body (e.g. a host's own 413), in the API's words.
 const BY_STATUS: Record<number, string> = {
   400: "maplescouter 캐릭터 데이터가 아니에요. 결과 페이지에서 다시 보내 주세요.",
-  413: "데이터가 너무 커요(최대 1MB). maplescouter 결과 페이지에서 다시 보내 주세요.",
+  413: "데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요.",
 };
 
 // Resolves with the saved character's name; rejects with a message to show.
@@ -33,7 +34,7 @@ async function send(hash: string): Promise<string> {
   }
   const data = await res.json().catch(() => null);
   if (!res.ok || typeof data?.name !== "string")
-    throw new Error(data?.error ?? BY_STATUS[res.status] ?? `캐릭터를 저장하지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
+    throw new Error(data?.error ?? BY_STATUS[res.status] ?? `캐릭터를 가져오지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
   return data.name;
 }
 
@@ -49,7 +50,7 @@ export default function ImportPage() {
     if (hash) history.replaceState(null, "", location.pathname); // keep the payload out of the address bar and history
     send(hash).then(
       (name) => {
-        setMsg({ text: `‘${name}’ 캐릭터를 등록했어요. 메인 화면으로 이동해요.`, error: false });
+        setMsg({ text: `‘${name}’ 캐릭터를 가져왔어요. 메인 화면으로 이동해요.`, error: false });
         router.replace("/");
       },
       (e: Error) => setMsg({ text: e.message, error: true }),
@@ -61,7 +62,7 @@ export default function ImportPage() {
       <header className="topbar">
         <div className="shell topbar-row">
           <h1 className="logo">
-            <Link href="/" aria-label="Maple Boss 처음으로">
+            <Link href="/" aria-label="Maple Boss 메인 화면">
               <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
             </Link>
           </h1>
@@ -76,13 +77,11 @@ export default function ImportPage() {
             <p className={msg.error ? "empty-title is-error" : "empty-title"} role="status">
               {msg.text}
             </p>
+            {/* each message already says what to do next */}
             {msg.error && (
-              <>
-                <p>결과 페이지에서 북마크를 다시 누르거나, 메인 화면으로 돌아가 다시 시도해 주세요.</p>
-                <Link className="btn btn--quiet" href="/">
-                  메인 화면으로
-                </Link>
-              </>
+              <Link className="btn btn--quiet" href="/">
+                메인 화면으로
+              </Link>
             )}
           </div>
         </section>

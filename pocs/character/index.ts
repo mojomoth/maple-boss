@@ -1,11 +1,11 @@
-// Public interface of the character PoC. Party PoC imports listCharacters/getCharacter/listClearRates.
+// Characters and their clear rates in the database; seeds a new database from seed/*.json on first use.
 import "server-only";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { query, tx, type Query, type Row } from "@/lib/db";
 import { resolveScouterBoss } from "@/boss";
 import type { Character, ClearRate } from "@/lib/types";
-import { parseCharacter, type Payload } from "./parse";
+import { parseCharacter, storable, type BossCut, type Payload } from "./parse";
 
 const COLS = ["name", "world", "job", "level", "image_url", "combat_power", "boss300_stat", "boss380_stat", "source", "fetched_at"];
 const SELECT = `SELECT ${COLS.join(", ")} FROM characters`;
@@ -49,7 +49,9 @@ export async function listCharacters(): Promise<Character[]> {
   return (await query(`${SELECT} ORDER BY boss300_stat DESC`)).map(toCharacter);
 }
 
+// A name parse.ts would refuse (NUL, lone surrogate) cannot be stored, so lookups skip the query (it would throw).
 export async function getCharacter(name: string): Promise<Character | null> {
+  if (!storable(name)) return null;
   await ready();
   const [r] = await query(`${SELECT} WHERE name = $1`, [name]);
   return r ? toCharacter(r) : null;
@@ -63,7 +65,7 @@ async function save(q: Query, c: Character, p: Payload) {
     [c.name, c.world, c.job, c.level, c.imageUrl, c.combatPower, c.boss300Stat, c.boss380Stat, c.source, c.fetchedAt, JSON.stringify(p)],
   );
   await q("DELETE FROM clear_rates WHERE character_name = $1", [c.name]);
-  const rates = new Map<string, Payload["calc"]["bossCuts"][number]>(); // last one wins, like INSERT OR REPLACE did
+  const rates = new Map<string, BossCut>(); // two cuts for one boss: the last one wins
   for (const b of p.calc.bossCuts) {
     const bossId = resolveScouterBoss(b.boss, b.difficulty);
     if (bossId) rates.set(bossId, b);
@@ -92,6 +94,7 @@ const toClearRate = (r: Row): ClearRate => ({
 
 // Hardest first (lowest clearRate).
 export async function getClearRates(name: string): Promise<ClearRate[]> {
+  if (!storable(name)) return [];
   await ready();
   return (await query("SELECT * FROM clear_rates WHERE character_name = $1 ORDER BY clear_rate", [name])).map(toClearRate);
 }
@@ -105,6 +108,7 @@ export async function listClearRates(bossId?: string): Promise<ClearRate[]> {
 // Removes the character, its clear_rates (ON DELETE CASCADE) and its open party requests in one transaction.
 // Saved parties (parties/party_members) are snapshots and keep the name. Returns whether the character existed.
 export async function deleteCharacter(name: string): Promise<boolean> {
+  if (!storable(name)) return false;
   await ready();
   return tx(async (q) => {
     await q("DELETE FROM party_requests WHERE character_name = $1 AND status = 'open'", [name]);

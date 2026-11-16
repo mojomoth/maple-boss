@@ -73,6 +73,19 @@ test("rejects malformed input", () => {
     ["cut not an object", (p) => ((p.calc.bossCuts as unknown[])[1] = 5), /bossCuts\[1\]/],
     ["bossCuts not an array", (p) => ((p.calc as Record<string, unknown>).bossCuts = {}), /bossCuts/],
     ["too many cuts", (p) => (p.calc.bossCuts = Array(101).fill(p.calc.bossCuts[0])), /최대 100개/],
+    // A finite but absurd rate made a party's sum Infinity (sent as `sum: null`).
+    ["clearRate 1e308", (p) => (p.calc.bossCuts[2].clearRate = 1e308), /bossCuts\[2\]\.clearRate/],
+    ["clearRate over 1e6", (p) => (p.calc.bossCuts[2].clearRate = 1_000_000.1), /bossCuts\[2\]\.clearRate/],
+    // URL paths resolve '.' and '..' away, so such a character could be imported but never deleted.
+    ["name '..'", (p) => (p.info.character_name = ".."), /‘\.\.’은 캐릭터 이름으로 쓸 수 없어요/],
+    ["name ' . '", (p) => (p.info.character_name = " . "), /‘\.’은 캐릭터 이름으로 쓸 수 없어요/],
+    // Postgres cannot store NUL; a lone surrogate is not UTF-8. Both were a 500 at insert time.
+    ["NUL in name", (p) => (p.info.character_name = "a\u0000b"), /character_name 값에 쓸 수 없는 문자/],
+    ["lone surrogate in name", (p) => (p.info.character_name = "a\ud800"), /character_name 값에 쓸 수 없는 문자/],
+    ["NUL in world", (p) => (p.info.world_name = "스카\u0000니아"), /world_name 값에 쓸 수 없는 문자/],
+    ["lone low surrogate in job", (p) => (p.info.character_class = "\udc00아델"), /character_class 값에 쓸 수 없는 문자/],
+    ["NUL in analytics", (p) => (p.calc.bossCuts[4].analytics = "x\u0000"), /bossCuts\[4\]\.analytics 값에 쓸 수 없는 문자/],
+    ["NUL in image", (p) => (p.info.character_image = "https://x/\u0000.png"), /character_image/],
   ];
   for (const [what, mutate, msg] of bad) {
     const p = clone(seed);
@@ -89,4 +102,13 @@ test("accepts the edges", () => {
   const { character, payload } = parseCharacter(p, now);
   assert.equal(character.name.length, 20);
   assert.equal(payload.calc.bossCuts.length, 100);
+
+  const q = clone(seed);
+  q.calc.bossCuts[0].clearRate = 17832.1883792285; // 노말 스우, a real rate
+  q.calc.bossCuts[1].clearRate = 1_000_000; // the cap itself
+  q.info.character_name = "a.b🐉"; // dots inside a name and a surrogate pair are fine
+  const r = parseCharacter(q, now);
+  assert.equal(r.payload.calc.bossCuts[0].clearRate, 17832.1883792285);
+  assert.equal(r.payload.calc.bossCuts[1].clearRate, 1_000_000);
+  assert.equal(r.character.name, "a.b🐉");
 });

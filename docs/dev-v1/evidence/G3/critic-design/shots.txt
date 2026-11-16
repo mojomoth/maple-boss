@@ -1,0 +1,42 @@
+home 1440x900 status=200 title="파티 추천 · Maple Boss" docW=1440/1440 docH=990 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  outside: img [-141..369]
+modal 1440x900 dialog=640x476 at 400,212 vh=900
+  outside: img [-141..369]
+flow 1440x900 status=200 title="개발 진행 · Maple Boss" docW=1440/1440 docH=1544 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  clipped: span.flow-node-agent "build:import+harness · Opus 5.5" sw=180 cw=166 ellipsis=ellipsis
+import 1440x900 status=200 title="캐릭터 가져오기 · Maple Boss" docW=1440/1440 docH=900 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-character 1440x900 status=200 title="캐릭터 등록 · Maple Boss" docW=1440/1440 docH=900 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  outside: img [-4..161]
+pocs-boss 1440x900 status=200 title="보스 조회 · Maple Boss" docW=1440/1440 docH=6857 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-party 1440x900 status=200 title="파티 편성 · Maple Boss" docW=1440/1440 docH=917 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+404 1440x900 status=404 title="없는 페이지 · Maple Boss" docW=1440/1440 docH=900 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)
+404-pocs 1440x900 status=404 title="없는 페이지 · Maple Boss" docW=1440/1440 docH=900 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)
+home 1920x1080 status=200 title="파티 추천 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+modal 1920x1080 dialog=640x476 at 640,302 vh=1080
+flow 1920x1080 status=200 title="개발 진행 · Maple Boss" docW=1920/1920 docH=1544 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  clipped: span.flow-node-agent "build:import+harness · Opus 5.5" sw=180 cw=166 ellipsis=ellipsis
+import 1920x1080 status=200 title="캐릭터 가져오기 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-character 1920x1080 status=200 title="캐릭터 등록 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-boss 1920x1080 status=200 title="보스 조회 · Maple Boss" docW=1920/1920 docH=6857 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-party 1920x1080 status=200 title="파티 편성 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+404 1920x1080 status=404 title="없는 페이지 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)
+404-pocs 1920x1080 status=404 title="없는 페이지 · Maple Boss" docW=1920/1920 docH=1080 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)
+home 375x812 status=200 title="파티 추천 · Maple Boss" docW=375/375 docH=2194 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  outside: img [-66..249] | img [66..381] | img [-66..249] | img [66..381] | img [-66..249] | img [66..381]
+modal 375x812 dialog=337x475 at 19,169 vh=812
+  outside: img [-50..250] | img [-66..249] | img [66..381] | img [-66..249] | img [66..381] | img [-66..249] | img [66..381]
+flow 375x812 status=200 title="개발 진행 · Maple Boss" docW=375/375 docH=1898 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  clipped: span.flow-node-agent "build:import+harness · Opus 5.5" sw=180 cw=166 ellipsis=ellipsis
+import 375x812 status=200 title="캐릭터 가져오기 · Maple Boss" docW=375/375 docH=812 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-character 375x812 status=200 title="캐릭터 등록 · Maple Boss" docW=375/375 docH=812 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  outside: img [-36..129] | img [-36..129] | img [-36..129]
+pocs-boss 375x812 status=200 title="보스 조회 · Maple Boss" docW=375/375 docH=6931 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+pocs-party 375x812 status=200 title="파티 편성 · Maple Boss" docW=375/375 docH=1198 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+404 375x812 status=404 title="없는 페이지 · Maple Boss" docW=375/375 docH=812 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)
+404-pocs 375x812 status=404 title="없는 페이지 · Maple Boss" docW=375/375 docH=812 font="Noto Sans KR", "Noto Sans KR Fallback", "Apple SD Gothic Ne
+  errors: console: Failed to load resource: the server responded with a status of 404 (Not Found)

@@ -81,10 +81,17 @@ async function main() {
     const r = await fetch(BASE + p).catch((e) => ({ status: e.message, headers: new Headers() }));
     check(`page ${p}`, r.status === 200 && /text\/html/.test(r.headers.get("content-type") ?? ""), String(r.status));
   }
-  for (const p of ["/character", "/boss", "/party"]) {
-    const r = await fetch(BASE + p).catch((e) => ({ status: e.message }));
-    check(`old PoC path ${p} is gone`, r.status === 404, String(r.status));
+  for (const p of ["/character", "/boss", "/party", "/pocs"]) {
+    const r = await fetch(BASE + p).catch((e) => ({ status: e.message, text: async () => "" }));
+    const html = await r.text();
+    check(`no page at ${p}: 404 with the app's Korean page and a way back`, r.status === 404 && html.includes("없는 페이지예요") && html.includes('href="/"'), String(r.status));
   }
+
+  // every API failure is { error }, also the ones Next would answer itself
+  await expect("PUT /api/party -> 405 { error }", call("PUT", "/api/party"), 405);
+  await expect("GET /api/character/import -> 405 { error }", call("GET", "/api/character/import"), 405);
+  await expect("GET /api/no-such-route -> 404 { error }", call("GET", "/api/no-such-route"), 404);
+  await expect("DELETE /api/character/%E0%A4%A (bad encoding) -> 400 { error }", call("DELETE", "/api/character/%E0%A4%A"), 400);
 
   // bosses
   await expect("GET /api/boss -> Boss[]", call("GET", "/api/boss"), 200, (j) => Array.isArray(j) && j.length >= 60 && j.every((b) => b.id && b.name));
@@ -106,6 +113,8 @@ async function main() {
   await expect("POST /api/character/import not JSON -> 400", call("POST", "/api/character/import", "{nope"), 400);
   await expect("POST /api/character/import wrong shape -> 400", call("POST", "/api/character/import", { v: 1, info: { character_name: "x" } }), 400);
   await expect("POST /api/character/import out-of-range value -> 400", call("POST", "/api/character/import", { ...seedA, info: { ...seedA.info, character_level: 999 } }), 400);
+  await expect("POST /api/character/import name '..' -> 400 (could never be deleted)", call("POST", "/api/character/import", renamed(seedA, "..")), 400);
+  await expect("POST /api/character/import NUL in a name -> 400, not 500", call("POST", "/api/character/import", renamed(seedA, "a\u0000b")), 400);
   await expect("POST /api/character/import maplescouter placeholder -> 400", call("POST", "/api/character/import", {
     state: { searchResult: { userApiData: { info: { ...seedA.info, character_name: "으낭다" } }, calculatedData: { ...seedA.calc, bossCuts: [] } } },
   }), 400, (j) => j.error.includes("으낭다"));
@@ -144,6 +153,7 @@ async function main() {
   await expect("POST /api/party/requests unknown character -> 400", call("POST", "/api/party/requests", { characterName: `nobody${tag}`, bossId: BOSS, partySize: 2 }), 400);
   await expect("POST /api/party/requests unknown boss -> 400", call("POST", "/api/party/requests", { characterName: A, bossId: "no-such-boss", partySize: 2 }), 400);
   await expect("POST /api/party/requests party size 9 -> 400", call("POST", "/api/party/requests", { characterName: A, bossId: BOSS, partySize: 9 }), 400);
+  await expect('POST /api/party/requests party size "2" -> 400 (integers only)', call("POST", "/api/party/requests", { characterName: A, bossId: BOSS, partySize: "2" }), 400);
   await expect("POST /api/party/requests not JSON -> 400", call("POST", "/api/party/requests", "nope"), 400);
   await expect(`GET /api/party/requests?bossId=${BOSS} -> Seeker[] with both`, call("GET", `/api/party/requests?bossId=${BOSS}`), 200, (j) => {
     const mine = j.filter((s) => s.character.name === A || s.character.name === B);

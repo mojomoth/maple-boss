@@ -1,0 +1,15 @@
+$ node docs/dev-v1/evidence/G3/scripts/cleanup/classnames.mjs pocs   # class tokens in TSX that no CSS defines (expression fragments and template prefixes)
+flow-badge-- app/flow/Canvas.tsx,app/flow/StepPanel.tsx,app/flow/page.tsx
+flow-lane-- app/flow/Canvas.tsx
+flow-node-- app/flow/Canvas.tsx
+flow-arrow-- app/flow/Canvas.tsx
+flow-wire-- app/flow/Canvas.tsx,app/flow/page.tsx
+flow-wire-label-- app/flow/Canvas.tsx
+error app/import/page.tsx
+noto app/layout.tsx
+variable app/layout.tsx
+i app/page.tsx
+ok app/pocs/party/PartyClient.tsx
+p app/pocs/party/page.tsx
+clearable app/pocs/party/page.tsx
+sprite-- app/ui.tsx

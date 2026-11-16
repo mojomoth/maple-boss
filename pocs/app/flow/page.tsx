@@ -11,7 +11,7 @@ import StepPanel, { type StepDetail } from "./StepPanel";
 import { BLOCKER_LABEL, KIND_LABEL, STATUS_LABEL, flowHash, parseFlow, readStamp, type Flow, type Kind, type Status } from "./flow.mjs";
 
 export const metadata: Metadata = {
-  title: "개발 진행 · Maple Boss",
+  title: "개발 진행",
   description: "Maple Boss v1을 만드는 게이트별 진행 상황이에요.",
 };
 
@@ -77,7 +77,7 @@ export default function FlowPage() {
       <header className="topbar">
         <div className="shell flow-top">
           <h1 className="logo">
-            <Link href="/" aria-label="Maple Boss 처음으로">
+            <Link href="/" aria-label="Maple Boss 메인 화면">
               <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
             </Link>
           </h1>
@@ -97,8 +97,8 @@ export default function FlowPage() {
             </p>
           </div>
           <p className="section-help">
-            게이트마다 계획, 구현, 검증 순서로 진행하고, 검증에서 실패하면 수정한 뒤 다시 검증해요. 단계를 누르면 담당, 메모, 근거 파일을 볼 수
-            있어요.
+            게이트마다 계획, 구현, 검증 순서로 진행하고, 검증에서 실패하면 수정한 뒤 다시 검증해요. 단계를 누르면 담당, 메모, 근거 파일이
+            나와요.
           </p>
 
           <div className="flow-meta">
@@ -154,7 +154,7 @@ export default function FlowPage() {
         </section>
       </main>
 
-      <footer className="foot">
+      <footer>
         <div className="shell foot-row">
           <strong>Maple Boss</strong>
           <nav aria-label="다른 화면" className="foot-nav">

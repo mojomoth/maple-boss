@@ -1,0 +1,14 @@
+$ npm test   (cwd pocs, 2026-11-17 02:20 KST)
+✔ the stamp matches the hash /flow computes, and goes stale when flow.json changes (77.938958ms)
+✔ an invalid flow.json exits 1 with the problem's path and leaves both files alone (122.12375ms)
+✔ a missing marker exits 1 without writing (45.733458ms)
+✔ parseFlow rejects unsafe evidence paths and duplicate ids (1.165791ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1178.420875
+exit 0

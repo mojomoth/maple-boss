@@ -1,7 +1,6 @@
 import { upsertCharacter } from "@/character";
 import { ParseError, parseCharacter } from "@/character/parse";
-
-export const runtime = "nodejs";
+import { notAllowed } from "@/lib/http";
 
 const MAX_BYTES = 1_000_000; // a whole maplescouter character-store is ~250 KB, the bookmarklet's payload ~11 KB
 
@@ -34,7 +33,7 @@ export async function POST(req: Request) {
     if (text === null)
       // The rest of the body is never read, so the connection cannot carry another request: say so (RFC 9110 15.5.14).
       return Response.json({ error: "데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요." }, { status: 413, headers: { connection: "close" } });
-    if (!text.trim()) return Response.json({ error: "가져올 데이터가 비어 있어요." }, { status: 400 });
+    if (!text.trim()) return Response.json({ error: "가져올 데이터가 없어요." }, { status: 400 });
     const { character, payload } = parseCharacter(text);
     await upsertCharacter(character, payload);
     return Response.json(character, { status: 201 });
@@ -44,3 +43,6 @@ export async function POST(req: Request) {
     return Response.json({ error: "캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요." }, { status: 500 });
   }
 }
+
+const no = notAllowed("POST");
+export { no as GET, no as PUT, no as PATCH, no as DELETE };

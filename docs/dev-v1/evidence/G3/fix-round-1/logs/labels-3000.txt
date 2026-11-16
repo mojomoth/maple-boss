@@ -1,0 +1,13 @@
+ok   1440: 60 labels, 0 clipped (256px field, client 198)
+ok   1440 hover: 60 labels, 0 clipped (256px field, client 198)
+ok   1440: /?boss=extreme-first-adversary -> field "익스트림 최초의 대적자" fits
+ok   1440: search "카칼" -> field "카오스 감시자 칼로스" fits=true
+ok   1920: 60 labels, 0 clipped (256px field, client 198)
+ok   1920 hover: 60 labels, 0 clipped (256px field, client 198)
+ok   1920: /?boss=extreme-first-adversary -> field "익스트림 최초의 대적자" fits
+ok   1920: search "카칼" -> field "카오스 감시자 칼로스" fits=true
+ok   375: 60 labels, 0 clipped (343px field, client 285)
+ok   375 hover: 60 labels, 0 clipped (343px field, client 285)
+ok   375: /?boss=extreme-first-adversary -> field "익스트림 최초의 대적자" fits
+ok   375: search "카칼" -> field "카오스 감시자 칼로스" fits=true
+# all passed

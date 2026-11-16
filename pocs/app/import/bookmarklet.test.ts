@@ -53,7 +53,7 @@ test("the bookmarklet stays on the page and explains itself when there is nothin
   const r = click(bookmarklet(ORIGIN), null);
   assert.equal(r.href, "https://maplescouter.com/ko/result?name=x");
   assert.equal(r.alerts.length, 1);
-  assert.match(r.alerts[0], /maplescouter 캐릭터 결과 페이지/);
+  assert.match(r.alerts[0], /^Maple Boss로 보내지 못했어요\. maplescouter에서 캐릭터 결과가 뜬 뒤에 눌러 주세요\.$/);
 });
 
 test("scouterUrl encodes the nickname", () => {

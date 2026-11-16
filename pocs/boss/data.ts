@@ -1,6 +1,5 @@
 // Boss seed data: exactly maplescouter's 60 calculatedData.bossCuts (boss × difficulty) entries.
 // Sources and what is verified vs estimated: ./SOURCES.md
-// Type-only imports so `node --test` can load this file without the `@/` alias.
 import type { Boss } from "@/lib/types";
 
 export type BossRow = Boss & { scouterName: string }; // maplescouter bossCuts[].boss

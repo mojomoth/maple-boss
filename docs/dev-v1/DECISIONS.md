@@ -58,4 +58,4 @@
 |---|---|---|---|
 | B1 | Neon 약관 동의 필요 | 사용자가 https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli 에서 동의 → `vercel integration add neon --name maple-boss-db --billing-plan free_v3` | 열림 |
 | B2 | Codex(GPT) 사용량 한도 | 2026-11-20 18:31 이후 교차 Critic 재실행 | 열림 |
-| B3 | `.env` 없음 (OPENAI 등 키) | v1 핵심 기능은 키가 필요 없음. 이미지 재생성 때만 필요 | 열림 |
+| B3 | `.env` 없음 (OPENAI 등 키) | 2026-11-17 00:49 루트에 `.env` 생김(이름: JEV_KEY, GOOGLE_KEY, OPENAI_KEY, CLAUDE_KEY, VERCEL_KEY, RENDER_KEY, OPENROUTER_KEY). CLAUDE.md의 `*_API_KEY` 이름과 다르다 | 해결 |

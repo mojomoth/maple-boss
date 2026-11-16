@@ -1,0 +1,19 @@
+# database down: http://localhost:3100
+ok   GET /api/health -> 503 { error }  | {"ok":false,"db":"postgres","persistent":true,"error":"저장소에 연결하지 못했어요."}
+ok   GET /api/character -> 500 { error }  | {"error":"캐릭터 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+ok   GET /api/party -> 500 { error }  | {"error":"파티 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+ok   GET /api/party/requests -> 500 { error }  | {"error":"구직 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+ok   GET /api/character/rates?name=x -> 500 { error }  | {"error":"배율을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+ok   DELETE /api/character/x -> 500 { error }  | {"error":"캐릭터를 삭제하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+ok   POST /api/character/import -> 400 { error }  | {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+ok   API-10 / with the database down -> 500 "화면을 불러오지 못했어요"  | 저장소에 연결하지 못했거나 서버에서 오류가 났어요.잠시 뒤 다시 시도해 주세요.다시 시도메인 화면으로
+ok   API-10 /: 다시 시도 and 메인 화면으로 are there
+ok   API-10 /: 다시 시도 with the database still down shows the same page
+ok   API-10 /pocs/party with the database down -> 500 "화면을 불러오지 못했어요"  | 저장소에 연결하지 못했거나 서버에서 오류가 났어요.잠시 뒤 다시 시도해 주세요.다시 시도메인 화면으로
+ok   API-10 /pocs/party: 다시 시도 and 메인 화면으로 are there
+ok   API-10 /pocs/party: 다시 시도 with the database still down shows the same page
+ok   API-10 /pocs/party: 메인 화면으로 leaves the failing screen
+# temporary storage: http://localhost:3190
+ok   temporary storage notice says data can be missing after a reload, not only after a restart  | 임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요.
+ok   temporary storage: /api/health persistent false  | {"ok":true,"db":"pglite","persistent":false}
+# all passed

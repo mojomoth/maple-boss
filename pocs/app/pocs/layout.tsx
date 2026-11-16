@@ -1,24 +1,25 @@
 import "../home.css";
+import "./pocs.css";
+import Image from "next/image";
 import Link from "next/link";
+import logo from "@/public/maple-boss-logo.png";
+import PocsNav from "./PocsNav";
 
-// The PoC screens' way back: one quiet bar above each /pocs/* page, in the main screen's footer style.
+// The PoC screens' frame: the main screen's top bar, with the screens as links and the way back to /.
 export default function PocsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="home">
       <header className="topbar">
-        <div className="shell foot-row">
-          <Link href="/">
-            <span aria-hidden="true">← </span>메인 화면으로
-          </Link>
-          <nav aria-label="다른 화면" className="foot-nav">
-            <Link href="/pocs/character">캐릭터 등록</Link>
-            <Link href="/pocs/boss">보스 조회</Link>
-            <Link href="/pocs/party">파티 편성</Link>
-            <Link href="/flow">개발 진행</Link>
-          </nav>
+        <div className="shell pocs-top">
+          <div className="logo">
+            <Link href="/" aria-label="Maple Boss 메인 화면">
+              <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
+            </Link>
+          </div>
+          <PocsNav />
         </div>
       </header>
       {children}
-    </>
+    </div>
   );
 }

@@ -1,0 +1,51 @@
+# BEFORE the G3 fixes (dev server, 2026-11-17). Three lines expecting 201 (17832.188, emoji name, partySize=2) were
+# marked FAIL only because the first version of the script checked them for { error }; their 201 was the right answer.
+# The '.' and '..' rows this run created could not be deleted through the API (see cleanup lines) and were removed
+# from data/pglite directly with the dev server stopped.
+# api-probe http://localhost:3000 tag=hjkx
+FAIL import name '..' -> 201 {"name":"..","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/ch
+FAIL import name '.' -> 201 {"name":".","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/cha
+ok   import name 'a.b' still fine -> 201 {"name":"a.bhjkx","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplesto
+FAIL import clearRate 1e308 -> 201 {"name":"bighjkx","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplesto
+FAIL import clearRate 2e6 -> 201 {"name":"bighjkx","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplesto
+FAIL import clearRate 17832.188 (노말 스우) kept -> 201 {"name":"swoohjkx","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplest
+FAIL import name with NUL -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+FAIL import name with lone surrogate -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+FAIL import world_name with NUL -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+FAIL import analytics with NUL -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+FAIL import emoji name (well-formed pair) fine -> 201 {"name":"🐉hjkx","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestor
+FAIL POST /api/character name with NUL (refused before the crawler) -> 500 {"error":"캐릭터를 저장하지 못했어요."}
+FAIL GET /api/character/rates?name=<NUL> -> 500 {"error":"배율을 불러오지 못했어요."}
+FAIL DELETE /api/character/<NUL> -> 500 {"error":"캐릭터를 삭제하지 못했어요."}
+FAIL GET /api/party/requests?bossId=<NUL> -> 500 {"error":"구직 목록을 불러오지 못했어요."}
+FAIL POST /api/party/requests partySize="2" -> 201 {"ok":true}
+FAIL POST /api/party/requests partySize=true -> 201 {"ok":true}
+FAIL POST /api/party/requests partySize=[2] -> 201 {"ok":true}
+ok   POST /api/party/requests partySize=null -> 400 {"error":"인원은 1~6명이어야 합니다."}
+ok   POST /api/party/requests partySize=2.5 -> 400 {"error":"인원은 1~6명이어야 합니다."}
+ok   POST /api/party/requests partySize="abc" -> 400 {"error":"인원은 1~6명이어야 합니다."}
+FAIL POST /api/party/requests partySize=2 -> 201 {"ok":true}
+ok   POST /api/party members with non-strings -> 400 {"error":"이 보스에 구직 중이 아닌 캐릭터: [object Object], 1"}
+ok   POST /api/party invalid JSON -> 400 {"error":"members 배열이 필요해요."}
+ok   POST /api/party/requests invalid JSON -> 400 {"error":"요청 본문이 JSON 객체가 아니에요."}
+ok   POST /api/character invalid JSON -> 400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character/import invalid JSON -> 400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+FAIL PUT /api/party -> 405  ""
+FAIL PATCH /api/character -> 405  ""
+FAIL DELETE /api/boss/normal-lotus -> 405  ""
+FAIL GET /api/character/import -> 405  ""
+FAIL POST /api/health -> 405  ""
+FAIL PUT /api/party/1 -> 405  ""
+FAIL POST /api/boss -> 405  ""
+FAIL GET /api/character/x -> 405  ""
+FAIL DELETE /api/party/requests -> 405  ""
+FAIL PATCH /api/character/rates -> 405  ""
+FAIL GET /api/nope -> 404 text/html; charset=utf-8 "<!DOCTYPE html><html lang=\"ko\" class=\"noto_sans_kr_b1cbd4dc-"
+FAIL GET /api -> 404 text/html; charset=utf-8 "<!DOCTYPE html><html lang=\"ko\" class=\"noto_sans_kr_b1cbd4dc-"
+FAIL GET /api/character/a/b -> 404 text/html; charset=utf-8 "<!DOCTYPE html><html lang=\"ko\" class=\"noto_sans_kr_b1cbd4dc-"
+FAIL GET /api/character/.. -> 404 text/html; charset=utf-8 "<!DOCTYPE html><html lang=\"ko\" class=\"noto_sans_kr_b1cbd4dc-"
+FAIL DELETE /api/character/%E0%A4%A (bad percent-encoding) -> 400 text/html; charset=utf-8 "<!DOCTYPE html><html><head><meta charSet=\"utf-8\" data-next-h"
+cleanup: DELETE ".." -> 404 text/html; charset=utf-8 "<!DOCTYPE html><html lang=\"ko\" class=\"noto_sans_kr_b1cbd4dc-"
+cleanup: DELETE "." -> 405  ""
+cleanup: 6 temp characters
+# 33 failed

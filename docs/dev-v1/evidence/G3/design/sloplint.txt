@@ -1,0 +1,22 @@
+# node .claude/skills/hallmark/scripts/sloplint.mjs app --genre modern-minimal --scope app --url / /flow /import /pocs/character /pocs/boss?q=카링 /pocs/party  (cwd pocs, HALLMARK_PUPPETEER=/tmp/mbdesign/pp, 2026-11-17 02:19 KST)
+render tier: 30 screenshots in /Users/jeongyounglee/work/repo/maple-boss/pocs/.hallmark/shots (1280x800, 1440x900, 1920x1080 folds; 1440 and 375 full pages)
+http://localhost:3000/
+  WAIVED 39b :1 [1440px] control height outside 32 to 52px: button.card 154px, button.card 154px, button.card 154px
+http://localhost:3000/flow
+  WAIVED 39b :1 [1440px] control height outside 32 to 52px: button.flow-node 120px, button.flow-node 120px, button.flow-node 120px
+  WAIVED 72 :1 [1440px] text crowds the edge of its box: button.flow-node right -2px
+  WAIVED 80 :1 [1440px] drawn illustration: div.flow-board (1296x1008, 21 shapes)
+http://localhost:3000/pocs/character
+  WAIVED 39b :1 [1440px] control height outside 32 to 52px: button.pick-row 58px, button.pick-row 58px, button.pick-row 58px
+app/flow/flow.css
+  ANSWERED F3 :114 no text-wrap: balance on any display head (1 head rule(s), e.g. .flow-panel h2)
+app/pocs/pocs.css
+  ANSWERED F3 :19 no text-wrap: balance on any display head (1 head rule(s), e.g. .panel h2)
+app/home.css
+  ANSWERED F24 :244 a hairline border under a wide soft shadow on .confirm
+  DISMISSED 40 :102 4.17:1 < 4.5:1 on .btn--danger
+  DISMISSED F4 :102 2 filled primary-button recipes: .btn--primary + .btn--danger
+http://localhost:3000/pocs/boss?q=카링
+  ANSWERED F25 :1 [375px] a table opens with 2 columns off-screen (from "최대 인원")
+sloplint: 0 FAIL, 0 WARN, 5 WAIVED, 4 ANSWERED, 2 DISMISSED across 22 file(s) and 6 URL(s).
+exit 0

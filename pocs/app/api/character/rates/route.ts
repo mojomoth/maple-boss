@@ -1,8 +1,7 @@
 import { getCharacter, getClearRates } from "@/character";
 import { getBoss } from "@/boss";
 import { bossLabel } from "@/boss/search";
-
-export const runtime = "nodejs";
+import { notAllowed } from "@/lib/http";
 
 // GET ?name=<character> -> its clear rates, hardest boss first, each with a display label. 400 | 404
 export async function GET(req: Request) {
@@ -18,6 +17,9 @@ export async function GET(req: Request) {
     );
   } catch (e) {
     console.error("GET /api/character/rates:", e);
-    return Response.json({ error: "배율을 불러오지 못했어요." }, { status: 500 });
+    return Response.json({ error: "배율을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요." }, { status: 500 });
   }
 }
+
+const no = notAllowed("GET");
+export { no as POST, no as PUT, no as PATCH, no as DELETE };

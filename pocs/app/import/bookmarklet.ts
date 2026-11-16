@@ -38,5 +38,5 @@ export const bookmarklet = (origin: string) =>
   "javascript:" +
   encodeURIComponent(
     `(()=>{try{location.href=(${toImportUrl})(localStorage.getItem("character-store"),${JSON.stringify(origin)})}` +
-      `catch(e){alert("Maple Boss로 보내지 못했어요. maplescouter 캐릭터 결과 페이지에서 결과가 뜬 뒤에 눌러 주세요.")}})()`,
+      `catch(e){alert("Maple Boss로 보내지 못했어요. maplescouter에서 캐릭터 결과가 뜬 뒤에 눌러 주세요.")}})()`,
   );

@@ -1,0 +1,34 @@
+ok   P2-2 boss field typed before hydration is kept  | hydrated before typing: false, after: "카링 노말"
+ok   P2-2 nickname typed before hydration is kept  | "아무개"
+ok   P2-2 추가 uses the pre-hydration nickname (import guide opens for it)  | maplescouter에서 ‘아무개’ 가져오기
+ok   P2-2 the kept boss text still searches  | http://localhost:3000/?boss=normal-kaling
+ok   P2-4 focus after paste import is the nickname field  | INPUT#character-name
+ok   P2-4 the field's status line says what happened  | ‘붙여neyn’ 캐릭터를 가져왔어요.
+ok   P2-4 the nickname field is cleared
+ok   P2-8 round 1: boss already shown, "카링 익스" -> URL ?boss=extreme-kaling, field "익스트림 카링"  | focus boss-q
+ok   P2-8 round 2: boss already shown, "카링 익스" -> URL ?boss=extreme-kaling, field "익스트림 카링"  | focus boss-q
+ok   API-8 main search "하스우" -> 하드 스우  | http://localhost:3000/?boss=hard-lotus
+ok   API-8 main search "익검마" -> 익스트림 검은 마법사  | http://localhost:3000/?boss=extreme-black-mage
+ok   API-8 main search "하진힐" -> 하드 진 힐라  | http://localhost:3000/?boss=hard-jin-hilla
+ok   P2-1 delete modal, server unreachable -> Korean message  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   P2-6 member rates are cut like the sum (54.9% + 54.9% beside 109.9%)  | 54.9% 검증 / 54.9% 검증
+ok   P2-6 sum line: 109.9%, 공략 불가, 0.1% 부족  | 2/2명합계 109.9%공략 불가 (0.1% 부족)
+ok   P2-3 double click 파티 편성 -> one POST, one party, success message kept  | POSTs 201, parties 1, "#115 파티를 편성했어요. 합계 109.9%로, 110%까지 0.1% 모자라요."
+ok   P2-6 saved party: members 54.9% each, sum 109.9%, 공략 불가  | 익스트림 카링합계 109.9%공략 불가2026. 11. 17. 오전 3:59:14#115 익스트림 카링 파티 삭제반올림Aneyn54.9%반올림Bneyn54.9%
+ok   P2-1 구직 등록, server unreachable -> Korean message  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   G2-P2-4 /pocs/party: aria-current on "파티 편성" only  | 파티 편성
+ok   G2-P2-4 /pocs/character: aria-current on "캐릭터 등록" only  | 캐릭터 등록
+ok   G2-P2-4 /pocs/boss: aria-current on "보스 조회" only  | 보스 조회
+ok   API-8 /pocs/boss?q=검마 -> 검은 마법사  | 검은 마법사
+ok   G2-P2-2 /pocs -> 404, Korean page  | 404 없는 페이지예요
+ok   G2-P2-2 its link goes back to /  | http://localhost:3000/
+ok   title / -> "파티 추천 · Maple Boss"
+ok   title /import -> "캐릭터 가져오기 · Maple Boss"
+ok   title /flow -> "개발 진행 · Maple Boss"
+ok   title /pocs/character -> "캐릭터 등록 · Maple Boss"
+ok   title /pocs/boss -> "보스 조회 · Maple Boss"
+ok   title /pocs/party -> "파티 편성 · Maple Boss"
+ok   title /pocs -> "없는 페이지 · Maple Boss"
+cleanup: 1 parties, 3 characters
+ok   no page errors or console errors
+# all passed

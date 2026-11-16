@@ -66,17 +66,23 @@ test("party requests: one open request per character and boss", async () => {
   const seekers = await party.listSeekers("extreme-kaling");
   assert.deepEqual(seekers.map((s) => [s.character.name, s.partySize, s.clearRate]), [["테스트A", 3, 0.65]]);
 
-  await assert.rejects(party.createRequest("없는캐릭", "extreme-kaling", 1), /등록되지 않은 캐릭터/);
-  await assert.rejects(party.createRequest("테스트A", "nope", 1), /존재하지 않는 보스/);
-  await assert.rejects(party.createRequest("테스트A", "extreme-kaling", 7), /인원은 1~6명/);
-  await assert.rejects(party.createRequest("테스트A", "extreme-kaling", 1.5), party.PartyError);
+  await assert.rejects(party.createRequest("없는캐릭", "extreme-kaling", 1), /등록되지 않은 캐릭터예요/);
+  await assert.rejects(party.createRequest("없는\u0000캐릭", "extreme-kaling", 1), /등록되지 않은 캐릭터예요/); // not a 500
+  await assert.rejects(party.createRequest("테스트A", "nope", 1), /없는 보스예요/);
+  await assert.rejects(party.createRequest("테스트A", "extreme-kaling", 7), /희망 인원은 1~6 사이의 정수여야 해요/);
+  // partySize is the JSON value as sent: integers only, nothing that merely converts to one.
+  for (const size of [0, -1, 1.5, NaN, Infinity, "2", true, [2], null, undefined, {}])
+    await assert.rejects(party.createRequest("테스트A", "extreme-kaling", size), party.PartyError, String(size));
+  assert.deepEqual((await party.listSeekers("extreme-kaling")).map((s) => s.partySize), [3]); // none of those changed it
+  assert.deepEqual(await party.listSeekers("nope"), []);
+  assert.deepEqual(await party.listSeekers("no\u0000pe"), []); // never reaches SQL
 });
 
 test("formParty sums the rates, saves the party and closes the requests", async () => {
   const b = make("테스트B", [["카링", "Extreme", 0.45]]);
   await ch.upsertCharacter(b.character, b.payload);
   await party.createRequest("테스트B", "extreme-kaling", 2);
-  await assert.rejects(party.formParty("extreme-kaling", ["테스트A", "테스트B", "강은호"]), /구직 중이 아닌 캐릭터: 강은호/);
+  await assert.rejects(party.formParty("extreme-kaling", ["테스트A", "테스트B", "강은호"]), { message: "강은호 캐릭터는 이 보스에 구직 중이 아니에요." });
 
   const formed = await party.formParty("extreme-kaling", ["테스트A", "테스트B", "테스트A"]); // duplicates ignored
   assert.ok(Math.abs(formed.sum - 1.1) < 1e-9);
@@ -93,7 +99,7 @@ test("formParty sums the rates, saves the party and closes the requests", async 
   await party.createRequest("테스트B", "extreme-kaling", 1);
   const solo = await party.formParty("extreme-kaling", ["테스트B"]);
   assert.deepEqual([solo.sum, solo.clearable], [0.45, false]);
-  await assert.rejects(party.formParty("extreme-kaling", ["테스트B"]), /구직 중이 아닌/); // its request is closed
+  await assert.rejects(party.formParty("extreme-kaling", ["테스트B"]), /구직 중이 아니에요/); // its request is closed
 });
 
 test("formParty rejects double booking inside the transaction", async () => {
@@ -102,24 +108,29 @@ test("formParty rejects double booking inside the transaction", async () => {
   for (const n of ["테스트A", "테스트B", "테스트C"]) await party.createRequest(n, "extreme-kaling", 2);
   const before = (await party.listParties()).length;
 
-  // Both pass the seeker check before either transaction runs; the second must find 테스트A already taken.
-  const [p1, p2] = await Promise.allSettled([
-    party.formParty("extreme-kaling", ["테스트A", "테스트B"]),
-    party.formParty("extreme-kaling", ["테스트A", "테스트C"]),
-  ]);
-  assert.equal(p1.status, "fulfilled");
-  assert.equal(p2.status, "rejected");
-  assert.ok(p2.reason instanceof party.PartyError);
-  assert.match(p2.reason.message, /이미 다른 파티에 편성된 캐릭터: 테스트A$/);
+  // Both pass the seeker check before either transaction runs; whichever commits second must find 테스트A taken.
+  // PGlite runs them in call order, but through `pg` (a pool of connections) either one may win, so the test
+  // checks the outcome, not the order.
+  const teams = [["테스트A", "테스트B"], ["테스트A", "테스트C"]];
+  const results = await Promise.allSettled(teams.map((t) => party.formParty("extreme-kaling", t)));
+  assert.deepEqual(results.map((r) => r.status).sort(), ["fulfilled", "rejected"]);
+  const lost = results.findIndex((r) => r.status === "rejected");
+  const reason = (results[lost] as PromiseRejectedResult).reason;
+  assert.ok(reason instanceof party.PartyError);
+  assert.equal(reason.message, "테스트A 캐릭터는 이미 다른 파티에 편성됐어요.");
 
   const after = await party.listParties();
   assert.equal(after.length, before + 1); // the loser rolled back: no party row, no members
-  assert.deepEqual((await party.listSeekers("extreme-kaling")).map((s) => s.character.name), ["테스트C"]); // C stays open
+  assert.deepEqual(after[0].members.map((m) => m.name).sort(), teams[1 - lost]);
+  const loserMate = teams[lost][1];
+  assert.deepEqual((await party.listSeekers("extreme-kaling")).map((s) => s.character.name), [loserMate]); // stays open
 });
 
 test("delete removes the character, its rates and open requests; parties keep the name", async () => {
   assert.equal(await ch.deleteCharacter("테스트C"), true);
   assert.equal(await ch.deleteCharacter("테스트C"), false);
+  assert.equal(await ch.deleteCharacter("테스트\u0000C"), false); // a name that cannot be stored: 404, not a 500
+  assert.deepEqual(await ch.getClearRates("\ud800"), []);
   assert.equal(await ch.getCharacter("테스트C"), null);
   assert.deepEqual(await ch.getClearRates("테스트C"), []);
   const [open] = await query<{ n: number }>("SELECT count(*)::int AS n FROM party_requests WHERE character_name = '테스트C' AND status = 'open'");

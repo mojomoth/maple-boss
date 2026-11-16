@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Character } from "@/lib/types";
 import { formatKorean } from "@/boss/search";
-import { CloseIcon, PinIcon, Sprite, TrashIcon } from "./ui";
+import { errorText } from "./messages";
+import { CloseIcon, PinIcon, Sprite, SwordsIcon, TrashIcon } from "./ui";
 
 const Meta = ({ c }: { c: Character }) => (
   <span className="meta">
@@ -43,7 +44,7 @@ export default function CharacterGrid({ characters }: { characters: Character[] 
       document.getElementById("chars-title")?.focus(); // the opener card is going away
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(errorText(err)); // a TypeError ("Failed to fetch") is the server being unreachable
     } finally {
       setBusy(false);
     }
@@ -73,6 +74,7 @@ export default function CharacterGrid({ characters }: { characters: Character[] 
                   {c.world}
                 </span>
                 <span className="power">
+                  <SwordsIcon />
                   전투력 <strong className="num">{formatKorean(c.combatPower)}</strong>
                 </span>
               </span>
@@ -94,7 +96,7 @@ export default function CharacterGrid({ characters }: { characters: Character[] 
         {target && (
           <div className="confirm-body">
             <button type="button" className="icon-btn confirm-close" aria-label="닫기" onClick={() => dialog.current?.close()}>
-              <CloseIcon />
+              <CloseIcon size={36} />
             </button>
             <span className="confirm-icon" aria-hidden="true">
               <TrashIcon />

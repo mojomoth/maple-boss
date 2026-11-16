@@ -53,6 +53,27 @@ test("search", () => {
   assert.deepEqual(ids("없는보스"), []);
 });
 
+test("search: shorthand players use", () => {
+  assert.deepEqual(ids("검마"), ["hard-black-mage", "extreme-black-mage", "champion-black-mage"]);
+  assert.deepEqual(ids("익검마"), ["extreme-black-mage"]);
+  assert.deepEqual(ids("하드 검마"), ["hard-black-mage"]);
+  assert.deepEqual(ids("하스우"), ["hard-lotus"]);
+  assert.deepEqual(ids("익스우"), ["extreme-lotus"]);
+  assert.deepEqual(ids("노스우"), ["normal-lotus"]);
+  assert.deepEqual(ids("하진힐"), ["hard-jin-hilla"]);
+  assert.deepEqual(ids("진힐라"), ["normal-jin-hilla", "hard-jin-hilla", "champion-jin-hilla"]);
+  assert.deepEqual(ids("익카링"), ["extreme-kaling"]);
+  assert.deepEqual(ids("카더스크"), ["chaos-dusk"]);
+  assert.deepEqual(ids("노칼"), ["normal-kalos"]);
+  assert.deepEqual(ids("카엔슬"), ["chaos-guardian-angel-slime"]);
+  assert.deepEqual(ids("하세렌"), ["hard-seren"]);
+  // Names that start with a difficulty initial still match as names, not as shorthand.
+  assert.deepEqual(ids("카링"), ["easy-kaling", "normal-kaling", "hard-kaling", "extreme-kaling", "destiny-kaling"]);
+  assert.equal(ids("하드").length, bosses.filter((b) => b.difficulty === "hard").length);
+  assert.equal(ids("카오스").length, bosses.filter((b) => b.difficulty === "chaos").length);
+  assert.deepEqual(ids("하없는보스"), []);
+});
+
 test("formatKorean", () => {
   assert.equal(formatKorean(1_073_700_000_000), "1조 737억");
   assert.equal(formatKorean(822_000_000_000), "8220억");

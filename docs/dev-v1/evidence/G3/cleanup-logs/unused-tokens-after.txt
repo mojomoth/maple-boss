@@ -1,0 +1,5 @@
+$ node docs/dev-v1/evidence/G3/scripts/cleanup/tokens.mjs pocs   # custom properties declared but never read (--danger/--primary/--quiet are .btn--x selectors, not properties)
+--danger
+--primary
+--quiet
+-- read but not declared in app CSS: --pad --head --lane-x --node-w --node-h --font-noto

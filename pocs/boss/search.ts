@@ -1,4 +1,5 @@
-// Pure helpers (type-only imports so `node --test` can load this file).
+// Pure helpers shared by server pages and client components. Type-only imports keep the boss table (data.ts)
+// out of client bundles.
 import type { Boss } from "@/lib/types";
 import type { BossRow } from "./data.ts";
 
@@ -12,17 +13,26 @@ export const DIFFICULTY_LABEL: Record<Boss["difficulty"], string> = {
   champion: "챔피언",
 };
 
+export const FORCE_LABEL = { arcane: "아케인", authentic: "어센틱" } as const;
+
 export const bossLabel = (b: Pick<Boss, "name" | "difficulty">) => `${DIFFICULTY_LABEL[b.difficulty]} ${b.name}`;
 
 const norm = (s: string) => s.replace(/\s+/g, "").toLowerCase();
 
-// Every whitespace-separated token must appear in "난이도+이름+스카우터 약칭+id", spaces ignored:
-// "카링", "노말 카링", "카링 노말", "검은마법사", "가엔슬", "extreme-black" all match.
+// Names players use that are not in the boss's name or maplescouter's short name.
+const ALIAS: Record<string, string> = { "검은 마법사": "검마" };
+// Players write a difficulty as its first syllable in front of the name: 하스우, 익카링, 노칼, 카더스크, 하진힐.
+const INITIAL: Record<string, Boss["difficulty"]> = { 이: "easy", 노: "normal", 하: "hard", 카: "chaos", 익: "extreme" };
+
+// Every whitespace-separated token must appear in "난이도+이름+스카우터 약칭+별칭+id", spaces ignored, or be a
+// difficulty initial plus part of the name: "카링", "노말 카링", "카링 노말", "검은마법사", "검마", "가엔슬",
+// "하스우", "익스트림 검마", "extreme-black" all match.
 export function searchBosses(bosses: BossRow[], q: string): BossRow[] {
   const tokens = q.trim().split(/\s+/).filter(Boolean).map(norm);
   return bosses.filter((b) => {
-    const hay = norm(`${DIFFICULTY_LABEL[b.difficulty]}${b.name}${b.scouterName}${b.id}`);
-    return tokens.every((t) => hay.includes(t));
+    const names = norm(`${b.name}${b.scouterName}${ALIAS[b.name] ?? ""}`);
+    const hay = norm(DIFFICULTY_LABEL[b.difficulty]) + names + b.id;
+    return tokens.every((t) => hay.includes(t) || (INITIAL[t[0]] === b.difficulty && t.length > 1 && names.includes(t.slice(1))));
   });
 }
 

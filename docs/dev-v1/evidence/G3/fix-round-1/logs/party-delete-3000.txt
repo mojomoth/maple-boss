@@ -1,0 +1,27 @@
+     import 파티Awbgl: 201
+     import 파티Bwbgl: 201
+ok   1440 formation message  | #119 파티를 편성했어요. 합계 176.7%로 공략 가능해요.
+ok   1440 saved list shows the new party
+ok   1440 saved party has a delete button named "#119 익스트림 카링 파티 삭제"  | buttons in the row: 1
+ok   1440 500 -> Korean error under the row  | 파티를 삭제하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1440 500 -> button usable again  | #119 익스트림 카링 파티 삭제
+ok   1440 offline -> Korean error  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1440 busy -> "삭제 중…", disabled, aria-busy  | #119 익스트림 카링 파티 삭제 중…
+ok   1440 the error line is cleared while it retries
+ok   1440 after delete the party leaves the list
+ok   1440 the party is gone on the server (DELETE again -> 404)  | 404
+ok   1440 no page errors
+ok   375 formation message  | #120 파티를 편성했어요. 합계 176.7%로 공략 가능해요.
+ok   375 saved list shows the new party
+ok   375 saved party has a delete button named "#120 익스트림 카링 파티 삭제"  | buttons in the row: 1
+ok   375 500 -> Korean error under the row  | 파티를 삭제하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   375 500 -> button usable again  | #120 익스트림 카링 파티 삭제
+ok   375 offline -> Korean error  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   375 busy -> "삭제 중…", disabled, aria-busy  | #120 익스트림 카링 파티 삭제 중…
+ok   375 the error line is cleared while it retries
+ok   375 after delete the party leaves the list
+ok   375 the party is gone on the server (DELETE again -> 404)  | 404
+ok   375 no page errors
+     cleanup 파티Awbgl: 204
+     cleanup 파티Bwbgl: 204
+# all passed

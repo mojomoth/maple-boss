@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { sumRatios, isClearable, shownSum, suggestParty, rankParties } from "./ratio.ts";
+import { sumRatios, isClearable, shortfall, suggestParty, rankParties } from "./ratio.ts";
 import { pct } from "../character/format.ts";
 
 const T = 1.1; // CLEAR_THRESHOLD
@@ -14,12 +14,31 @@ test("threshold: exactly 110% clears, even with float error", () => {
   assert.equal(isClearable(sumRatios([17832.1883792285]), T), true); // 노말 스우: huge rates are fine
 });
 
-test("shownSum never displays an unclearable sum as 110.0%", () => {
-  const near = sumRatios([0.9352402891241739, 0.1643]); // 1.0995..., pct() alone rounds it to 110.0%
-  assert.equal(pct(shownSum(near, T)), "109.9%");
-  assert.equal(pct(T - shownSum(near, T)), "0.1%"); // deficit
-  assert.equal(pct(shownSum(sumRatios([0.7, 0.4]), T)), "110.0%"); // clearable, shown as-is
-  assert.equal(pct(T - shownSum(1, T)), "10.0%");
+test("shown rates, sums and shortfalls agree with isClearable and with each other", () => {
+  const near = sumRatios([0.9352402891241739, 0.1643]); // 1.0995...: rounding showed "110.0% · 공략 불가"
+  assert.equal(pct(near), "109.9%");
+  assert.equal(pct(shortfall(near, T)), "0.1%"); // 109.9 + 0.1 = 110.0
+  assert.equal(pct(sumRatios([0.7, 0.4])), "110.0%"); // 1.0999999999999999 clears and shows as 110.0%
+  assert.equal(shortfall(sumRatios([0.7, 0.4]), T), 0);
+  assert.equal(pct(shortfall(1, T)), "10.0%");
+  assert.equal(pct(0.57), "57.0%"); // 0.57 * 1000 = 569.999…
+  assert.equal(pct(shortfall(0.57, T)), "53.0%");
+
+  // Members that rounded to 55.0% each beside a sum of 109.9% (P2-6): cut, they never add up past the sum.
+  const members = [0.5496, 0.5496];
+  assert.deepEqual(members.map(pct), ["54.9%", "54.9%"]);
+  assert.equal(pct(sumRatios(members)), "109.9%");
+  assert.equal(isClearable(sumRatios(members), T), false);
+  let seed = 7; // fixed LCG, so a failure reproduces
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
+  for (let i = 0; i < 2000; i++) {
+    const ms = [rnd() * 0.8, rnd() * 0.8, rnd() * 0.2];
+    const shown = (r: number) => Number(pct(r).replace(/[%,]/g, ""));
+    const sum = sumRatios(ms);
+    assert.ok(ms.reduce((a, m) => a + shown(m), 0) <= shown(sum) + 1e-9, ms.join());
+    assert.equal(shown(sum) >= 110, isClearable(sum, T), ms.join());
+    if (!isClearable(sum, T)) assert.equal(Math.round((shown(sum) + shown(shortfall(sum, T))) * 10), 1100, ms.join());
+  }
 });
 
 const seekers = [

@@ -3,17 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { bookmarklet, scouterUrl } from "./import/bookmarklet";
+import { CRAWLING, errorText } from "./messages";
 import { CloseIcon } from "./ui";
-
-// One line at 375px, so the reserved message line holds it without moving the page.
-const BUSY = "불러오는 중(최대 3분). 새 창에서 ‘사람인지 확인’을 눌러요.";
-const OFFLINE = "서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요."; // fetch rejects with a TypeError
 
 // With the local crawler (crawler: true), POST /api/character crawls maplescouter and a human may have to pass its
 // check in the browser window it opens. Without it (Vercel), the nickname opens the import guide instead.
+// The nickname field is uncontrolled: hydration keeps what was typed before it, which a controlled field's empty
+// state would throw away.
 export default function AddCharacter({ crawler }: { crawler: boolean }) {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const field = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState("");
@@ -21,7 +20,7 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const n = name.trim();
+    const n = field.current?.value.trim() ?? "";
     if (busy) return;
     setDone("");
     if (!n) return setError("캐릭터 닉네임을 입력해 주세요."); // spaces pass `required`
@@ -36,11 +35,11 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
       });
       const data = await res.json().catch(() => null);
       if (res.status === 501) return setGuide(n); // the crawler went missing since the page rendered
-      if (!res.ok) throw new Error(data?.error ?? `캐릭터를 추가하지 못했어요 (${res.status}).`);
-      setName("");
+      if (!res.ok) throw new Error(data?.error ?? `캐릭터를 추가하지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
+      if (field.current) field.current.value = "";
       router.refresh();
     } catch (err) {
-      setError(err instanceof TypeError ? OFFLINE : err instanceof Error ? err.message : String(err));
+      setError(errorText(err));
     } finally {
       setBusy(false);
     }
@@ -51,11 +50,10 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
       <form className="search search--add" onSubmit={submit}>
         <label htmlFor="character-name">캐릭터 검색</label>
         <input
+          ref={field}
           id="character-name"
           name="name"
           className="field"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
           placeholder="캐릭터 닉네임을 입력하세요"
           autoComplete="off"
           maxLength={20}
@@ -69,19 +67,21 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
         </button>
       </form>
       <p id="add-msg" className={`search-msg search-msg--add${error ? " is-error" : ""}`} role="status">
-        {busy ? BUSY : error || done}
+        {busy ? CRAWLING : error || done}
       </p>
       {guide && (
         <ImportGuide
           name={guide}
           onClose={() => {
             setGuide("");
-            document.getElementById("character-name")?.focus();
+            field.current?.focus();
           }}
+          // The guide (and the focused 가져오기 button) goes away: back to the field, whose status line says what happened.
           onImported={(n) => {
             setGuide("");
-            setName("");
+            if (field.current) field.current.value = "";
             setDone(`‘${n}’ 캐릭터를 가져왔어요.`);
+            field.current?.focus();
             router.refresh();
           }}
         />
@@ -108,17 +108,18 @@ function ImportGuide({ name, onClose, onImported }: { name: string; onClose: () 
     if (busy) return;
     const form = e.currentTarget;
     const text = String(new FormData(form).get("store") ?? "");
-    if (!text.trim()) return setError("붙여 넣은 값이 없어요.");
+    if (!text.trim()) return setError("가져올 데이터가 없어요. 복사한 값을 붙여 넣어 주세요.");
     setBusy(true);
     setError("");
     try {
       const res = await fetch("/api/character/import", { method: "POST", headers: { "content-type": "application/json" }, body: text });
       const data = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(data?.error ?? `가져오지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
+      if (!res.ok || typeof data?.name !== "string")
+        throw new Error(data?.error ?? `캐릭터를 가져오지 못했어요 (${res.status}). 잠시 뒤 다시 시도해 주세요.`);
       form.reset();
       onImported(data.name);
     } catch (err) {
-      setError(err instanceof TypeError ? OFFLINE : err instanceof Error ? err.message : String(err));
+      setError(errorText(err));
     } finally {
       setBusy(false);
     }
@@ -142,7 +143,7 @@ function ImportGuide({ name, onClose, onImported }: { name: string; onClose: () 
             <a className="btn btn--quiet" href={scouterUrl(name)} target="_blank" rel="noopener noreferrer">
               maplescouter에서 결과 열기<span className="visually-hidden"> (새 탭)</span>
             </a>
-            <p>새 탭에서 사람 확인을 마치고 캐릭터 결과가 뜰 때까지 기다려요.</p>
+            <p>새 탭에서 ‘사람인지 확인’을 누르고 캐릭터 결과가 뜰 때까지 기다려요.</p>
           </div>
         </li>
         <li className="step">
@@ -170,7 +171,7 @@ function ImportGuide({ name, onClose, onImported }: { name: string; onClose: () 
         <form className="paste-form" onSubmit={paste}>
           <p id="paste-help">
             북마크를 쓸 수 없으면 maplescouter 결과 탭에서 개발자 도구(F12) 콘솔에 <code>copy(localStorage[&apos;character-store&apos;])</code>를
-            입력해요. 복사된 값을 여기에 붙여 넣어요.
+            입력해요. 복사한 값을 여기에 붙여 넣어요.
           </p>
           <label htmlFor="paste-store">character-store 값</label>
           <textarea

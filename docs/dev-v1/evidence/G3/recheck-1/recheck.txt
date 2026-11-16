@@ -1,0 +1,39 @@
+G3 recheck round 1 (2026-11-17), independent critic. Dev server :3000 (left running, not restarted).
+Prod check: npm run build, then next start -p 3100 with MAPLE_DB=/tmp/recheck1/pglite (throwaway); stopped by port
+with -sTCP:LISTEN afterwards and the DB deleted. Data: every character/party created was deleted; dev DB ends as it
+started (characters 강은호, 아델, 고딩; parties #34, #1; no requests).
+
+Defects
+  D1 / FN-1  FIXED   logs/d1-party-delete.log (dev), logs/d1-party-delete-prod3100.log: request -> formation -> saved
+                     row button "#<id> 익스트림 카링 파티 삭제" -> 500 JSON / 502 HTML / offline show Korean role=alert in
+                     the row and give the button back -> busy "삭제 중…" (disabled, aria-busy, alert cleared) -> row
+                     leaves the list, GET /api/party no longer has it, other parties kept, second DELETE 404. 1440 + 375,
+                     keyboard (Enter/Space), no page errors. shots/d1-row-*.png, d1-error-*.png.
+  D2         FIXED   logs/orig-labels.log (critic's labels.mjs unchanged: 0 clipped). logs/d2-labels.log + prod: 60 labels,
+                     0 clipped at 1440, 1920, 1280, 1024, 375, at rest / hovered / focused (span-measured text vs content
+                     box, scrollWidth, and text end vs the icon button). Widest 카오스 가디언 엔젤 슬라임 175px in a 198px
+                     box. shots/d2-header-first-adversary-{1440,1920,375}.png show "익스트림 최초의 대적자" in full.
+  FN-2       FIXED   logs/orig-back.log (critic's back.mjs unchanged): len 2->3->4, every Back/Forward has field == boss.
+                     logs/fn2-history-*.log (dev 1440/375, dev 6x CPU, prod 1440, prod 375 at 6x CPU): per-key typing,
+                     auto-submit + Enter, search button, missing text, alias, no-op Enter -> one entry per search; 5 Back,
+                     3 Forward, rapid 2 Forward + 3 Back, reload, shared /?q= link rewritten and Back past it: field always
+                     equals 보스 정보 (or the missing text). logs/fn2-refresh-keeps-typing.log: a refresh from the modal
+                     delete keeps typed "세렌"; the following search adds one entry; Back is in step.
+
+Regression
+  npm test 40/40, tsc exit 0, lint exit 0, smoke :3000 and :3100 all passed, build exit 0 (logs/*).
+  .next/static secret scan: 0 hits; .env* ignored by .gitignore and .vercelignore; no tracked .env (logs/secrets-scan.log).
+  Layout checks over /, modal, /flow, /import, /pocs/*, 404 at 1440/1920/375 (critic-design shots.mjs): identical to the
+  pre-fix critic run (only the known sprite crops and the ellipsised /flow agent label) -> logs/layout-all-routes.log.
+  logs/regress-browser.log (1440 + 375): searches (하드 세렌, 데미안, 카칼, missing), modal focus on 취소, Tab never reaches
+  the page (native dialog passes through browser UI), Esc returns focus to the card, keyboard delete -> focus on 내 캐릭터,
+  /pocs/party one delete button per row, /flow renders, no overflow, no page errors.
+
+New / remaining (P2 only)
+  R1-P2-1  /pocs/party delete button uses `disabled` while busy, so keyboard focus drops to <body> after a failed
+           delete (all three error cases) and after a successful one. CharacterGrid avoids this on purpose
+           (aria-disabled + focus to #chars-title). d1-party-delete.log "focus on body".
+  R1-P2-2  Header logo squeeze (known P2) is wider after D2's 16rem field: logo 0px at 961, 28px at 1000, 52px at 1024,
+           full 272px only from ~1250 (logs/logo-band.log, shots/d2-header-first-adversary-1024.png). Outside G3-2 sizes.
+  R1-P2-3  Stale comment, pocs/app/api/party/[id]/route.ts:4 "Lets `npm run smoke` remove the party it formed." The
+           /pocs/party UI calls it now too.

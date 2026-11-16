@@ -71,7 +71,7 @@ export default function StepPanel({ steps, children }: { steps: Record<string, S
             <dl className="flow-panel-facts">
               <div>
                 <dt>담당</dt>
-                <dd>{step.agent || "아직 정해지지 않았어요."}</dd>
+                <dd>{step.agent || "미정"}</dd>
               </div>
               <div>
                 <dt>메모</dt>

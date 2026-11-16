@@ -6,6 +6,8 @@ const SITE = "https://maplescouter.com";
 const PLACEHOLDER = "으낭다"; // maplescouter's default store before any search
 const MAX_CUTS = 100;
 const INT_MAX = 2_147_483_647; // Postgres INTEGER
+// 1,000,000 = 100,000,000%. Real rates reach ~17,832 (노말 스우); the cap keeps a party's sum finite (no Infinity).
+const MAX_CLEAR_RATE = 1e6;
 
 export interface BossCut {
   boss: string;
@@ -39,9 +41,13 @@ const json = (s: string): unknown => {
   }
 };
 
+// Postgres TEXT/JSONB cannot hold NUL, and a lone surrogate is not valid UTF-8: refuse both up front (400, not 500).
+export const storable = (s: string) => !s.includes("\0") && s.isWellFormed();
+
 const str = (o: Obj, key: string, where: string, max: number, min = 1): string => {
   const v = o[key];
   if (typeof v !== "string" || v.trim().length < min || v.trim().length > max) fail(`${where}.${key} 값이 올바르지 않아요.`);
+  if (!storable(v as string)) fail(`${where}.${key} 값에 쓸 수 없는 문자가 있어요.`);
   return (v as string).trim();
 };
 
@@ -72,7 +78,7 @@ export function parseCharacter(input: unknown, now = new Date()): { character: C
 
   let image = typeof info.character_image === "string" ? info.character_image.trim() : fail("info.character_image 값이 올바르지 않아요.");
   if (image.startsWith("/")) image = SITE + image;
-  if (image.length > 4096 || (image && !/^https?:\/\//.test(image))) fail("info.character_image 값이 올바르지 않아요.");
+  if (image.length > 4096 || (image && !/^https?:\/\//.test(image)) || !storable(image)) fail("info.character_image 값이 올바르지 않아요.");
 
   const payload: Payload = {
     v: 1,
@@ -93,7 +99,7 @@ export function parseCharacter(input: unknown, now = new Date()): { character: C
         return {
           boss: str(c, "boss", where, 50),
           difficulty: str(c, "difficulty", where, 20),
-          clearRate: num(c, "clearRate", where, Number.MAX_VALUE),
+          clearRate: num(c, "clearRate", where, MAX_CLEAR_RATE),
           analytics: str(c, "analytics", where, 50, 0),
           bossStat: num(c, "bossStat", where, INT_MAX),
         };
@@ -102,6 +108,8 @@ export function parseCharacter(input: unknown, now = new Date()): { character: C
   };
 
   const { info: i, calc: c } = payload;
+  // URLs resolve '.' and '..' away, so DELETE /api/character/.. could never reach this character.
+  if (i.character_name === "." || i.character_name === "..") fail(`‘${i.character_name}’은 캐릭터 이름으로 쓸 수 없어요.`);
   const character: Character = {
     name: i.character_name,
     world: i.world_name,

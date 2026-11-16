@@ -1,0 +1,69 @@
+ok   1440 boss search "루시드" ->  루시드  | shown 이지 루시드, parties 3 (count badge 3) ; field="이지 루시드" url=/?boss=easy-lucid
+ok   1440 boss search "검마" ->  검은 마법사  | shown 하드 검은 마법사, parties 3 (count badge 3) ; field="하드 검은 마법사" url=/?boss=hard-black-mage
+ok   1440 boss search "하드 루시드" -> 하드 루시드  | shown 하드 루시드, parties 3 (count badge 3) ; field="하드 루시드" url=/?boss=hard-lucid
+ok   1440 boss search "익카링" -> 익스트림 카링  | shown 익스트림 카링, parties 3 (count badge 3) ; field="익스트림 카링" url=/?boss=extreme-kaling
+ok   1440 boss search "노말 카링" -> 노말 카링  | shown 노말 카링, parties 3 (count badge 3) ; field="노말 카링" url=/?boss=normal-kaling
+ok   1440 boss search miss shows Korean message  | ‘없는보스’에 맞는 보스가 없어요. 목록에서 골라 주세요.
+ok   1440 miss message does not overlap and stays in viewport  | {"m":[1069,82,1392,102],"hits":[],"vw":1440}
+     1440 empty submit -> browser validation: "이 입력란을 작성하세요."
+ok   1440 spaces-only nickname -> Korean message  | 캐릭터 닉네임을 입력해 주세요.
+ok   1440 crawler busy line is Korean and visible  | 불러오는 중(최대 3분). 새 창에서 ‘사람인지 확인’을 눌러요.
+ok   1440 busy line inside viewport  | [671,1015,1440]
+ok   1440 crawler 404 -> Korean message under the field  | maplescouter에서 ‘없는닉’ 캐릭터를 찾지 못했어요. 닉네임을 확인해 주세요.
+ok   1440 add offline -> Korean  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1440 guide opens, heading focused  | h2#guide-title "maplescouter에서 ‘크리틱A"
+ok   1440 paste empty -> Korean  | 가져올 데이터가 없어요. 복사한 값을 붙여 넣어 주세요.
+ok   1440 paste non-JSON -> Korean  | JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+ok   bookmarklet -> /import -> / shows card 크리틱A77f0
+ok   1440 modal initial focus on 취소  | button.btn "취소"
+     1440 Tab: button.btn "삭제" > body "캐릭터 검색
+추가
+
+보스 검색
+
+내 " > button.icon-btn "닫기" > button.btn "취소" > button.btn "삭제"
+     1440 Shift+Tab: button.btn "취소" > button.icon-btn "닫기" > button.btn "삭제" > button.btn "취소"
+FAIL 1440 focus stays inside dialog after Tab cycling
+ok   1440 Esc closes, focus returns to card  | button.card "크리틱A77f0
+Lv.298
+아델
+스"
+ok   1440 delete offline -> Korean error in modal  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1440 modal with error fits viewport  | [193,707,900]
+ok   1440 keyboard delete removes the card  | focus h2#chars-title "내 캐릭터"
+ok   1440 no page errors
+ok   375 boss search "루시드" ->  루시드  | shown 이지 루시드, parties 3 (count badge 3) ; field="이지 루시드" url=/?boss=easy-lucid
+ok   375 boss search "검마" ->  검은 마법사  | shown 하드 검은 마법사, parties 3 (count badge 3) ; field="하드 검은 마법사" url=/?boss=hard-black-mage
+ok   375 boss search "하드 루시드" -> 하드 루시드  | shown 하드 루시드, parties 3 (count badge 3) ; field="하드 루시드" url=/?boss=hard-lucid
+ok   375 boss search "익카링" -> 익스트림 카링  | shown 익스트림 카링, parties 3 (count badge 3) ; field="익스트림 카링" url=/?boss=extreme-kaling
+FAIL 375 boss search "노말 카링" -> 노말 카링  | shown 익스트림 카링, parties 3 (count badge 3) ; field="노말 카링" url=/?boss=extreme-kaling
+ok   375 boss search miss shows Korean message  | ‘없는보스’에 맞는 보스가 없어요. 목록에서 골라 주세요.
+ok   375 miss message does not overlap and stays in viewport  | {"m":[16,293,359,313],"hits":[],"vw":375}
+     375 empty submit -> browser validation: "이 입력란을 작성하세요."
+ok   375 spaces-only nickname -> Korean message  | 캐릭터 닉네임을 입력해 주세요.
+ok   375 crawler busy line is Korean and visible  | 불러오는 중(최대 3분). 새 창에서 ‘사람인지 확인’을 눌러요.
+ok   375 busy line inside viewport  | [16,359,375]
+ok   375 crawler 404 -> Korean message under the field  | maplescouter에서 ‘없는닉’ 캐릭터를 찾지 못했어요. 닉네임을 확인해 주세요.
+ok   375 add offline -> Korean  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   375 guide opens, heading focused  | h2#guide-title "maplescouter에서 ‘크리틱B"
+ok   375 paste empty -> Korean  | 가져올 데이터가 없어요. 복사한 값을 붙여 넣어 주세요.
+ok   375 paste non-JSON -> Korean  | JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+ok   375 paste imports 크리틱B77f0
+ok   375 paste confirmation line  | ‘크리틱B77f0’ 캐릭터를 가져왔어요. ; focus input#character-name.field ""
+ok   375 confirmation inside viewport  | [16,359,375]
+ok   375 modal initial focus on 취소  | button.btn "취소"
+     375 Tab: button.btn "삭제" > body "캐릭터 검색
+추가
+
+‘크리틱B77f0" > button.icon-btn "닫기" > button.btn "취소" > button.btn "삭제"
+     375 Shift+Tab: button.btn "취소" > button.icon-btn "닫기" > button.btn "삭제" > button.btn "취소"
+FAIL 375 focus stays inside dialog after Tab cycling
+ok   375 Esc closes, focus returns to card  | button.card "크리틱B77f0
+Lv.299
+팔라딘
+"
+ok   375 delete offline -> Korean error in modal  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   375 modal with error fits viewport  | [139,673,812]
+ok   375 keyboard delete removes the card  | focus h2#chars-title "내 캐릭터"
+ok   375 no page errors
+# 3 failed
