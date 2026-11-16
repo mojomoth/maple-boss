@@ -1,9 +1,9 @@
 import "server-only";
 import { db } from "@/lib/db";
-import { listCharacters } from "@/character";
+import { listCharacters, listClearRates } from "@/character";
 import { getBoss, listBosses } from "@/boss";
 import { CLEAR_THRESHOLD, type Boss, type Character } from "@/lib/types";
-import { isClearable, ratioOf, sumRatios } from "./ratio";
+import { isClearable, sumRatios } from "./ratio";
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS party_requests (
@@ -29,10 +29,10 @@ CREATE TABLE IF NOT EXISTS party_members (
 export interface Seeker {
   requestId: number;
   bossId: string;
-  partySize: number;
+  partySize: number; // 희망 인원: the largest party this seeker joins
   character: Character;
-  stat: number; // 환산 주스탯 on this boss's basis
-  ratio: number;
+  clearRate: number | null; // null: no maplescouter rate for this boss -> shown, not selectable
+  analytics: string | null; // e.g. "2인 최소컷"
 }
 
 export interface FormedParty {
@@ -65,20 +65,21 @@ export function createRequest(characterName: string, bossId: string, partySize: 
 export function listSeekers(bossId?: string): Seeker[] {
   const chars = new Map(listCharacters().map((c) => [c.name, c]));
   const bosses = new Map(listBosses().map((b) => [b.id, b]));
+  const rates = new Map(listClearRates(bossId).map((r) => [`${r.characterName}\n${r.bossId}`, r]));
   const rows = db
     .prepare("SELECT id, character_name, boss_id, party_size FROM party_requests WHERE status = 'open' AND (? IS NULL OR boss_id = ?) ORDER BY id")
     .all(bossId ?? null, bossId ?? null) as { id: number; character_name: string; boss_id: string; party_size: number }[];
   return rows.flatMap((r) => {
     const character = chars.get(r.character_name);
-    const boss = bosses.get(r.boss_id);
-    if (!character || !boss) return []; // character/boss removed since the request was made
+    if (!character || !bosses.has(r.boss_id)) return []; // character/boss removed since the request was made
+    const rate = rates.get(`${r.character_name}\n${r.boss_id}`);
     return [{
       requestId: r.id,
       bossId: r.boss_id,
       partySize: r.party_size,
       character,
-      stat: boss.statBasis === "380" ? character.boss380Stat : character.boss300Stat,
-      ratio: ratioOf(character, boss),
+      clearRate: rate?.clearRate ?? null,
+      analytics: rate?.analytics ?? null,
     }];
   });
 }
@@ -90,8 +91,12 @@ export function formParty(bossId: string, memberNames: string[]) {
   const seekers = new Map(listSeekers(bossId).map((s) => [s.character.name, s]));
   const missing = names.filter((n) => !seekers.has(n));
   if (missing.length) fail(`이 보스에 구직 중이 아닌 캐릭터: ${missing.join(", ")}`);
+  const noRate = names.filter((n) => seekers.get(n)!.clearRate === null);
+  if (noRate.length) fail(`이 보스의 배율이 없는 캐릭터: ${noRate.join(", ")}`);
+  const tooBig = names.filter((n) => seekers.get(n)!.partySize < names.length);
+  if (tooBig.length) fail(`희망 인원보다 큰 파티입니다: ${tooBig.join(", ")}`);
 
-  const ratios = names.map((n) => seekers.get(n)!.ratio);
+  const ratios = names.map((n) => seekers.get(n)!.clearRate!); // snapshot at formation
   db.exec("BEGIN");
   try {
     const partyId = Number(db.prepare("INSERT INTO parties (boss_id) VALUES (?)").run(bossId).lastInsertRowid);

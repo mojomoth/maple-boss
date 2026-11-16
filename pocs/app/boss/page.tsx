@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { findBosses, listBosses } from "@/boss";
-import { DIFFICULTY_LABEL, formatHp } from "@/boss/search";
+import { DIFFICULTY_LABEL, formatKorean } from "@/boss/search";
 import type { Boss } from "@/lib/types";
 
 const FORCE_LABEL = { arcane: "아케인", authentic: "어센틱" } as const;
@@ -38,11 +38,11 @@ export default async function BossPage({ searchParams }: { searchParams: Promise
               <h2 className="text-xl font-semibold">{name}</h2>
             </div>
             <div className="mt-3 overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm break-keep">
                 <thead className="text-left text-neutral-400">
                   <tr>
-                    {["난이도", "Lv", "HP", "방어율", "포스", "최대 인원", "기준", "컷(환산)"].map((h) => (
-                      <th key={h} className="px-2 py-1 font-medium whitespace-nowrap">{h}</th>
+                    {["난이도", "Lv", "HP", "방어율", "포스", "최대 인원", "기준"].map((h) => (
+                      <th key={h} className="px-2 py-1 font-medium">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -60,17 +60,16 @@ export default async function BossPage({ searchParams }: { searchParams: Promise
 
 function BossRow({ b }: { b: Boss }) {
   return (
-    <tr className="border-t border-neutral-800 whitespace-nowrap">
+    <tr className="border-t border-neutral-800">
       <td className="px-2 py-1">
         <span className="rounded bg-neutral-800 px-2 py-0.5 text-xs">{DIFFICULTY_LABEL[b.difficulty]}</span>
       </td>
       <td className="px-2 py-1">{b.level}</td>
-      <td className="px-2 py-1">{formatHp(b.hp)}</td>
+      <td className="px-2 py-1">{formatKorean(b.hp)}</td>
       <td className="px-2 py-1">{b.defenseRate}%</td>
       <td className="px-2 py-1">{b.forceType ? `${FORCE_LABEL[b.forceType]} ${b.forceRequired}` : "-"}</td>
       <td className="px-2 py-1">{b.maxParty}인</td>
       <td className="px-2 py-1">방어율 {b.statBasis}</td>
-      <td className="px-2 py-1">{b.cut.toLocaleString("ko-KR")} <span className="text-neutral-500">(추정)</span></td>
     </tr>
   );
 }

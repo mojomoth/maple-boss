@@ -12,7 +12,7 @@ export interface Character {
   combatPower: number; // 전투력
   boss300Stat: number; // 환산 주스탯 vs 방어율 300% boss (calculatedData.boss300_stat)
   boss380Stat: number; // 환산 주스탯 vs 방어율 380% boss (calculatedData.boss380_stat)
-  source: "maplescouter" | "fixture";
+  source: "maplescouter";
   fetchedAt: string; // ISO
 }
 

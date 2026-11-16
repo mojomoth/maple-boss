@@ -1,0 +1,48 @@
+:root {
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.2rem; --text-xl: 1.44rem; --text-2xl: 1.728rem; --text-3xl: 2.074rem;
+  --text-display-s: 1.44rem; --text-display: 1.728rem; --text-section: 1.728rem; --text-title: 1.44rem; --text-lead: 1rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --container: 1440px; --gutter: 48px; --gap-columns: 24px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+
+  /* the operator's dark-v2 draft, converted to OKLCH */
+  --color-paper: oklch(20.2% 0.006 237);        /* page */
+  --color-paper-2: oklch(23.6% 0.008 240);      /* top bar */
+  --color-paper-3: oklch(27.6% 0.010 229);      /* cards and panels */
+  --color-inset: oklch(23.1% 0.009 234);        /* inputs */
+  --color-modal: oklch(28.4% 0.011 226);
+  --color-preview: oklch(26.2% 0.021 171);      /* preview tile in the dialog */
+  --color-badge: oklch(34.1% 0.035 166);        /* count and difficulty badges */
+  --color-forest: oklch(32.4% 0.037 168);       /* first-ranked party's rank cell */
+  --color-ink: oklch(96% 0.006 170);
+  --color-ink-2: oklch(75.6% 0.015 174);        /* secondary */
+  --color-muted: oklch(66.1% 0.017 166);        /* quiet */
+  --color-rule: oklch(37.4% 0.015 216);
+  --color-rule-strong: oklch(42.2% 0.018 170);  /* modal edge */
+  --color-field-edge: oklch(54.3% 0.017 171);   /* 3:1 against the bar, the draft's rule is too faint for a field */
+  --color-accent: oklch(61.5% 0.096 167);       /* primary green */
+  --color-accent-hover: oklch(69.3% 0.106 166);
+  --color-accent-ink: oklch(20.4% 0.020 167);   /* dark ink: light text on the draft green is 3.2:1 */
+  --color-mint: oklch(80.5% 0.099 165);         /* figures, icons, first-rank edge */
+  --color-focus: oklch(80.5% 0.099 165);
+  --color-danger: oklch(54.7% 0.143 20);        /* draft coral darkened to carry light text at 4.7:1 */
+  --color-danger-hover: oklch(51.3% 0.127 18);
+  --color-danger-ink: oklch(96% 0.006 170);
+  --color-warn: oklch(76.7% 0.103 84);          /* muted amber trash icon */
+  --color-warn-well: oklch(29.6% 0.029 87);
+  --color-error: oklch(72% 0.13 20);
+  --color-success: oklch(80.5% 0.099 165);
+  --color-boss-1: oklch(30% 0.075 310);         /* boss backdrop, one purple hue */
+  --color-boss-2: oklch(20% 0.045 300);
+  --color-scrim: oklch(12% 0.006 237 / 0.72);
+
+  --font-display: var(--font-plex), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: var(--font-plex), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-outlier: var(--font-body);
+
+  --radius-card: 12px; --radius-inner: 8px; --radius-input: 8px; --radius-badge: 6px; --radius-modal: 16px; --radius-pill: 999px;
+  --rule-hair: 1px; --shadow-card: none;
+  --tracking-display: -0.01em;
+}

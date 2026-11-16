@@ -3,8 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CLEAR_THRESHOLD, type Boss, type Character } from "@/lib/types";
 import type { Seeker } from "@/party";
-import { isClearable, suggestParty, sumRatios } from "@/party/ratio";
-import { bossLabel, groupBosses, pct } from "@/party/labels";
+import { isClearable, shownSum, suggestParty, sumRatios } from "@/party/ratio";
+import { groupBosses } from "@/party/labels";
+import { bossLabel } from "@/boss/search";
+import { pct } from "@/character/format";
 
 const field = "rounded-md border border-neutral-700 bg-neutral-950 px-2 py-1";
 const button = "rounded-md bg-neutral-100 px-3 py-1 font-medium text-neutral-900 disabled:opacity-40";
@@ -16,9 +18,9 @@ async function post(url: string, body: unknown) {
   return data;
 }
 
-function BossSelect({ bosses, value, onChange, counts }: { bosses: Boss[]; value: string; onChange: (id: string) => void; counts?: Map<string, number> }) {
+function BossSelect({ name, bosses, value, onChange, counts }: { name: string; bosses: Boss[]; value: string; onChange: (id: string) => void; counts?: Map<string, number> }) {
   return (
-    <select className={field} value={value} onChange={(e) => onChange(e.target.value)}>
+    <select name={name} aria-label="보스" className={field} value={value} onChange={(e) => onChange(e.target.value)}>
       {groupBosses(bosses).map(([name, bs]) => (
         <optgroup key={name} label={name}>
           {bs.map((b) => (
@@ -33,6 +35,7 @@ function BossSelect({ bosses, value, onChange, counts }: { bosses: Boss[]; value
 }
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i + 1);
+const BAR_MAX = 2; // the sum bar spans 0..200%; bigger sums (노말 스우 1,783,218.8%) just fill it
 
 export function RequestForm({ characters, bosses }: { characters: Character[]; bosses: Boss[] }) {
   const router = useRouter();
@@ -55,13 +58,13 @@ export function RequestForm({ characters, bosses }: { characters: Character[]; b
 
   return (
     <form onSubmit={submit} className="flex flex-wrap items-center gap-2">
-      <select className={field} value={name} onChange={(e) => setName(e.target.value)}>
+      <select name="characterName" aria-label="캐릭터" className={field} value={name} onChange={(e) => setName(e.target.value)}>
         {characters.map((c) => (
           <option key={c.name} value={c.name}>{c.name} ({c.job} Lv.{c.level})</option>
         ))}
       </select>
-      <BossSelect bosses={bosses} value={bossId} onChange={(id) => { setBossId(id); setSize(1); }} />
-      <select className={field} value={size} onChange={(e) => setSize(Number(e.target.value))}>
+      <BossSelect name="bossId" bosses={bosses} value={bossId} onChange={(id) => { setBossId(id); setSize(1); }} />
+      <select name="partySize" aria-label="희망 인원" className={field} value={size} onChange={(e) => setSize(Number(e.target.value))}>
         {range(boss.maxParty).map((n) => <option key={n} value={n}>{n}인</option>)}
       </select>
       <button className={button}>구직 등록</button>
@@ -81,10 +84,13 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
   const [msg, setMsg] = useState("");
 
   const list = seekers.filter((s) => s.bossId === boss.id);
-  const chosen = list.filter((s) => picked.includes(s.character.name));
-  const sum = sumRatios(chosen.map((s) => s.ratio));
+  // Has a rate and accepts a party this big (희망 인원 >= 파티 인원).
+  const selectable = (s: Seeker): s is Seeker & { clearRate: number } => s.clearRate !== null && s.partySize >= size;
+  const rated = list.filter(selectable);
+  const chosen = rated.filter((s) => picked.includes(s.character.name));
+  const sum = sumRatios(chosen.map((s) => s.clearRate));
   const ok = isClearable(sum, CLEAR_THRESHOLD);
-  const scale = Math.max(2, sum); // bar spans 0..200% (or more if the sum exceeds it)
+  const shown = shownSum(sum, CLEAR_THRESHOLD);
 
   function selectBoss(id: string) {
     setBossId(id);
@@ -97,7 +103,7 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
   async function form() {
     try {
       const r = await post("/api/party", { bossId: boss.id, members: picked });
-      setMsg(`파티 #${r.id} 편성 완료 · ${pct(r.sum)} · ${r.clearable ? "공략 가능" : "공략 불가"}`);
+      setMsg(`파티 #${r.id} 편성 완료 · ${pct(shownSum(r.sum, CLEAR_THRESHOLD))} · ${r.clearable ? "공략 가능" : "공략 불가"}`);
       setPicked([]);
       router.refresh();
     } catch (err) {
@@ -108,11 +114,10 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <BossSelect bosses={bosses} value={boss.id} onChange={selectBoss} counts={counts} />
-        <select className={field} value={size} onChange={(e) => { const n = Number(e.target.value); setSize(n); setPicked((p) => p.slice(0, n)); }}>
+        <BossSelect name="builderBossId" bosses={bosses} value={boss.id} onChange={selectBoss} counts={counts} />
+        <select name="builderSize" aria-label="파티 인원" className={field} value={size} onChange={(e) => { setSize(Number(e.target.value)); setPicked([]); }}>
           {range(boss.maxParty).map((n) => <option key={n} value={n}>{n}인 파티</option>)}
         </select>
-        <span className="text-sm text-neutral-400">컷 {boss.cut.toLocaleString()} ({boss.statBasis} 기준)</span>
       </div>
 
       {list.length === 0 ? (
@@ -120,7 +125,7 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
       ) : (
         <table className="w-full text-sm">
           <thead className="text-left text-neutral-400">
-            <tr><th className="w-8" /><th /><th>캐릭터</th><th>직업</th><th>희망 인원</th><th className="text-right">환산</th><th className="text-right">배율</th></tr>
+            <tr><th className="w-8" /><th /><th>캐릭터</th><th>직업</th><th>희망 인원</th><th className="text-right">배율</th></tr>
           </thead>
           <tbody>
             {list.map((s) => {
@@ -128,15 +133,22 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
               return (
                 <tr key={s.requestId} className="border-t border-neutral-800">
                   <td>
-                    <input type="checkbox" aria-label={`${s.character.name} 선택`} checked={on} disabled={!on && picked.length >= size} onChange={() => toggle(s.character.name)} />
+                    <input type="checkbox" name="member" value={s.character.name} aria-label={`${s.character.name} 선택`} checked={on} disabled={!selectable(s) || (!on && picked.length >= size)} onChange={() => toggle(s.character.name)} />
                   </td>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- external sprite hosts aren't in next.config images */}
-                  <td><img src={s.character.imageUrl} alt="" className="h-10 w-10 object-contain" /></td>
+                  <td>
+                    {s.character.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- external sprite hosts aren't in next.config images
+                      <img src={s.character.imageUrl} alt="" className="h-10 w-10 object-contain" />
+                    ) : (
+                      <div className="h-10 w-10 rounded bg-neutral-800" />
+                    )}
+                  </td>
                   <td>{s.character.name}</td>
                   <td>{s.character.job}</td>
                   <td>{s.partySize}인</td>
-                  <td className="text-right">{s.stat.toLocaleString()}</td>
-                  <td className="text-right">{pct(s.ratio)}</td>
+                  <td className="text-right tabular-nums">
+                    {s.clearRate === null ? <span className="text-neutral-500">배율 없음</span> : `${pct(s.clearRate)} · ${s.analytics}`}
+                  </td>
                 </tr>
               );
             })}
@@ -146,17 +158,17 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
 
       <div>
         <div className="relative h-4 rounded bg-neutral-800">
-          <div className={`h-4 rounded ${ok ? "bg-green-500" : "bg-red-500"}`} style={{ width: `${(sum / scale) * 100}%` }} />
-          <div className="absolute top-0 h-4 w-0.5 bg-neutral-100" style={{ left: `${(CLEAR_THRESHOLD / scale) * 100}%` }} title="110%" />
+          <div className={`h-4 rounded ${ok ? "bg-green-500" : "bg-red-500"}`} style={{ width: `${Math.min(sum / BAR_MAX, 1) * 100}%` }} />
+          <div className="absolute top-0 h-4 w-0.5 bg-neutral-100" style={{ left: `${(CLEAR_THRESHOLD / BAR_MAX) * 100}%` }} title="110%" />
         </div>
-        <p className="mt-1 text-sm">
-          {chosen.length}/{size}명 · 합계 {pct(sum)} ·{" "}
-          {ok ? <span className="text-green-400">공략 가능</span> : <span className="text-red-400">공략 불가 ({pct(CLEAR_THRESHOLD - sum)} 부족)</span>}
+        <p className="mt-1 break-all text-sm">
+          {chosen.length}/{size}명 · 합계 {pct(shown)} ·{" "}
+          {ok ? <span className="text-green-400">공략 가능</span> : <span className="text-red-400">공략 불가 ({pct(CLEAR_THRESHOLD - shown)} 부족)</span>}
         </p>
       </div>
 
       <div className="flex gap-2">
-        <button className={button} disabled={list.length === 0} onClick={() => setPicked(suggestParty(list, size, CLEAR_THRESHOLD).map((s) => s.character.name))}>
+        <button className={button} disabled={rated.length === 0} onClick={() => setPicked(suggestParty(rated, size, CLEAR_THRESHOLD).map((s) => s.character.name))}>
           추천 편성
         </button>
         <button className={button} disabled={chosen.length === 0} onClick={form}>파티 편성</button>

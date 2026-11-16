@@ -2,7 +2,10 @@ import Link from "next/link";
 import { listCharacters } from "@/character";
 import { listBosses } from "@/boss";
 import { listParties, listSeekers } from "@/party";
-import { bossLabel, pct } from "@/party/labels";
+import { shownSum } from "@/party/ratio";
+import { bossLabel } from "@/boss/search";
+import { pct } from "@/character/format";
+import { CLEAR_THRESHOLD } from "@/lib/types";
 import { PartyBuilder, RequestForm } from "./PartyClient";
 
 export const dynamic = "force-dynamic";
@@ -52,7 +55,7 @@ export default function PartyPage() {
               <li key={p.id} className="rounded-lg border border-neutral-800 p-3">
                 <div className="flex flex-wrap items-center gap-x-3">
                   <span className="font-semibold">{p.boss ? bossLabel(p.boss) : p.bossId}</span>
-                  <span>합계 {pct(p.sum)}</span>
+                  <span>합계 {pct(shownSum(p.sum, CLEAR_THRESHOLD))}</span>
                   <span className={p.clearable ? "text-green-400" : "text-red-400"}>{p.clearable ? "공략 가능" : "공략 불가"}</span>
                   <span className="text-xs text-neutral-500">{new Date(p.createdAt).toLocaleString("ko-KR")}</span>
                 </div>

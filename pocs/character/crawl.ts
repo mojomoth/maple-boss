@@ -13,9 +13,14 @@ export class CrawlError extends Error {
 }
 
 // Spawns the headful crawler; a human may need to click the Turnstile check in the window it opens.
-export function crawlCharacter(name: string): Promise<{ character: Character; raw: unknown }> {
+export const crawlCharacter = (name: string) => run([name], name);
+
+// Same mapping as a live crawl, from an already-saved payload (no browser).
+export const parseSample = (file: string) => run(["--from-file", file], file);
+
+function run(args: string[], name: string): Promise<{ character: Character; raw: unknown }> {
   return new Promise((resolve, reject) => {
-    execFile(PY, [SCRIPT, name], { timeout: 200_000, maxBuffer: 64 * 1024 * 1024 }, (err, stdout, stderr) => {
+    execFile(PY, [SCRIPT, ...args], { timeout: 200_000, maxBuffer: 64 * 1024 * 1024 }, (err, stdout, stderr) => {
       if (err) {
         if (err.code === 2) return reject(new CrawlError(`캐릭터를 찾을 수 없어요: ${name}`, 404));
         if (err.killed || /timeout/i.test(stderr)) return reject(new CrawlError("HIL 확인 필요/시간초과", 504));

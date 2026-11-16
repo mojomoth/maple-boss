@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Character } from "@/lib/types";
-import { formatKorean } from "@/character/format";
+import type { Character, ClearRate } from "@/lib/types";
+import { pct } from "@/character/format";
+import { formatKorean } from "@/boss/search";
 
 const num = (n: number) => n.toLocaleString("ko-KR");
 
@@ -23,11 +24,22 @@ export default function CharacterPage() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<Character | null>(null);
   const [list, setList] = useState<Character[]>([]);
+  const [rates, setRates] = useState<(ClearRate & { label: string })[]>([]);
 
   const refresh = () => fetch("/api/character").then((r) => r.json()).then(setList);
   useEffect(() => {
     refresh();
   }, []);
+  useEffect(() => {
+    if (!result) return;
+    let live = true;
+    fetch(`/api/character/rates?name=${encodeURIComponent(result.name)}`)
+      .then((r) => r.json())
+      .then((r) => live && setRates(r));
+    return () => {
+      live = false;
+    };
+  }, [result]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,6 +69,8 @@ export default function CharacterPage() {
 
       <form onSubmit={submit} className="flex gap-2">
         <input
+          id="character-name"
+          name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="캐릭터 닉네임"
@@ -90,8 +104,29 @@ export default function CharacterPage() {
             <dd>{num(result.boss300Stat)}</dd>
             <dt className="text-neutral-400">보스380 환산</dt>
             <dd>{num(result.boss380Stat)}</dd>
-            {result.source === "fixture" && <dd className="col-span-2 text-xs text-amber-400">샘플 데이터</dd>}
           </dl>
+        </section>
+      )}
+
+      {result && (
+        <section>
+          <h2 className="mb-2 font-semibold">
+            보스 배율 ({rates.length}) <span className="text-xs font-normal text-neutral-500">어려운 보스부터</span>
+          </h2>
+          {rates.length === 0 ? (
+            <p className="text-sm text-neutral-400">배율 데이터가 없어요.</p>
+          ) : (
+            <ul className="grid gap-x-6 text-sm sm:grid-cols-2">
+              {rates.map((r) => (
+                <li key={r.bossId} className="flex justify-between gap-2 border-b border-neutral-800 py-1">
+                  <span>{r.label}</span>
+                  <span className="text-right tabular-nums">
+                    {pct(r.clearRate)} <span className="text-neutral-500">· {r.analytics}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
 
@@ -105,7 +140,6 @@ export default function CharacterPage() {
                 <span className="flex-1">
                   <span className="font-medium">{c.name}</span>
                   <span className="ml-2 text-sm text-neutral-400">Lv.{c.level} {c.job} · {c.world}</span>
-                  {c.source === "fixture" && <span className="ml-2 text-xs text-amber-400">샘플</span>}
                 </span>
                 <span className="text-sm text-neutral-300">{num(c.boss300Stat)}</span>
               </button>

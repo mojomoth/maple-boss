@@ -1,0 +1,31 @@
+[
+ {
+  "date": "2026-11-16",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "custom (operator draft dark-v2)",
+  "idea": "pick a boss and the screen answers with which of your characters go, ranked by their summed clear rates",
+  "axes": "dark/grotesk-sans/chromatic-green",
+  "posture": "restrained",
+  "hero": "none, an app screen opens on its work",
+  "nav": "top bar, logo left, character add and boss search right",
+  "footer": "one quiet centred row, rate source and the PoC links",
+  "imagery": "real Nexon character sprites and the 60 local boss images",
+  "photos": [],
+  "entry": "pocs/app/page.tsx",
+  "fingerprint": "top-bar/card-grid/panel+ranked-rows/quiet-footer/dark/plex-kr",
+  "sections": [
+   "top bar",
+   "내 캐릭터 card grid",
+   "보스 정보 panel",
+   "추천 파티 ranked rows",
+   "footer"
+  ],
+  "signature": "the ranked party rows, each member real maplescouter rate summed against 110%",
+  "waived": [
+   "39b"
+  ],
+  "prompt": "Maple Boss main screen at /, operator dark-v2 draft, real DB data",
+  "mode": "build"
+ }
+]

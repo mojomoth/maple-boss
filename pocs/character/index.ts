@@ -1,7 +1,8 @@
-// Public interface of the character PoC. Owner: character agent. Party PoC imports only these.
+// Public interface of the character PoC. Party PoC imports listCharacters/getCharacter/listClearRates.
 import "server-only";
 import { db } from "@/lib/db";
-import type { Character } from "@/lib/types";
+import { resolveScouterBoss } from "@/boss";
+import type { Character, ClearRate } from "@/lib/types";
 
 db.exec(`CREATE TABLE IF NOT EXISTS characters (
   name TEXT PRIMARY KEY,
@@ -15,6 +16,14 @@ db.exec(`CREATE TABLE IF NOT EXISTS characters (
   source TEXT NOT NULL,
   fetched_at TEXT NOT NULL,
   raw TEXT
+);
+CREATE TABLE IF NOT EXISTS clear_rates (
+  character_name TEXT NOT NULL,
+  boss_id TEXT NOT NULL,
+  clear_rate REAL NOT NULL,
+  analytics TEXT NOT NULL,
+  boss_stat INTEGER NOT NULL,
+  PRIMARY KEY (character_name, boss_id)
 )`);
 
 type Row = Record<string, string | number | null>;
@@ -43,26 +52,62 @@ export function getCharacter(name: string): Character | null {
   return r ? toCharacter(r) : null;
 }
 
+type BossCut = { boss: string; difficulty: string; clearRate: number; analytics: string; bossStat: number };
+
+// Replaces the character and its clear_rates (from raw.calculatedData.bossCuts) in one transaction.
 export function upsertCharacter(c: Character, raw: unknown) {
-  db.prepare(
-    `INSERT OR REPLACE INTO characters (${COLS}, raw) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).run(c.name, c.world, c.job, c.level, c.imageUrl, c.combatPower, c.boss300Stat, c.boss380Stat, c.source, c.fetchedAt, JSON.stringify(raw));
+  const cuts: BossCut[] = (raw as { calculatedData?: { bossCuts?: BossCut[] } })?.calculatedData?.bossCuts ?? [];
+  db.exec("BEGIN");
+  try {
+    db.prepare(
+      `INSERT OR REPLACE INTO characters (${COLS}, raw) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ).run(c.name, c.world, c.job, c.level, c.imageUrl, c.combatPower, c.boss300Stat, c.boss380Stat, c.source, c.fetchedAt, JSON.stringify(raw));
+    db.prepare("DELETE FROM clear_rates WHERE character_name = ?").run(c.name);
+    const ins = db.prepare("INSERT OR REPLACE INTO clear_rates VALUES (?, ?, ?, ?, ?)");
+    for (const b of cuts) {
+      const bossId = resolveScouterBoss(b.boss, b.difficulty);
+      if (bossId) ins.run(c.name, bossId, b.clearRate, b.analytics, b.bossStat);
+      else console.warn(`clear_rates: unresolved boss ${b.difficulty} ${b.boss} (${c.name})`);
+    }
+    db.exec("COMMIT");
+  } catch (e) {
+    db.exec("ROLLBACK");
+    throw e;
+  }
 }
 
-// Obviously fake sample characters so /character and /party work without a live crawl.
-const FIXTURES: [string, string, string, number, number, number, number][] = [
-  ["샘플-아델", "스카니아", "아델", 285, 980_000_000, 128_000, 121_500],
-  ["샘플-비숍", "루나", "비숍", 270, 420_000_000, 82_000, 77_800],
-  ["샘플-나이트로드", "크로아", "나이트로드", 280, 760_000_000, 112_000, 106_300],
-  ["샘플-보우마스터", "엘리시움", "보우마스터", 265, 260_000_000, 61_000, 57_900],
-  ["샘플-메르세데스", "베라", "메르세데스", 260, 150_000_000, 44_500, 42_200],
-  ["샘플-팔라딘", "리부트", "팔라딘", 255, 90_000_000, 31_000, 29_400],
-];
+const toClearRate = (r: Row): ClearRate => ({
+  characterName: String(r.character_name),
+  bossId: String(r.boss_id),
+  clearRate: Number(r.clear_rate),
+  analytics: String(r.analytics),
+  bossStat: Number(r.boss_stat),
+});
 
-export function seedFixtures(): number {
-  const insert = db.prepare(`INSERT OR IGNORE INTO characters (${COLS}) VALUES (?, ?, ?, ?, '', ?, ?, ?, 'fixture', ?)`);
-  const now = new Date().toISOString();
-  return FIXTURES.reduce((n, f) => n + Number(insert.run(...f, now).changes), 0);
+// Hardest first (lowest clearRate).
+export function getClearRates(name: string): ClearRate[] {
+  return (db.prepare("SELECT * FROM clear_rates WHERE character_name = ? ORDER BY clear_rate").all(name) as Row[]).map(toClearRate);
 }
 
-seedFixtures(); // idempotent: never overwrites an existing row
+// All characters' rates for one boss; every boss when bossId is omitted.
+export function listClearRates(bossId?: string): ClearRate[] {
+  return (db.prepare("SELECT * FROM clear_rates WHERE ? IS NULL OR boss_id = ?").all(bossId ?? null, bossId ?? null) as Row[]).map(toClearRate);
+}
+
+// Removes the character, its clear_rates and its open party requests in one transaction. Saved parties
+// (parties/party_members) are snapshots and keep the name. Returns whether the character existed.
+export function deleteCharacter(name: string): boolean {
+  db.exec("BEGIN");
+  try {
+    db.prepare("DELETE FROM clear_rates WHERE character_name = ?").run(name);
+    // party_requests belongs to @/party (which imports this module), so it may not exist on a fresh DB.
+    if (db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'party_requests'").get())
+      db.prepare("DELETE FROM party_requests WHERE character_name = ? AND status = 'open'").run(name);
+    const { changes } = db.prepare("DELETE FROM characters WHERE name = ?").run(name);
+    db.exec("COMMIT");
+    return changes > 0;
+  } catch (e) {
+    db.exec("ROLLBACK");
+    throw e;
+  }
+}
