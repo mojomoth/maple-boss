@@ -10,11 +10,9 @@ import { PartyBuilder, RequestForm } from "./PartyClient";
 
 export const dynamic = "force-dynamic";
 
-export default function PartyPage() {
-  const characters = listCharacters();
+export default async function PartyPage() {
+  const [characters, seekers, parties] = await Promise.all([listCharacters(), listSeekers(), listParties()]);
   const bosses = listBosses();
-  const seekers = listSeekers();
-  const parties = listParties();
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
@@ -25,11 +23,11 @@ export default function PartyPage() {
         <h2 className="mb-3 text-lg font-semibold">구직 등록</h2>
         {characters.length === 0 ? (
           <p className="text-neutral-400">
-            먼저 <Link href="/character" className="underline">/character</Link> 에서 캐릭터를 등록하세요.
+            먼저 <Link href="/pocs/character" className="underline">/pocs/character</Link> 에서 캐릭터를 등록하세요.
           </p>
         ) : bosses.length === 0 ? (
           <p className="text-neutral-400">
-            보스 데이터가 없습니다. <Link href="/boss" className="underline">/boss</Link> 를 확인하세요.
+            보스 데이터가 없습니다. <Link href="/pocs/boss" className="underline">/pocs/boss</Link> 를 확인하세요.
           </p>
         ) : (
           <RequestForm characters={characters} bosses={bosses} />

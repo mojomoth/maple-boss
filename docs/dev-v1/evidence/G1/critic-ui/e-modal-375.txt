@@ -1,0 +1,11 @@
+FAIL 375px modal for 강은호: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -71..304"]}
+FAIL 375px modal for 가나다라마바: content inside the dialog  | {"dlg":"19..356","scrollW":356,"clientW":335,"overflowX":"auto","out":["div.preview 44..376","img. -71..304","p.confirm-note 44..376","div.confirm-actions 44..376","button.btn.btn--danger 216..376"]}
+FAIL 375px modal for abcdefghijkl: content inside the dialog  | {"dlg":"19..356","scrollW":369,"clientW":335,"overflowX":"auto","out":["div.preview 44..389","img. -71..304","span.preview-text 204..365","strong. 204..365","span.meta 204..365","p.confirm-note 44..389"]}
+FAIL 375px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"19..356","scrollW":561,"clientW":335,"overflowX":"auto","out":["h2. 178..417","div.preview 98..498","img. -17..358","span.preview-text 258..474","strong. 258..581","span.meta 258..581"]}
+FAIL 375px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"19..356","scrollW":356,"clientW":335,"overflowX":"auto","out":["div.preview 44..376","img. -71..304","p.confirm-note 44..376","div.confirm-actions 44..376","button.btn.btn--danger 216..376"]}
+ok   1440px modal for 강은호: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 가나다라마바: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for abcdefghijkl: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+# 5 failed

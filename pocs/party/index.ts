@@ -1,30 +1,9 @@
 import "server-only";
-import { db } from "@/lib/db";
-import { listCharacters, listClearRates } from "@/character";
+import { query, tx } from "@/lib/db";
+import { getCharacter, listCharacters, listClearRates } from "@/character";
 import { getBoss, listBosses } from "@/boss";
 import { CLEAR_THRESHOLD, type Boss, type Character } from "@/lib/types";
 import { isClearable, sumRatios } from "./ratio";
-
-db.exec(`
-CREATE TABLE IF NOT EXISTS party_requests (
-  id INTEGER PRIMARY KEY,
-  character_name TEXT NOT NULL,
-  boss_id TEXT NOT NULL,
-  party_size INTEGER NOT NULL,
-  status TEXT NOT NULL DEFAULT 'open',
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
-);
-CREATE TABLE IF NOT EXISTS parties (
-  id INTEGER PRIMARY KEY,
-  boss_id TEXT NOT NULL,
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
-);
-CREATE TABLE IF NOT EXISTS party_members (
-  party_id INTEGER NOT NULL REFERENCES parties(id) ON DELETE CASCADE,
-  character_name TEXT NOT NULL,
-  ratio REAL NOT NULL,
-  PRIMARY KEY (party_id, character_name)
-);`);
 
 export interface Seeker {
   requestId: number;
@@ -45,30 +24,38 @@ export interface FormedParty {
   clearable: boolean;
 }
 
+// Input the user can fix (400); anything else is a server error.
+export class PartyError extends Error {}
+
 const fail = (msg: string): never => {
-  throw new Error(msg);
+  throw new PartyError(msg);
 };
 
-export function createRequest(characterName: string, bossId: string, partySize: number) {
-  if (!listCharacters().some((c) => c.name === characterName)) fail("등록되지 않은 캐릭터입니다.");
+export async function createRequest(characterName: string, bossId: string, partySize: number) {
+  if (!(await getCharacter(characterName))) fail("등록되지 않은 캐릭터입니다.");
   const boss = getBoss(bossId) ?? fail("존재하지 않는 보스입니다.");
   if (!Number.isInteger(partySize) || partySize < 1 || partySize > boss.maxParty)
     fail(`인원은 1~${boss.maxParty}명이어야 합니다.`);
-  // One open request per character per boss: re-registering updates the size.
-  const upd = db
-    .prepare("UPDATE party_requests SET party_size = ? WHERE character_name = ? AND boss_id = ? AND status = 'open'")
-    .run(partySize, characterName, bossId);
-  if (upd.changes === 0)
-    db.prepare("INSERT INTO party_requests (character_name, boss_id, party_size) VALUES (?, ?, ?)").run(characterName, bossId, partySize);
+  // One open request per character per boss (unique index): re-registering updates the size.
+  await query(
+    `INSERT INTO party_requests (character_name, boss_id, party_size) VALUES ($1, $2, $3)
+     ON CONFLICT (character_name, boss_id) WHERE status = 'open' DO UPDATE SET party_size = EXCLUDED.party_size`,
+    [characterName, bossId, partySize],
+  );
 }
 
-export function listSeekers(bossId?: string): Seeker[] {
-  const chars = new Map(listCharacters().map((c) => [c.name, c]));
+export async function listSeekers(bossId?: string): Promise<Seeker[]> {
+  const [characters, clearRates, rows] = await Promise.all([
+    listCharacters(),
+    listClearRates(bossId),
+    query<{ id: number; character_name: string; boss_id: string; party_size: number }>(
+      "SELECT id, character_name, boss_id, party_size FROM party_requests WHERE status = 'open' AND ($1::text IS NULL OR boss_id = $1) ORDER BY id",
+      [bossId ?? null],
+    ),
+  ]);
+  const chars = new Map(characters.map((c) => [c.name, c]));
   const bosses = new Map(listBosses().map((b) => [b.id, b]));
-  const rates = new Map(listClearRates(bossId).map((r) => [`${r.characterName}\n${r.bossId}`, r]));
-  const rows = db
-    .prepare("SELECT id, character_name, boss_id, party_size FROM party_requests WHERE status = 'open' AND (? IS NULL OR boss_id = ?) ORDER BY id")
-    .all(bossId ?? null, bossId ?? null) as { id: number; character_name: string; boss_id: string; party_size: number }[];
+  const rates = new Map(clearRates.map((r) => [`${r.characterName}\n${r.bossId}`, r]));
   return rows.flatMap((r) => {
     const character = chars.get(r.character_name);
     if (!character || !bosses.has(r.boss_id)) return []; // character/boss removed since the request was made
@@ -84,11 +71,11 @@ export function listSeekers(bossId?: string): Seeker[] {
   });
 }
 
-export function formParty(bossId: string, memberNames: string[]) {
+export async function formParty(bossId: string, memberNames: string[]) {
   const boss = getBoss(bossId) ?? fail("존재하지 않는 보스입니다.");
   const names = [...new Set(memberNames)];
   if (names.length < 1 || names.length > boss.maxParty) fail(`파티 인원은 1~${boss.maxParty}명이어야 합니다.`);
-  const seekers = new Map(listSeekers(bossId).map((s) => [s.character.name, s]));
+  const seekers = new Map((await listSeekers(bossId)).map((s) => [s.character.name, s]));
   const missing = names.filter((n) => !seekers.has(n));
   if (missing.length) fail(`이 보스에 구직 중이 아닌 캐릭터: ${missing.join(", ")}`);
   const noRate = names.filter((n) => seekers.get(n)!.clearRate === null);
@@ -97,31 +84,37 @@ export function formParty(bossId: string, memberNames: string[]) {
   if (tooBig.length) fail(`희망 인원보다 큰 파티입니다: ${tooBig.join(", ")}`);
 
   const ratios = names.map((n) => seekers.get(n)!.clearRate!); // snapshot at formation
-  db.exec("BEGIN");
-  try {
-    const partyId = Number(db.prepare("INSERT INTO parties (boss_id) VALUES (?)").run(bossId).lastInsertRowid);
-    const addMember = db.prepare("INSERT INTO party_members (party_id, character_name, ratio) VALUES (?, ?, ?)");
-    const close = db.prepare("UPDATE party_requests SET status = 'closed' WHERE character_name = ? AND boss_id = ? AND status = 'open'");
-    names.forEach((n, i) => {
-      addMember.run(partyId, n, ratios[i]);
-      close.run(n, bossId);
-    });
-    db.exec("COMMIT");
-    const sum = sumRatios(ratios);
-    return { id: partyId, sum, clearable: isClearable(sum, CLEAR_THRESHOLD) };
-  } catch (e) {
-    db.exec("ROLLBACK");
-    throw e;
-  }
+  const id = await tx(async (q) => {
+    // Close the requests first. If another party took a member since the check above, that request is no longer
+    // open (Postgres re-reads the row after the other transaction commits), so this party rolls back.
+    const closed = await q<{ character_name: string }>(
+      "UPDATE party_requests SET status = 'closed' WHERE boss_id = $1 AND character_name = ANY($2::text[]) AND status = 'open' RETURNING character_name",
+      [bossId, names],
+    );
+    const taken = names.filter((n) => !closed.some((r) => r.character_name === n));
+    if (taken.length) fail(`이미 다른 파티에 편성된 캐릭터: ${taken.join(", ")}`);
+    const [{ id }] = await q<{ id: number }>("INSERT INTO parties (boss_id) VALUES ($1) RETURNING id", [bossId]);
+    await q("INSERT INTO party_members (party_id, character_name, ratio) SELECT $1, * FROM unnest($2::text[], $3::float8[])", [id, names, ratios]);
+    return id;
+  });
+  const sum = sumRatios(ratios);
+  return { id, sum, clearable: isClearable(sum, CLEAR_THRESHOLD) };
 }
 
-export function listParties(): FormedParty[] {
+export async function listParties(): Promise<FormedParty[]> {
   const bosses = new Map(listBosses().map((b) => [b.id, b]));
-  const parties = db.prepare("SELECT id, boss_id, created_at FROM parties ORDER BY id DESC").all() as { id: number; boss_id: string; created_at: string }[];
-  const members = db.prepare("SELECT party_id, character_name, ratio FROM party_members ORDER BY ratio DESC").all() as { party_id: number; character_name: string; ratio: number }[];
+  const [parties, members] = await Promise.all([
+    query<{ id: number; boss_id: string; created_at: Date | string }>("SELECT id, boss_id, created_at FROM parties ORDER BY id DESC"),
+    query<{ party_id: number; character_name: string; ratio: number }>("SELECT party_id, character_name, ratio FROM party_members ORDER BY ratio DESC"),
+  ]);
   return parties.map((p) => {
     const ms = members.filter((m) => m.party_id === p.id).map((m) => ({ name: m.character_name, ratio: m.ratio }));
     const sum = sumRatios(ms.map((m) => m.ratio));
-    return { id: p.id, bossId: p.boss_id, boss: bosses.get(p.boss_id) ?? null, createdAt: p.created_at, members: ms, sum, clearable: isClearable(sum, CLEAR_THRESHOLD) };
+    return { id: p.id, bossId: p.boss_id, boss: bosses.get(p.boss_id) ?? null, createdAt: new Date(p.created_at).toISOString(), members: ms, sum, clearable: isClearable(sum, CLEAR_THRESHOLD) };
   });
+}
+
+// Removes a saved party and its members (ON DELETE CASCADE). Returns whether it existed.
+export async function deleteParty(id: number): Promise<boolean> {
+  return (await query("DELETE FROM parties WHERE id = $1 RETURNING id", [id])).length > 0;
 }

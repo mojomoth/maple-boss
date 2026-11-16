@@ -1,0 +1,59 @@
+# G1 tests, 2026-11-16T15:41:30Z, node v24.10.0
+
+$ npm test
+
+> pocs@0.1.0 test
+> node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs "**/*.test.ts"
+
+✔ toImportUrl trims the store to the payload parse.ts accepts, field for field (3.021083ms)
+✔ toImportUrl throws without a maplescouter result (0.280959ms)
+✔ the bookmarklet navigates to /import with the trimmed payload (2.99ms)
+✔ the bookmarklet stays on the page and explains itself when there is nothing to send (0.50825ms)
+✔ scouterUrl encodes the nickname (0.073209ms)
+✔ maplescouter bossCuts resolve 1:1 (0.708583ms)
+✔ seed integrity (0.157458ms)
+✔ search (1.060042ms)
+✔ formatKorean (0.197ms)
+✔ pct (33.145ms)
+✔ every accepted shape maps to the same character and trimmed payload (7.727125ms)
+✔ relative character_image gets the maplescouter origin (0.61ms)
+✔ rejects the maplescouter placeholder with a clear message (0.187792ms)
+✔ rejects malformed input (1.004916ms)
+✔ accepts the edges (0.173958ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ driver (1.09ms)
+✔ seeds load once into an empty database (16.511666ms)
+✔ upsert replaces the character and all its rates (3.729709ms)
+✔ party requests: one open request per character and boss (3.149083ms)
+✔ formParty sums the rates, saves the party and closes the requests (7.749166ms)
+✔ formParty rejects double booking inside the transaction (4.863291ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (1.637ms)
+✔ seeds do not come back after everyone is deleted (1.864584ms)
+✔ threshold: exactly 110% clears, even with float error (0.454625ms)
+✔ shownSum never displays an unclearable sum as 110.0% (28.2775ms)
+✔ suggestParty returns the smallest clearable set, strongest first (0.522208ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.082ms)
+✔ suggestParty does not mutate input (0.069084ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (0.619708ms)
+✔ rankParties: a solo-clearable member ranks first (0.087958ms)
+✔ rankParties: size limit, result limit, empty pool (0.071459ms)
+✔ rankParties does not mutate input (0.095084ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1170.293959
+exit=0
+
+$ npx tsc --noEmit
+exit=0
+
+$ npm run lint
+
+> pocs@0.1.0 lint
+> eslint
+
+exit=0

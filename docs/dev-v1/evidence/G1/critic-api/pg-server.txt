@@ -1,0 +1,21 @@
+# two production servers, one fresh Postgres, simultaneous first requests (schema + seed race)
+b1 200
+a1 200
+b4 200
+b3 200
+b2 200
+a3 200
+a4 200
+a2 200
+a1 ['강은호', '아델', '고딩']
+b1 ['강은호', '아델', '고딩']
+a4 ['강은호', '아델', '고딩']
+b4 ['강은호', '아델', '고딩']
+characters|3
+clear_rates|180
+meta|1
+health 3911: {"ok":true,"db":"postgres","persistent":true}
+# npm run smoke against the pg-backed server
+# smoke http://localhost:3911  temp characters: 아델smokefxwun, 고딩smokefxwun
+ok   GET /api/health -> { ok, db, persistent }  200 {"ok":true,"db":"postgres","persistent":true}
+# all passed

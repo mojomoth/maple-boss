@@ -1,0 +1,18 @@
+$ node -v: v24.10.0
+$ npm test
+✔ suggestParty returns the smallest clearable set, strongest first (0.522833ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.090541ms)
+✔ suggestParty does not mutate input (0.072625ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (0.698ms)
+✔ rankParties: a solo-clearable member ranks first (0.087083ms)
+✔ rankParties: size limit, result limit, empty pool (0.071292ms)
+✔ rankParties does not mutate input (0.092209ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1361.680292
+npm test exit=0

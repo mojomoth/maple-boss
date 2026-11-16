@@ -1,0 +1,13 @@
+import { BASE, launch } from "./lib.mjs";
+const browser = await launch();
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: "ko-KR" });
+const p = await ctx.newPage();
+await p.route("**/api/character", (r) => r.request().method() === "POST" ? r.fulfill({ status: 501, contentType: "application/json", body: '{"error":"x"}' }) : r.continue());
+await p.goto(BASE + "/", { waitUntil: "commit" });
+await p.locator("#character-name").waitFor({ state: "attached" });
+await p.locator("#character-name").fill("아무개");
+await p.waitForTimeout(3000);
+console.log("nickname field after hydration:", JSON.stringify(await p.inputValue("#character-name")));
+await p.locator("button", { hasText: "추가" }).click(); await p.waitForTimeout(800);
+console.log("after 추가: msg=", JSON.stringify(await p.locator("#add-msg").innerText()), "guide=", await p.locator("section.guide h2").innerText().catch(() => "(none)"));
+await browser.close();

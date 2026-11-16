@@ -1,0 +1,17 @@
+ok   1440 / : 200, no errors, no sideways scroll, images ok  | {"s":200,"errs":[],"scrollW":1440,"wide":[],"broken":[]}
+ok   1440 / : sections present (내 캐릭터, 보스 정보, 추천 파티)
+ok   1440 / : boss search '익스트림 카링' shows the boss and recommended parties  | boss=익스트림 카링 parties=3 errs= scrollW=1440
+ok   1440 /pocs/party : 200, no errors, no sideways scroll, images ok  | {"s":200,"errs":[],"scrollW":1440,"wide":[],"broken":[]}
+ok   1440 /pocs/party : controls render (selects, 구직 등록, 파티 편성)  | selects=5
+ok   1440 /import (no payload): Korean error + 메인 화면으로 link, no sideways scroll  | {"s":200,"errs":[],"scrollW":1440,"wide":[]}
+ok   1440 /import#broken: '깨져 있어요' message  |  / 결과 페이지에서 북마크를 다시 누르거나, 메인 화면으로 돌아가 다시 시도해 주세요. /  / 메인 화면으로
+ok   375 / : 200, no errors, no sideways scroll, images ok  | {"s":200,"errs":[],"scrollW":375,"wide":[],"broken":[]}
+ok   375 / : sections present (내 캐릭터, 보스 정보, 추천 파티)
+ok   375 / : boss search '익스트림 카링' shows the boss and recommended parties  | boss=익스트림 카링 parties=3 errs= scrollW=375
+ok   375 /pocs/party : 200, no errors, no sideways scroll, images ok  | {"s":200,"errs":[],"scrollW":375,"wide":[],"broken":[]}
+ok   375 /pocs/party : controls render (selects, 구직 등록, 파티 편성)  | selects=5
+ok   375 /import (no payload): Korean error + 메인 화면으로 link, no sideways scroll  | {"s":200,"errs":[],"scrollW":375,"wide":[]}
+ok   375 /import#broken: '깨져 있어요' message  |  / 결과 페이지에서 북마크를 다시 누르거나, 메인 화면으로 돌아가 다시 시도해 주세요. /  / 메인 화면으로
+ok   375 /import#<valid payload>: saves, lands on / with the new card  | url=http://localhost:3000/ card=1 errs=
+cleanup 재검증가져오기: 204
+# all passed

@@ -1,0 +1,26 @@
+# /import on the dev server (next dev :3000, React StrictMode runs effects twice): one POST, no 'empty' message, lands on / with the card, 2026-11-16T15:40:50Z
+# ad hoc script (not in the repo):
+#   // /import on the dev server (Turbopack dev, React StrictMode): one POST, no "empty" flash, lands on / with the card.
+#   import { readFileSync } from "node:fs";
+#   import { chromium } from "/Users/jeongyounglee/work/repo/maple-boss/pocs/node_modules/playwright-core/index.mjs";
+#   const BASE = "http://localhost:3000";
+#   const name = `아델dev${Date.now().toString(36).slice(-5)}`;
+#   const seed = JSON.parse(readFileSync("/Users/jeongyounglee/work/repo/maple-boss/pocs/seed/아델.json", "utf8"));
+#   seed.info.character_name = name;
+#   const b = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+#   const p = await b.newPage();
+#   const posts = []; const texts = []; const errs = [];
+#   p.on("request", (r) => r.method() === "POST" && r.url().endsWith("/api/character/import") && posts.push(r.url()));
+#   p.on("pageerror", (e) => errs.push(e.message));
+#   await p.exposeFunction("seen", (t) => texts.push(t));
+#   await p.addInitScript(() => new MutationObserver(() => { const t = document.querySelector(".empty-title")?.textContent; if (t) window.seen(t); }).observe(document, { subtree: true, childList: true, characterData: true }));
+#   await p.goto(`${BASE}/import#${encodeURIComponent(JSON.stringify(seed))}`);
+#   await p.waitForURL(BASE + "/", { timeout: 60000 });
+#   await p.locator(".card-name", { hasText: name }).waitFor({ timeout: 30000 });
+#   console.log("dev /import -> / with card", name, "| POSTs:", posts.length, "| messages seen:", [...new Set(texts)].join(" / "), "| pageerrors:", errs.length);
+#   const r = await fetch(`${BASE}/api/character/${encodeURIComponent(name)}`, { method: "DELETE" });
+#   console.log("cleanup DELETE", r.status);
+#   await b.close();
+dev /import -> / with card 아델devfkg35 | POSTs: 1 | messages seen: 캐릭터를 가져오는 중이에요… / ‘아델devfkg35’ 캐릭터를 등록했어요. 메인 화면으로 이동해요. | pageerrors: 0
+cleanup DELETE 204
+exit=0

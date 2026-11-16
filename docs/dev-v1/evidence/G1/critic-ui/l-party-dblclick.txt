@@ -1,0 +1,3 @@
+     POST /api/party statuses: 201,400; parties saved for 검증더블ct3: 1; message: 이 보스에 구직 중이 아닌 캐릭터: 검증더블ct3
+FAIL double-click 파티 편성: one party, success message kept  | 이 보스에 구직 중이 아닌 캐릭터: 검증더블ct3
+# 1 failed

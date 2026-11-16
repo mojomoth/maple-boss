@@ -1,0 +1,6 @@
+round 0: PartyError:이미 다른 파티에 편성된 캐릭터: A | PartyError:이미 다른 파티에 편성된 캐릭터: A | PartyError:이미 다른 파티에 편성된 캐릭터: D | ok  -> parties 1, max bookings per member 1
+round 1: ok | PartyError:이미 다른 파티에 편성된 캐릭터: A | PartyError:이미 다른 파티에 편성된 캐릭터: B | PartyError:이미 다른 파티에 편성된 캐릭터: A  -> parties 1, max bookings per member 1
+round 2: ok | PartyError:이미 다른 파티에 편성된 캐릭터: A | PartyError:이미 다른 파티에 편성된 캐릭터: B | PartyError:이미 다른 파티에 편성된 캐릭터: A  -> parties 1, max bookings per member 1
+round 3: ok | PartyError:이미 다른 파티에 편성된 캐릭터: A | PartyError:이미 다른 파티에 편성된 캐릭터: B | PartyError:이미 다른 파티에 편성된 캐릭터: A  -> parties 1, max bookings per member 1
+round 4: PartyError:이미 다른 파티에 편성된 캐릭터: A, B | ok | ok | PartyError:이미 다른 파티에 편성된 캐릭터: A, D  -> parties 2, max bookings per member 1
+outcomes over 30 rounds x 10 concurrent formParty: {"ok":48,"PartyError":252} rounds with a double-booked member: 0

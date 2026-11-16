@@ -1,15 +1,14 @@
 """Crawl one character from maplescouter.com (human-in-the-loop Turnstile).
 
-usage: crawl.py <name>               # opens a visible browser; a human clicks the check
-       crawl.py --from-file <path>   # parse a saved character-store / searchResult JSON
-stdout: {"character": {...}, "raw": <state.searchResult>}
+usage:  crawl.py <name>   # opens a visible browser; a human clicks the check
+stdout: the raw state.searchResult JSON (mapped to a Character by character/parse.ts),
+        also saved to docs/research/samples/<name>.json
 exit:   0 ok, 1 error/timeout, 2 character not found
 """
 
 import json
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
@@ -20,26 +19,6 @@ TIMEOUT_S = 180
 HIL_TEXT = "사람 확인이 필요해요"
 # shortcut: guessed not-found copy, never observed live; update after a real miss is seen.
 NOT_FOUND_TEXTS = ("캐릭터를 찾을 수 없", "존재하지 않는 캐릭터", "검색 결과가 없")
-
-
-def to_character(sr: dict) -> dict:
-    info = sr["userApiData"]["info"]
-    calc = sr["calculatedData"]
-    image = info.get("character_image") or ""
-    if image.startswith("/"):
-        image = SITE + image
-    return {
-        "name": info["character_name"],
-        "world": info["world_name"],
-        "job": info["character_class"],
-        "level": int(info["character_level"]),
-        "imageUrl": image,
-        "combatPower": int(calc["combatPower"]),
-        "boss300Stat": int(calc["boss300_stat"]),
-        "boss380Stat": int(calc["boss380_stat"]),
-        "source": "maplescouter",
-        "fetchedAt": datetime.now(timezone.utc).isoformat(),
-    }
 
 
 def search_result(store: dict) -> dict:
@@ -99,16 +78,14 @@ def crawl(name: str) -> dict:
 
 
 def main(argv: list[str]) -> None:
-    if len(argv) == 2 and argv[0] == "--from-file":
-        sr = search_result(json.loads(Path(argv[1]).read_text()))
-    elif len(argv) == 1:
-        sr = crawl(argv[0])
-        SAMPLES.mkdir(parents=True, exist_ok=True)
-        (SAMPLES / f"{argv[0]}.json").write_text(json.dumps(sr, ensure_ascii=False))
-    else:
+    if len(argv) != 1:
         print(__doc__, file=sys.stderr)
         sys.exit(1)
-    print(json.dumps({"character": to_character(sr), "raw": sr}, ensure_ascii=False))
+    sr = crawl(argv[0])
+    out = json.dumps(sr, ensure_ascii=False)
+    SAMPLES.mkdir(parents=True, exist_ok=True)
+    (SAMPLES / f"{argv[0]}.json").write_text(out)
+    print(out)
 
 
 if __name__ == "__main__":

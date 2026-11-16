@@ -1,0 +1,41 @@
+✔ driver (0.711834ms)
+✔ seeds load once into an empty database (14.228708ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ upsert replaces the character and all its rates (3.693542ms)
+✔ party requests: one open request per character and boss (24.266709ms)
+✔ formParty sums the rates, saves the party and closes the requests (7.677209ms)
+✖ formParty rejects double booking inside the transaction (25.544666ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (3.285667ms)
+✔ seeds do not come back after everyone is deleted (2.750958ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 236.3335
+
+✖ failing tests:
+
+test at lib/db.test.ts:99:1
+✖ formParty rejects double booking inside the transaction (25.544666ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'rejected'
+  - 'fulfilled'
+  
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'rejected',
+    expected: 'fulfilled',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+ℹ pass 8 ℹ fail 0 
+ℹ pass 8 ℹ fail 0 
+ℹ pass 7 ℹ fail 1 
+ℹ pass 8 ℹ fail 0 
+ℹ pass 8 ℹ fail 0 
+ℹ pass 8 ℹ fail 0 

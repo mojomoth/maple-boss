@@ -1,0 +1,41 @@
+ok   import 검증정확hhm (1.1) -> 201  | 201
+ok   import 검증미달hhm (1.0999) -> 201  | 201
+ok   import 검증칠hhm (0.7) -> 201  | 201
+ok   import 검증사hhm (0.4) -> 201  | 201
+ok   import 검증부족hhm (0.3996) -> 201  | 201
+ok   F4 / extreme-kaling: 1순위 is the exact-110% solo party  | 1순위 가장 추천 검증정확hhm 아델 합계 110.0% 1인 파티
+ok   F4: 109.99% solo is not offered as a 1인 party
+ok   /pocs/character: click 강은호 -> detail (Lv, 직업, 월드, 전투력, 환산)  | 강은호 레벨 / 직업 Lv.299 칼리 월드 스카니아 전투력 23억 6432만 보스300 환산 152,715 보스380 환산 153,521
+ok   /pocs/character: 60 rates with labels, hardest first  | 보스 배율 (60) 어려운 보스부터 rows=60 first=익스트림 카링 93.5% · 솔플 최소컷
+ok   /pocs/character: keyboard Enter opens imported char, rate 110.0%  | 익스트림 카링 110.0% · 검증
+ok   /pocs/character 501: alert + maplescouter link  | 이 서버에서는 닉네임으로 바로 불러올 수 없어요. maplescouter 결과 페이지에서 가져와 주세요.
+ok   /pocs/boss q="카링"  | groups=카링 rows=5 이지,노말,하드,익스트림,데스티니
+ok   /pocs/boss q="노말 카링"  | groups=카링 rows=1 노말
+ok   /pocs/boss q="카링 노말"  | groups=카링 rows=1 노말
+ok   /pocs/boss q="검은마법사"  | groups=검은 마법사 rows=3 하드,익스트림,챔피언
+ok   /pocs/boss q="가엔슬"  | groups=가디언 엔젤 슬라임 rows=2 노말,카오스
+ok   /pocs/boss q="extreme-black"  | groups=검은 마법사 rows=1 익스트림
+ok   /pocs/boss no match message
+ok   /pocs/boss row has image, Lv, HP, 방어율, 포스, 최대 인원  | 노말 285 1171조 7000억 380% 어센틱 330 6인 방어율 380
+ok   /pocs/party 구직 등록 검증칠hhm 2인  | 검증칠hhm → 익스트림 카링 2인 구직 등록 완료
+ok   /pocs/party 구직 등록 검증부족hhm 2인  | 검증부족hhm → 익스트림 카링 2인 구직 등록 완료
+ok   /pocs/party 구직 등록 검증사hhm 2인  | 검증사hhm → 익스트림 카링 2인 구직 등록 완료
+FAIL builder boss option shows 구직 3명  | 익스트림 카링 (최대 6인) · 구직 4명
+ok   builder 0.7+0.3996: 109.9% 공략 불가 (0.1% 부족)  | 2/2명 · 합계 109.9% · 공략 불가 (0.1% 부족)
+ok   third checkbox disabled at size 2
+ok   builder 0.7+0.4 (float 1.0999999999999999): 110.0% 공략 가능  | 2/2명 · 합계 110.0% · 공략 가능
+ok   파티 편성 -> message with 110.0% 공략 가능  | 파티 #48 편성 완료 · 110.0% · 공략 가능
+ok   saved list top: 익스트림 카링 합계 110.0% 공략 가능 + members  | 익스트림 카링 합계 110.0% 공략 가능 2026. 11. 17. 오전 12:46:24 검증칠hhm (70.0%) · 검증사hhm (40.0%)
+ok   formed members' requests closed (only 1 seeker left)  | 1
+ok   unclearable party saved with 39.9% 공략 불가  | 파티 #49 편성 완료 · 39.9% · 공략 불가
+ok   saved list shows 공략 불가 verdict  | 익스트림 카링 합계 39.9% 공략 불가 2026. 11. 17. 오전 12:46:25 검증부족hhm (40.0%)
+ok   no page errors
+ok   cleanup party 48
+ok   cleanup party 49
+ok   cleanup 검증정확hhm
+ok   cleanup 검증미달hhm
+ok   cleanup 검증칠hhm
+ok   cleanup 검증사hhm
+ok   cleanup 검증부족hhm
+# 1 failed
+# note: '구직 4명' = my 3 + 1 from a concurrently running critic (request list was empty before and after this run)

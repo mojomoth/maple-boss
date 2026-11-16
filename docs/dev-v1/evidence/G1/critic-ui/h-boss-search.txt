@@ -1,0 +1,7 @@
+ok   fill exact label '노말 카링' (auto-submit, no Enter) -> 노말 카링 shown, field says 노말 카링  | {"url":"/?boss=normal-kaling","badge":"노말","name":"카링","field":"노말 카링","focus":"boss-q","navs":["/?boss=extreme-kaling&q=노말+카링&_rsc=2Md0sTUZcnjCijMr"]}
+ok   type '노말 카링' key by key, no Enter -> 노말 카링 shown, field says 노말 카링  | {"url":"/?boss=normal-kaling","badge":"노말","name":"카링","field":"노말 카링","focus":"boss-q","navs":["/?boss=extreme-kaling&q=노말+카링&_rsc=2Md0sTUZcnjCijMr"]}
+ok   type '노말 카링' key by key, then Enter -> 노말 카링 shown, field says 노말 카링  | {"url":"/?boss=normal-kaling","badge":"노말","name":"카링","field":"노말 카링","focus":"boss-q","navs":["/?boss=extreme-kaling&q=노말+카링&_rsc=2Md0sTUZcnjCijMr","/?boss=extreme-kaling&q=노말+카링&_rsc=2Md0sTUZcnjCijMr"]}
+ok   fill '카링 노말' (not a label) + Enter -> 노말 카링 shown, field says 노말 카링  | {"url":"/?boss=normal-kaling","badge":"노말","name":"카링","field":"노말 카링","focus":"boss-q","navs":["/?boss=extreme-kaling&q=카링+노말&_rsc=2Md0sTUZcnjCijMr"]}
+ok   miss keeps previous boss, shows message, field keeps the typed text  | {"url":"/?boss=normal-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4","badge":"노말","name":"카링","field":"없는보스","focus":"boss-q"}
+     search for the boss already shown: {"url":"/?boss=extreme-kaling&q=%EC%B9%B4%EB%A7%81+%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%A6%BC","badge":"익스트림","name":"카링","field":"카링 익스트림","focus":"boss-q"}
+# all passed

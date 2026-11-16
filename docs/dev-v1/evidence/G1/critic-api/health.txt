@@ -1,0 +1,25 @@
+# MAPLE_DB=memory
+health: {"ok":true,"db":"pglite","persistent":false}
+# VERCEL=1 MAPLE_DB=/tmp/critic-vercel-pglite (Vercel-like: crawler off, /tmp storage)
+health: {"ok":true,"db":"pglite","persistent":false}
+POST /api/character {name:아델}: {"error":"이 서버에서는 닉네임으로 바로 불러올 수 없어요. maplescouter 결과 페이지에서 가져와 주세요.","importUrl":"https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8"} [501]
+POST /api/character {name:새캐릭} : {"error":"이 서버에서는 닉네임으로 바로 불러올 수 없어요. maplescouter 결과 페이지에서 가져와 주세요.","importUrl":"https://maplescouter.com/ko/result?name=%EC%83%88%20%EC%BA%90%EB%A6%AD"} [501]
+characters: ['강은호', '아델', '고딩']
+# DATABASE_URL unreachable (local, refused)
+health: {"ok":false,"db":"postgres","persistent":true,"error":"저장소에 연결하지 못했어요."} [503]
+GET /api/character: {"error":"캐릭터 목록을 불러오지 못했어요."} [500]
+GET /api/character/rates?name=a: {"error":"배율을 불러오지 못했어요."} [500]
+GET /api/party: {"error":"파티 목록을 불러오지 못했어요."} [500]
+GET /api/party/requests: {"error":"구직 목록을 불러오지 못했어요."} [500]
+POST import: {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."} [500]
+POST requests: {"error":"구직을 등록하지 못했어요."} [500]
+POST party: {"error":"파티를 저장하지 못했어요."} [500]
+DELETE char: {"error":"캐릭터를 삭제하지 못했어요."} [500]
+DELETE party: {"error":"파티를 삭제하지 못했어요."} [500]
+POST /api/character: {"error":"캐릭터를 저장하지 못했어요."} [500]
+page /: 500 leaks(ECONNREFUSED|***|stack): 0
+page /pocs/party: 500 leaks(ECONNREFUSED|***|stack): 0
+page /pocs/character: 200 leaks(ECONNREFUSED|***|stack): 0
+server log mentions password? 0
+# DATABASE_URL remote host (TLS verify-full path)
+health: {"ok":false,"db":"postgres","persistent":true,"error":"저장소에 연결하지 못했어요."} [503]

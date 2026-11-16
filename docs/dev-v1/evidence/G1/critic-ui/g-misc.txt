@@ -1,0 +1,15 @@
+ok   /pocs/party builder table at 375: no page overflow  | 375
+ok   /pocs/character detail at 375: no page overflow  | 375
+FAIL / boss search '노말 카링' + Enter: 노말 카링 shown with stats; URL clean; focus kept  | http://localhost:3000/?boss=extreme-kaling&q=%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%A6%BC+%EC%B9%B4%EB%A7%81 focus=boss-q 레벨 285 HP 1경 6707조 방어율 380% 포스 어센틱 480 최대 인원 6명
+ok   boss image loads
+FAIL / boss search miss: Korean message + aria-invalid, previous boss kept  | ‘없는보스’에 맞는 보스가 없어요. 목록에서 골라 주세요.
+ok   / alias search '검은마법사' resolves  | 하드
+검은 마법사
+ok   exact label input auto-submits  | http://localhost:3000/?boss=extreme-kaling
+ok   footer link 캐릭터 등록 -> /pocs/character
+ok   footer link 보스 조회 -> /pocs/boss
+ok   footer link 파티 편성 -> /pocs/party
+ok   no page errors
+ok   cleanup 가나다라마x
+ok   cleanup 검증표xkp
+# 2 failed

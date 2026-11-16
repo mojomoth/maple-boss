@@ -1,16 +1,25 @@
-import { createRequest, listSeekers } from "@/party";
+import { createRequest, listSeekers, PartyError } from "@/party";
 
-export function GET(req: Request) {
-  return Response.json(listSeekers(new URL(req.url).searchParams.get("bossId") ?? undefined));
+// GET ?bossId= (optional) -> open requests as Seeker[]
+export async function GET(req: Request) {
+  try {
+    return Response.json(await listSeekers(new URL(req.url).searchParams.get("bossId") || undefined));
+  } catch (e) {
+    console.error("GET /api/party/requests:", e);
+    return Response.json({ error: "구직 목록을 불러오지 못했어요." }, { status: 500 });
+  }
 }
 
-// body: { characterName, bossId, partySize }
+// body: { characterName, bossId, partySize } -> 201
 export async function POST(req: Request) {
   try {
-    const b = await req.json();
-    createRequest(String(b.characterName), String(b.bossId), Number(b.partySize));
+    const b = await req.json().catch(() => null);
+    if (!b || typeof b !== "object") throw new PartyError("요청 본문이 JSON 객체가 아니에요.");
+    await createRequest(String(b.characterName), String(b.bossId), Number(b.partySize));
     return Response.json({ ok: true }, { status: 201 });
   } catch (e) {
-    return Response.json({ error: (e as Error).message }, { status: 400 });
+    if (e instanceof PartyError) return Response.json({ error: e.message }, { status: 400 });
+    console.error("POST /api/party/requests:", e);
+    return Response.json({ error: "구직을 등록하지 못했어요." }, { status: 500 });
   }
 }

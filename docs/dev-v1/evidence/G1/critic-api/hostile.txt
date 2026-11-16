@@ -1,0 +1,108 @@
+[import] A 0.7 kaling-ext -> 201 {"name":"crtriz1A","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] B 0.4 kaling-ext -> 201 {"name":"crtriz1B","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] C 1.1 solo kaling-ext -> 201 {"name":"crtriz1C","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] D 1.0999 kaling-ext -> 201 {"name":"crtriz1D","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1A" extreme-kaling size=2 -> 201 {"ok":true}
+[request] "crtriz1B" extreme-kaling size=2 -> 201 {"ok":true}
+[request] "crtriz1C" extreme-kaling size=2 -> 201 {"ok":true}
+[request] "crtriz1D" extreme-kaling size=2 -> 201 {"ok":true}
+[party] 0.7+0.4 (exactly 110%) -> 201 {"id":42,"sum":1.1,"clearable":true}
+[party] 1.1 solo -> 201 {"id":43,"sum":1.1,"clearable":true}
+[party] 1.0999 solo (should be false) -> 201 {"id":44,"sum":1.0999,"clearable":false}
+[import] E clearRate 1e308 -> 201 {"name":"crtriz1E","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] F clearRate 1.7976931348623157e308 -> 201 {"name":"crtriz1F","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1E" hard-lotus size=6 -> 201 {"ok":true}
+[request] "crtriz1F" hard-lotus size=6 -> 201 {"ok":true}
+[party] 1e308 + MAX_VALUE (sum overflows) -> 201 {"id":45,"sum":null,"clearable":true}
+[party list] overflow party in GET /api/party: {"sum":null,"clearable":true,"members":[{"name":"crtriz1F","ratio":1.7976931348623157e+308},{"name":"crtriz1E","ratio":1e+308}]}
+[import] combatPower 2^53 (MAX_SAFE+1) -> 400 {"error":"calc.combatPower 값이 올바르지 않아요."}
+[import] combatPower 1e300 -> 400 {"error":"calc.combatPower 값이 올바르지 않아요."}
+[import] boss300_stat 2147483648 -> 400 {"error":"calc.boss300_stat 값이 올바르지 않아요."}
+[import] bossStat 2147483647.9 (trunc fits) -> 400 {"error":"calc.bossCuts[0].bossStat 값이 올바르지 않아요."}
+[import] clearRate -0.5 -> 400 {"error":"calc.bossCuts[0].clearRate 값이 올바르지 않아요."}
+[import] clearRate NaN (raw text) -> 400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+[import] clearRate '1.5' string -> 400 {"error":"calc.bossCuts[0].clearRate 값이 올바르지 않아요."}
+[import] clearRate 1e999 (parses to Infinity) -> 400 {"error":"calc.bossCuts[0].clearRate 값이 올바르지 않아요."}
+[import] level 300.9 -> 400 {"error":"info.character_level 값이 올바르지 않아요."}
+[import] level -1 -> 400 {"error":"info.character_level 값이 올바르지 않아요."}
+[import] name emoji "🐉드래곤riz1" -> 201 {"name":"🐉드래곤riz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPI
+   rates?name= -> 200 n=1
+   DELETE /api/character/%F0%9F%90%89%EB%93%9C%EB%9E%98%EA%B3%A4riz1 -> 204 null 
+[import] name SQL-ish "'; DROP TABLE x;--" -> 201 {"name":"'; DROP TABLE x;--","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJF
+   rates?name= -> 200 n=1
+   DELETE /api/character/'%3B%20DROP%20TABLE%20x%3B-- -> 204 null 
+[import] name slash "a/briz1" -> 201 {"name":"a/briz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIFF
+   rates?name= -> 200 n=1
+   DELETE /api/character/a%2Fbriz1 -> 204 null 
+[import] name percent "%25riz1" -> 201 {"name":"%25riz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIFF
+   rates?name= -> 200 n=1
+   DELETE /api/character/%2525riz1 -> 204 null 
+[import] name question/hash "q?#riz1" -> 201 {"name":"q?#riz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIFF
+   rates?name= -> 200 n=1
+   DELETE /api/character/q%3F%23riz1 -> 204 null 
+[import] name zero-width "아델​riz1" -> 201 {"name":"아델​riz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIFF
+   rates?name= -> 200 n=1
+   DELETE /api/character/%EC%95%84%EB%8D%B8%E2%80%8Briz1 -> 204 null 
+[import] name RTL override "‮riz1abc" -> 201 {"name":"‮riz1abc","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+   rates?name= -> 200 n=1
+   DELETE /api/character/%E2%80%AEriz1abc -> 204 null 
+[import] name NUL char "nul\u0000riz1" -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+[import] name lone surrogate "s\ud800riz1" -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+[import] name html "<b onclick=x>riz1" -> 201 {"name":"<b onclick=x>riz1","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFA
+   rates?name= -> 200 n=1
+   DELETE /api/character/%3Cb%20onclick%3Dx%3Eriz1 -> 204 null 
+[import] name dot-dot ".." -> 201 {"name":"..","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIFFCLKDC
+   rates?name= -> 200 n=1
+   DELETE /api/character/.. -> 404 text/html; charset=utf-8 <!DOCTYPE html><html lang="ko" class="ibm_plex_sans_kr_706acb0-module__2puazq__variable"><head><meta charSet="utf-8"/><m
+[import] analytics with NUL -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+[import] world_name with NUL -> 500 {"error":"캐릭터를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."}
+[rates] name=' OR '1'='1 -> 404
+[boss] q=' OR 1=1 -> []
+[boss] id=..%2F..%2Fetc -> 404
+[requests] bossId=' OR 1=1 -> []
+[request] "'; DELETE FROM characters;--" extreme-kaling size=1 -> 400 {"error":"등록되지 않은 캐릭터입니다."}
+[import] L lotus-ext -> 201 {"name":"crtriz1L","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] M lotus-ext -> 201 {"name":"crtriz1M","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[import] O lotus-ext -> 201 {"name":"crtriz1O","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1L" extreme-lotus size=3 -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size=0 -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size=-1 -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size=2.5 -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size="2" -> 201 {"ok":true}
+[request] "crtriz1L" extreme-lotus size=null -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size=true -> 201 {"ok":true}
+[request] "crtriz1L" extreme-lotus size=null -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size="abc" -> 400 {"error":"인원은 1~2명이어야 합니다."}
+[request] "crtriz1L" extreme-lotus size=[2] -> 201 {"ok":true}
+[request] "crtriz1L" extreme-lotus size=2 -> 201 {"ok":true}
+[request] "crtriz1M" extreme-lotus size=2 -> 201 {"ok":true}
+[request] "crtriz1O" extreme-lotus size=2 -> 201 {"ok":true}
+[party] 3 members on extreme-lotus (max 2) -> 400 {"error":"파티 인원은 1~2명이어야 합니다."}
+[party] duplicate members [L,L] -> 201 {"id":46,"sum":0.5,"clearable":false}
+[request] "crtriz1L" extreme-lotus size=2 -> 201 {"ok":true}
+[party] members with non-strings -> 400 {"error":"이 보스에 구직 중이 아닌 캐릭터: [object Object], 1"}
+[party] members not array (string) -> 400 {"error":"members 배열이 필요해요."}
+[request] "crtriz1M" extreme-lotus size=1 -> 201 {"ok":true}
+[party] seeker size 1 into 2-party -> 400 {"error":"희망 인원보다 큰 파티입니다: crtriz1M"}
+[import] P no kaling rate -> 201 {"name":"crtriz1P","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1P" extreme-kaling size=2 -> 201 {"ok":true}
+[party] member without a rate -> 400 {"error":"이 보스의 배율이 없는 캐릭터: crtriz1P"}
+[import] X kaling-normal -> 201 {"name":"crtriz1X","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1X" normal-kaling size=3 -> 201 {"ok":true}
+[import] Y kaling-normal -> 201 {"name":"crtriz1Y","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1Y" normal-kaling size=3 -> 201 {"ok":true}
+[import] Z kaling-normal -> 201 {"name":"crtriz1Z","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIHGMDLNJFAMIGBMPPIF
+[request] "crtriz1Z" normal-kaling size=3 -> 201 {"ok":true}
+[concurrent] 30 overlapping formParty: statuses {"201":1,"400":29}; 400 messages: ["이 보스에 구직 중이 아닌 캐릭터: X","이 보스에 구직 중이 아닌 캐릭터: Y","이 보스에 구직 중이 아닌 캐릭터: X, Y"]
+[concurrent] saved normal-kaling parties with X/Y/Z: {"Y":1,"X":1} (each must be <= 1)
+[concurrent] 20 createRequest same char+boss: {"201":20}; open requests now: 1
+[method] PUT /api/party -> 405 null body=""
+[method] PATCH /api/character -> 405 null body=""
+[method] DELETE /api/boss/normal-lotus -> 405 null body=""
+[method] GET /api/character/import -> 405 null body=""
+[method] GET /api/nope -> 404 text/html; charset=utf-8 body="<!DOCTYPE html><html lang=\"ko\" class=\"ibm_plex_sans_kr_706acb0-module__2puazq__v"
+[path] DELETE /api/character/%E0%A4%A (bad percent) -> 400 text/html; charset=utf-8 "<!DOCTYPE html><html><head><meta charSet=\"utf-8\" data-next-head=\"\"/><meta name=\"viewport\" content=\"width=device-width\" data-next-head=\"\"/><title data-next-head=\"\">400: Bad Request</title><style data-n"
+[size] POST /api/party 2.9 MB members[] -> 400 in 157 ms {"error":"파티 인원은 1~6명이어야 합니다."}
+[size] POST /api/party/requests 5 MB name -> 400 in 70 ms {"error":"등록되지 않은 캐릭터입니다."}
+[cleanup] could not delete "..": 404 text/html; charset=utf-8 <!DOCTYPE html><html lang="ko" class="ibm_plex_sans_kr_706acb0-module__2puazq__variable"><head><meta
+[cleanup] removed 6 parties, 14 characters

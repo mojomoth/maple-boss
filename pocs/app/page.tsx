@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { listCharacters, listClearRates } from "@/character";
+import { crawlerAvailable } from "@/character/crawl";
 import { pct } from "@/character/format";
 import { findBosses, getBoss, listBosses } from "@/boss";
 import { bossLabel, DIFFICULTY_LABEL, formatKorean } from "@/boss/search";
 import { rankParties, shownSum, suggestParty, sumRatios } from "@/party/ratio";
+import { dbInfo } from "@/lib/db";
 import { CLEAR_THRESHOLD, type Character } from "@/lib/types";
 import logo from "@/public/maple-boss-logo.png";
 import AddCharacter from "./AddCharacter";
@@ -52,10 +54,10 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
   const found = q ? findBosses(q)[0] : undefined;
   const boss = found ?? ((typeof sp.boss === "string" && getBoss(sp.boss)) || getBoss(DEFAULT_BOSS)!);
 
-  const characters = listCharacters();
+  const [characters, rates] = await Promise.all([listCharacters(), listClearRates(boss.id)]);
   const byName = new Map(characters.map((c) => [c.name, c]));
   // Characters without a rate for this boss are left out.
-  const pool: Member[] = listClearRates(boss.id).flatMap((r) => {
+  const pool: Member[] = rates.flatMap((r) => {
     const c = byName.get(r.characterName);
     return c ? [{ ...c, clearRate: r.clearRate }] : [];
   });
@@ -80,7 +82,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
               <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
             </Link>
           </h1>
-          <AddCharacter />
+          <AddCharacter crawler={crawlerAvailable()} />
           <BossSearch
             labels={listBosses().map(bossLabel)}
             value={q && !found ? q : bossLabel(boss)}
@@ -106,6 +108,9 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
               </p>
             )}
           </div>
+          {!dbInfo.persistent && (
+            <p className="section-help">임시 저장소를 쓰고 있어요. 서버가 다시 시작되면 등록한 캐릭터와 파티가 지워져요.</p>
+          )}
           {characters.length ? (
             <CharacterGrid characters={characters} />
           ) : (
@@ -202,9 +207,9 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
             배율: <a href="https://maplescouter.com">maplescouter.com</a>
           </span>
           <nav aria-label="PoC 화면" className="foot-nav">
-            <Link href="/character">캐릭터 등록</Link>
-            <Link href="/boss">보스 조회</Link>
-            <Link href="/party">파티 편성</Link>
+            <Link href="/pocs/character">캐릭터 등록</Link>
+            <Link href="/pocs/boss">보스 조회</Link>
+            <Link href="/pocs/party">파티 편성</Link>
           </nav>
         </div>
       </footer>

@@ -1,0 +1,69 @@
+$ npm run build   (2026-11-16T15:20:42Z; the dev server kept running on :3000, dev builds into .next/dev)
+
+> pocs@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 76ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 551ms
+  Running TypeScript ...
+  Finished TypeScript in 912ms ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/13) ...
+  Generating static pages using 11 workers (3/13) 
+  Generating static pages using 11 workers (6/13) 
+  Generating static pages using 11 workers (9/13) 
+✓ Generating static pages using 11 workers (13/13) in 159ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/boss
+├ ƒ /api/boss/[id]
+├ ƒ /api/character
+├ ƒ /api/character/[name]
+├ ƒ /api/character/import
+├ ƒ /api/character/rates
+├ ƒ /api/health
+├ ƒ /api/party
+├ ƒ /api/party/requests
+├ ƒ /boss
+├ ○ /character
+└ ƒ /party
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+exit=0
+
+# server traces (.nft.json): seeds and PGlite assets ship, the local data/ dir does not
+page                         files: 374  data/: 0  seed/*.json: 3  pglite.wasm+data: 2  pg: true
+api/health/route             files: 358  data/: 0  seed/*.json: 3  pglite.wasm+data: 2  pg: true
+api/character/route          files: 361  data/: 0  seed/*.json: 3  pglite.wasm+data: 2  pg: true
+api/character/import/route   files: 360  data/: 0  seed/*.json: 3  pglite.wasm+data: 2  pg: true
+api/party/route              files: 361  data/: 0  seed/*.json: 3  pglite.wasm+data: 2  pg: true
+
+# production bundle (next start -p 3999, built by npm run build), PGlite in a /tmp dir like the Vercel fallback
+{"ok":true,"db":"pglite","persistent":false} -> HTTP 200
+GET /api/character -> 강은호 2364320307, 아델 2127534108, 고딩 1957366035
+GET / -> HTTP 200
+
+# production bundle with DATABASE_URL -> pg Pool against PostgreSQL 18 (embedded, local)
+{"ok":true,"db":"postgres","persistent":true} -> HTTP 200
+GET /api/character -> 강은호 2364320307, 아델 2127534108, 고딩 1957366035
+GET / -> HTTP 200
+server logs:
+▲ Next.js 16.4.6
+- Local:         http://localhost:3999
+- Network:       http://192.168.0.103:3999
+✓ Ready in 116ms
+✓ Running next.config.ts took 21ms
+▲ Next.js 16.4.6
+- Local:         http://localhost:3999
+- Network:       http://192.168.0.103:3999
+✓ Ready in 77ms
+✓ Running next.config.ts took 20ms

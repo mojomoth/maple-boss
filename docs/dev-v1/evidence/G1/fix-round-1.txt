@@ -1,0 +1,91 @@
+# G1 fix round 1 — 2026-11-17 (node v24.10.0, dev server http://localhost:3000)
+
+## P1-1 Delete modal overflows horizontally at 375px for max-length nicknames
+
+Root cause: .confirm-body is a grid with an implicit 'auto' column. An auto track grows to its items' min-content.
+Under the page's word-break: keep-all, .preview's min-content is the 120px sprite plus the whole unbreakable name,
+so the track grew past the dialog (356-376px). .confirm-note and .confirm-actions (width 100%) followed it, and 삭제 was clipped.
+.preview-text was a second auto-track grid with the same problem, so a long name also ran past the preview tile.
+
+Fix (pocs/app/home.css only):
+  .confirm-body  + grid-template-columns: minmax(0, 1fr)   track can no longer exceed the dialog
+  .preview-text  + overflow-wrap: anywhere                  long names/job text wrap inside the tile instead of widening it
+  @media (max-width: 40rem): .preview padding-inline md, .sprite--preview 96px/zoom 1, .preview-text strong text-xl
+                  (same pattern the card already uses at this width; keeps the 6-char Korean max name on one line at 375px)
+CharacterGrid.tsx: no change needed.
+
+$ git diff -U0 -- pocs/app/home.css   (relevant hunks)
+-.confirm-body { position: relative; display: grid; justify-items: center; gap: var(--space-md); padding: var(--space-xl) var(--space-lg) var(--space-lg); text-align: center; }
++.confirm-body { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: var(--space-md); padding: var(--space-xl) var(--space-lg) var(--space-lg); text-align: center; }
+-.preview-text { display: grid; gap: var(--space-2xs); min-width: 0; }
++.preview-text { display: grid; gap: var(--space-2xs); min-width: 0; overflow-wrap: anywhere; } /* a 12-letter name wraps, not widens the dialog */
++  .preview { padding-inline: var(--space-md); }
++  .sprite--preview { --sprite-box: 96px; --sprite-zoom: 1; }
++  .preview-text strong { font-size: var(--text-xl); } /* a 6-letter Korean name stays on one line at 375px */
+
+## Before fix: critic repro (node docs/dev-v1/evidence/G1/critic-ui/scripts/e-modal375.mjs)
+FAIL 375px modal for 강은호: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -71..304"]}
+FAIL 375px modal for 가나다라마바: content inside the dialog  | {"dlg":"19..356","scrollW":356,"clientW":335,"overflowX":"auto","out":["div.preview 44..376","img. -71..304","p.confirm-note 44..376","div.confirm-actions 44..376","button.btn.btn--danger 216..376"]}
+FAIL 375px modal for abcdefghijkl: content inside the dialog  | {"dlg":"19..356","scrollW":369,"clientW":335,"overflowX":"auto","out":["div.preview 44..389","img. -71..304","span.preview-text 204..365","strong. 204..365","span.meta 204..365","p.confirm-note 44..389"]}
+FAIL 375px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"19..356","scrollW":561,"clientW":335,"overflowX":"auto","out":["h2. 178..417","div.preview 98..498","img. -17..358","span.preview-text 258..474","strong. 258..581","span.meta 258..581"]}
+FAIL 375px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"19..356","scrollW":356,"clientW":335,"overflowX":"auto","out":["div.preview 44..376","img. -71..304","p.confirm-note 44..376","div.confirm-actions 44..376","button.btn.btn--danger 216..376"]}
+ok   1440px modal for 강은호: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 가나다라마바: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for abcdefghijkl: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+# 5 failed
+
+## After fix: node docs/dev-v1/evidence/G1/scripts/fix1-modal375.mjs
+# Same flow as the critic script, plus 320px. It also requires the name, meta and sprite box to stay inside the .preview tile
+# and reports the 삭제 button's x-range. It skips only the sprite <img>, which is clipped by .sprite { overflow: hidden } by design.
+ok   320px modal for 강은호: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..301","scrollW":280,"clientW":280,"del":"166..276","preview":"44..276","nameLines":1,"out":[]}
+ok   320px modal for 가나다라마바: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..301","scrollW":280,"clientW":280,"del":"166..276","preview":"44..276","nameLines":2,"out":[]}
+ok   320px modal for abcdefghijkl: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..301","scrollW":280,"clientW":280,"del":"166..276","preview":"44..276","nameLines":2,"out":[]}
+ok   320px modal for WWWWWWWWWWWW: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..301","scrollW":280,"clientW":280,"del":"166..276","preview":"44..276","nameLines":4,"out":[]}
+ok   320px modal for 검증삭제tmy: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..301","scrollW":280,"clientW":280,"del":"166..276","preview":"44..276","nameLines":2,"out":[]}
+ok   375px modal for 강은호: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..356","scrollW":335,"clientW":335,"del":"194..331","preview":"44..331","nameLines":1,"out":[]}
+ok   375px modal for 가나다라마바: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..356","scrollW":335,"clientW":335,"del":"194..331","preview":"44..331","nameLines":1,"out":[]}
+ok   375px modal for abcdefghijkl: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..356","scrollW":335,"clientW":335,"del":"194..331","preview":"44..331","nameLines":1,"out":[]}
+ok   375px modal for WWWWWWWWWWWW: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..356","scrollW":335,"clientW":335,"del":"194..331","preview":"44..331","nameLines":2,"out":[]}
+ok   375px modal for 검증삭제tmy: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"19..356","scrollW":335,"clientW":335,"del":"194..331","preview":"44..331","nameLines":1,"out":[]}
+ok   1440px modal for 강은호: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"400..1040","scrollW":638,"clientW":638,"del":"726..1015","preview":"520..920","nameLines":1,"out":[]}
+ok   1440px modal for 가나다라마바: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"400..1040","scrollW":638,"clientW":638,"del":"726..1015","preview":"520..920","nameLines":1,"out":[]}
+ok   1440px modal for abcdefghijkl: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"400..1040","scrollW":638,"clientW":638,"del":"726..1015","preview":"520..920","nameLines":1,"out":[]}
+ok   1440px modal for WWWWWWWWWWWW: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"400..1040","scrollW":638,"clientW":638,"del":"726..1015","preview":"520..920","nameLines":2,"out":[]}
+ok   1440px modal for 검증삭제tmy: content inside the dialog and preview tile, no sideways scroll  | {"dlg":"400..1040","scrollW":638,"clientW":638,"del":"726..1015","preview":"520..920","nameLines":1,"out":[]}
+# all passed
+
+## After fix: critic repro, unmodified (node docs/dev-v1/evidence/G1/critic-ui/scripts/e-modal375.mjs)
+FAIL 375px modal for 강은호: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -51..249"]}
+FAIL 375px modal for 가나다라마바: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -51..249"]}
+FAIL 375px modal for abcdefghijkl: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -51..249"]}
+FAIL 375px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -51..249"]}
+FAIL 375px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"19..356","scrollW":335,"clientW":335,"overflowX":"auto","out":["img. -51..249"]}
+ok   1440px modal for 강은호: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 가나다라마바: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for abcdefghijkl: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for WWWWWWWWWWWW: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+ok   1440px modal for 검증삭제tmy: content inside the dialog  | {"dlg":"400..1040","scrollW":638,"clientW":638,"overflowX":"auto","out":[]}
+# 5 failed
+# Note: the only element still listed is 'img. -51..249', the sprite image inside the 96px .sprite box (overflow: hidden).
+# It is clipped and adds no scroll: scrollW == clientW == 335 in every row. Before the fix it was listed for 강은호 as well
+# ('img. -71..304'), which the critic counted as fitting. .preview, .confirm-note, .confirm-actions, the 삭제 button and h2 no longer appear.
+
+Screenshots (dialog only, 375x812): fix1-delete-modal-375-6char.png (가나다라마바, one line), fix1-delete-modal-375-12W.png
+(WWWWWWWWWWWW wraps to 2 lines inside the tile), fix1-delete-modal-375-seeded.png (강은호).
+Temp characters were deleted afterwards; GET /api/character lists: 강은호, 아델, 고딩
+
+## Regression
+$ npm test
+ℹ tests 32
+ℹ pass 32
+ℹ fail 0
+npm test exit=0
+$ npx tsc --noEmit
+tsc exit=0
+$ npm run smoke
+59 ok, 0 FAIL
+# smoke http://localhost:3000  temp characters: 아델smokegcccn, 고딩smokegcccn
+# all passed
+smoke exit=0

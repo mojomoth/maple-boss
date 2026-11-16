@@ -1,0 +1,61 @@
+     tab order:
+       a [Maple Boss 처음으로] outline=solid/2px shadow=false
+       input#character-name.field [] outline=solid/2px shadow=false
+       button.btn.btn--primary [추가] outline=solid/2px shadow=false
+       input#boss-q.field [] outline=solid/2px shadow=false
+       button.icon-btn [보스 찾기] outline=solid/2px shadow=false
+       button.card [강은호Lv.299칼리스카니아전투력 2] outline=solid/2px shadow=false
+       button.card [아델Lv.298아델스카니아전투력 21] outline=solid/2px shadow=false
+       button.card [..Lv.298아델스카니아전투력 21] outline=solid/2px shadow=false
+ok   tab order starts logo -> nickname -> 추가 -> boss search -> 보스 찾기 -> cards
+ok   every tab stop has a visible focus indicator
+ok   spaces-only nickname: Korean error, aria-invalid, no request  | 캐릭터 닉네임을 입력해 주세요.
+ok   empty nickname: native required blocks submit
+ok   501 -> guide opens (no error under the field)
+ok   guide heading focused
+     guide tab order:
+       button.icon-btn [가져오기 안내 닫기] outline=solid/2px shadow=false
+       a.btn.btn--quiet [maplescouter에서 결과 열기] outline=solid/2px shadow=false
+       a.btn.btn--quiet.bookmarklet [Maple Boss로 보내기] outline=solid/2px shadow=false
+       summary [직접 붙여넣기] outline=solid/2px shadow=false
+       input#boss-q.field [] outline=solid/2px shadow=false
+ok   guide tab order: close -> step1 link -> bookmarklet -> summary
+ok   step 1 href/target/rel  | https://maplescouter.com/ko/result?name=%EA%B2%80%EC%A6%9D%EB%B6%99%EC%9E%84k1d
+ok   bookmarklet href is javascript: with this origin  | 2498 chars
+ok   Enter on bookmarklet here shows the drag hint and stays on /  | http://localhost:3000/
+ok   summary opens with Enter
+ok   paste empty: Korean error shown, aria-invalid  | 붙여 넣은 값이 없어요.
+ok   paste bad JSON: Korean error shown, aria-invalid  | JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+ok   paste wrong shape: Korean error shown, aria-invalid  | maplescouter 캐릭터 데이터가 아니에요.
+ok   paste placeholder 으낭다: Korean error shown, aria-invalid  | maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요.
+ok   paste > 1 MB: Korean error shown, aria-invalid  | 데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요.
+ok   paste full store -> guide closes, card appears
+ok   …confirmation under the field  | ‘검증붙임k1d’ 캐릭터를 가져왔어요.
+     focus after paste import: body
+ok   paste state -> card
+ok   paste searchResult -> card
+ok   close guide -> focus back on nickname input
+ok   guide at 375: no horizontal page overflow  | 375
+ok   bookmarklet on mock page -> /import#payload -> /  | http://localhost:3000/import#%7B%22v%22%3A1%2C%22i -> http://localhost:3000/import#%7B%22v%22%3A1%2C%22i -> http://localhost:3000/import -> http://localhost:3000/
+ok   fragment payload is trimmed (< 64 KB)  | 15084
+ok   card 검증북마k1d on / after bookmarklet
+ok   no hash left in URL  | http://localhost:3000/
+ok   bookmarklet-imported char has 60 rates  | 60
+     history.length=4; after Back: http://127.0.0.1:49970/with?name=x msg=
+ok   Back after import does not show an error page  | http://127.0.0.1:49970/with?name=x 
+ok   bookmarklet on page without store: Korean alert, no navigation  | Maple Boss로 보내지 못했어요. maplescouter 캐릭터 결과 페이지에서 결과가 뜬 뒤에 눌러 주세요.
+ok   bookmarklet with 으낭다 placeholder store -> /import shows Korean error  | http://localhost:3000/import maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요.
+ok   /import empty hash: Korean error + 메인 화면으로 link, hash cleared  | 가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요.
+ok   /import bare #: Korean error + 메인 화면으로 link, hash cleared  | 가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요.
+ok   /import bad JSON: Korean error + 메인 화면으로 link, hash cleared  | 받은 데이터가 깨져 있어요. maplescouter 결과 페이지에서 다시 보내 주세요.
+ok   /import bad percent-encoding: Korean error + 메인 화면으로 link, hash cleared  | 받은 데이터가 깨져 있어요. maplescouter 결과 페이지에서 다시 보내 주세요.
+ok   /import wrong shape 400: Korean error + 메인 화면으로 link, hash cleared  | maplescouter 캐릭터 데이터가 아니에요.
+ok   /import > 1 MB 413: Korean error + 메인 화면으로 link, hash cleared  | 데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요.
+ok   /import error at 375: no overflow
+ok   메인 화면으로 link goes to /
+ok   no uncaught page errors
+ok   cleanup 검증붙임k1d
+ok   cleanup 검증상태k1d
+ok   cleanup 검증결과k1d
+ok   cleanup 검증북마k1d
+# all passed

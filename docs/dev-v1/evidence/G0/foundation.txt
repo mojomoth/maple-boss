@@ -1,0 +1,169 @@
+# G0 foundation transcript, 2026-11-16T15:20:13Z
+# dev server: one `next dev` on http://localhost:3000 (log /tmp/maple-dev.log), PGlite at pocs/data/pglite
+# node v24.10.0, next 16.4.6, react 19.3.1, @electric-sql/pglite 0.5.16, pg 8.23.1
+# This DB was seeded on first start and the dev server was restarted since: party #1 below survived the restart.
+
+## health, characters (seeded), rates, bosses
+
+$ c http://localhost:3000/api/health
+{"ok":true,"db":"pglite","persistent":true}
+-> HTTP 200
+
+$ c http://localhost:3000/api/character
+[3 items] [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGH…","combatPower":2364320307,"boss300Stat":152715,"boss380Stat":153521,"source":"maplescouter","fetchedAt":"2026-11-16T15:16:04.763Z"},{"name":"아델","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBID…","combatPower":2127534108,"boss300Stat":147690,"boss380Stat":148430,"source":"maplescouter","fetchedAt":"2026-11-16T15:16:04.700Z"},{"name":"고딩","world":"루나","job":"팔라딘","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDKEL…","combatPower":1957366035,"boss300Stat":144756,"boss380Stat":145476,"source":"maplescouter","fetchedAt":"2026-11-16T15:16:04.638Z"}]
+-> HTTP 200
+
+$ c http://localhost:3000/api/character/rates?name=%EA%B0%95%EC%9D%80%ED%98%B8
+[60 items] [{"characterName":"강은호","bossId":"extreme-kaling","clearRate":0.9352402891241739,"analytics":"솔플 최소컷","bossStat":153521,"label":"익스트림 카링"},{"characterName":"강은호","bossId":"extreme-first-adversary","clearRate":1.2285508819033937,"analytics":"솔플 가능","bossStat":153521,"label":"익스트림 최초의 대적자"},{"characterName":"강은호","bossId":"extreme-baldrix","clearRate":1.3613019990856534,"analytics":"2인 최소컷","bossStat":153521,"label":"익스트림 발드릭스"}]
+-> HTTP 200
+
+$ c http://localhost:3000/api/boss?q=%EC%B9%B4%EB%A7%81
+[5 items] [{"id":"easy-kaling","name":"카링","scouterName":"카링","difficulty":"easy","level":275,"defenseRate":380,"maxParty":6,"hp":273655000000000,"forceType":"authentic","forceRequired":230,"imageUrl":"/bosses/kaling.png","statBasis":"380"},{"id":"normal-kaling","name":"카링","scouterName":"카링","difficulty":"normal","level":285,"defenseRate":380,"maxParty":6,"hp":1171700000000000,"forceType":"authentic","forceRequired":330,"imageUrl":"/bosses/kaling.png","statBasis":"380"},{"id":"hard-kaling","name":"카링","scouterName":"카링","difficulty":"hard","level":285,"defenseRate":380,"maxParty":6,"hp":3715300000000000,"forceType":"authentic","forceRequired":350,"imageUrl":"/bosses/kaling.png","statBasis":"380"}]
+-> HTTP 200
+
+$ c http://localhost:3000/api/boss/extreme-kaling
+{"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseRate":380,"maxParty":6,"hp":16707200000000000,"forceType":"authentic","forceRequired":480,"imageUrl":"/bosses/kaling.png","statBasis":"380"}
+-> HTTP 200
+
+$ c http://localhost:3000/api/boss/nope
+{"error":"not found"}
+-> HTTP 404
+
+## DELETE /api/character/[name], then POST /api/character/import with the raw maplescouter searchResult (~250 KB)
+
+$ c -X DELETE http://localhost:3000/api/character/%EA%B3%A0%EB%94%A9
+(empty body)
+-> HTTP 204
+
+$ c -X DELETE http://localhost:3000/api/character/%EA%B3%A0%EB%94%A9
+{"error":"등록되지 않은 캐릭터입니다."}
+-> HTTP 404
+
+$ c -X POST -H content-type: application/json --data-binary @../docs/research/samples/고딩.json http://localhost:3000/api/character/import
+{"name":"고딩","world":"루나","job":"팔라딘","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDKEL…","combatPower":1957366035,"boss300Stat":144756,"boss380Stat":145476,"source":"maplescouter","fetchedAt":"2026-11-16T15:20:15.422Z"}
+-> HTTP 201
+
+## import: whole localStorage store {state:{searchResult},version}, trimmed v1 seed payload, placeholder, malformed, not JSON, too big
+
+$ c -X POST --data-binary @/tmp/store.json http://localhost:3000/api/character/import
+{"name":"아델","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBID…","combatPower":2127534108,"boss300Stat":147690,"boss380Stat":148430,"source":"maplescouter","fetchedAt":"2026-11-16T15:20:15.489Z"}
+-> HTTP 201
+
+$ c -X POST -H content-type: application/json --data-binary @seed/강은호.json http://localhost:3000/api/character/import
+{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGH…","combatPower":2364320307,"boss300Stat":152715,"boss380Stat":153521,"source":"maplescouter","fetchedAt":"2026-11-16T15:20:15.520Z"}
+-> HTTP 201
+
+$ c -X POST --data-binary @/tmp/placeholder.json http://localhost:3000/api/character/import
+{"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+-> HTTP 400
+
+$ c -X POST --data-binary {"v":1,"info":{"character_name":"x"}} http://localhost:3000/api/character/import
+{"error":"maplescouter 캐릭터 데이터가 아니에요."}
+-> HTTP 400
+
+$ c -X POST --data-binary not json http://localhost:3000/api/character/import
+{"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+-> HTTP 400
+
+$ c -X POST --data-binary @/tmp/big.json http://localhost:3000/api/character/import
+{"error":"데이터가 너무 커요. maplescouter 캐릭터 데이터만 보내 주세요."}
+-> HTTP 413
+
+## POST /api/character (local crawler route): just imported, so it returns the stored character without opening a browser; bad name 400
+
+$ c -X POST -H content-type: application/json -d {"name":"강은호"} http://localhost:3000/api/character
+{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGH…","combatPower":2364320307,"boss300Stat":152715,"boss380Stat":153521,"source":"maplescouter","fetchedAt":"2026-11-16T15:20:15.520Z"}
+-> HTTP 200
+
+$ c -X POST -H content-type: application/json -d {} http://localhost:3000/api/character
+{"error":"캐릭터 이름을 입력해주세요"}
+-> HTTP 400
+
+## party: request upsert, validation, form (sum/clearable), same members again, list
+
+$ c -X POST -H content-type: application/json -d {"characterName":"강은호","bossId":"extreme-kaling","partySize":2} http://localhost:3000/api/party/requests
+{"ok":true}
+-> HTTP 201
+
+$ c -X POST -H content-type: application/json -d {"characterName":"아델","bossId":"extreme-kaling","partySize":2} http://localhost:3000/api/party/requests
+{"ok":true}
+-> HTTP 201
+
+$ c -X POST -H content-type: application/json -d {"characterName":"아델","bossId":"extreme-kaling","partySize":3} http://localhost:3000/api/party/requests
+{"ok":true}
+-> HTTP 201
+
+$ c -X POST -H content-type: application/json -d {"characterName":"아델","bossId":"extreme-kaling","partySize":9} http://localhost:3000/api/party/requests
+{"error":"인원은 1~6명이어야 합니다."}
+-> HTTP 400
+
+$ c -X POST -H content-type: application/json -d {"characterName":"없는캐릭","bossId":"extreme-kaling","partySize":1} http://localhost:3000/api/party/requests
+{"error":"등록되지 않은 캐릭터입니다."}
+-> HTTP 400
+
+$ c http://localhost:3000/api/party/requests?bossId=extreme-kaling
+[2 items] [{"requestId":34,"bossId":"extreme-kaling","partySize":2,"character":"강은호","clearRate":0.9352402891241739,"analytics":"솔플 최소컷"},{"requestId":35,"bossId":"extreme-kaling","partySize":3,"character":"아델","clearRate":0.8323749667523922,"analytics":"파티격 가능"}]
+-> HTTP 200
+
+$ c -X POST -H content-type: application/json -d {"bossId":"extreme-kaling","members":["강은호","아델"]} http://localhost:3000/api/party
+{"id":34,"sum":1.767615255876566,"clearable":true}
+-> HTTP 201
+
+$ c -X POST -H content-type: application/json -d {"bossId":"extreme-kaling","members":["강은호","아델"]} http://localhost:3000/api/party
+{"error":"이 보스에 구직 중이 아닌 캐릭터: 강은호, 아델"}
+-> HTTP 400
+
+$ c -X POST -H content-type: application/json -d nope http://localhost:3000/api/party
+{"error":"members 배열이 필요합니다."}
+-> HTTP 400
+
+$ c http://localhost:3000/api/party
+[2 items] [{"id":34,"bossId":"extreme-kaling","boss":"extreme-kaling","createdAt":"2026-11-16T15:20:15.975Z","members":[{"name":"강은호","ratio":0.9352402891241739},{"name":"아델","ratio":0.8323749667523922}],"sum":1.767615255876566,"clearable":true},{"id":1,"bossId":"extreme-kaling","boss":"extreme-kaling","createdAt":"2026-11-16T15:16:05.383Z","members":[{"name":"강은호","ratio":0.9352402891241739},{"name":"아델","ratio":0.8323749667523922}],"sum":1.767615255876566,"clearable":true}]
+-> HTTP 200
+
+## pages: status, size, seeded names in the server-rendered HTML
+GET / -> HTTP 200, 82379 bytes, names: 강은호 아델 고딩
+GET /character -> HTTP 200, 29481 bytes, names:
+GET /boss -> HTTP 200, 163810 bytes, names:
+GET /boss?q=%EC%B9%B4%EB%A7%81 -> HTTP 200, 41983 bytes, names:
+GET /party -> HTTP 200, 71912 bytes, names: 강은호 아델 고딩
+(/character and /boss render no character names server-side: /character is a client page that lists GET /api/character, /boss has no character data)
+/ boss: <h3>카링</h3>, 추천 파티 count: 3, 내 캐릭터 count: 3
+
+## dev server log for this run (errors/warnings: 0)
+ GET /api/health 200 in 334ms (next.js: 61ms, application-code: 273ms)
+ GET /api/health 200 in 4ms (next.js: 0.9ms, application-code: 3ms)
+ GET /api/party 200 in 20ms (next.js: 15ms, application-code: 5ms)
+ GET /api/health 200 in 9ms (next.js: 0.9ms, application-code: 8ms)
+ GET /api/character 200 in 26ms (next.js: 16ms, application-code: 10ms)
+ GET /api/character/rates?name=%EA%B0%95%EC%9D%80%ED%98%B8 200 in 17ms (next.js: 12ms, application-code: 5ms)
+ GET /api/boss?q=%EC%B9%B4%EB%A7%81 200 in 14ms (next.js: 11ms, application-code: 2ms)
+ GET /api/boss/extreme-kaling 200 in 517ms (next.js: 513ms, application-code: 4ms)
+ GET /api/boss/nope 404 in 3ms (next.js: 1.5ms, application-code: 1.7ms)
+ DELETE /api/character/%EA%B3%A0%EB%94%A9 204 in 440ms (next.js: 427ms, application-code: 13ms)
+ DELETE /api/character/%EA%B3%A0%EB%94%A9 404 in 4ms (next.js: 1.3ms, application-code: 3ms)
+ POST /api/character/import 201 in 29ms (next.js: 11ms, application-code: 18ms)
+ POST /api/character/import 201 in 7ms (next.js: 0.4ms, application-code: 7ms)
+ POST /api/character/import 201 in 6ms (next.js: 0.4ms, application-code: 6ms)
+ POST /api/character/import 400 in 1.8ms (next.js: 0.3ms, application-code: 1.5ms)
+ POST /api/character/import 400 in 1.7ms (next.js: 0.3ms, application-code: 1.4ms)
+ POST /api/character/import 400 in 2ms (next.js: 0.4ms, application-code: 1.7ms)
+ POST /api/character/import 413 in 1.7ms (next.js: 0.4ms, application-code: 1.3ms)
+ POST /api/character 200 in 3ms (next.js: 0.3ms, application-code: 2ms)
+ POST /api/character 400 in 1.8ms (next.js: 0.4ms, application-code: 1.5ms)
+ POST /api/party/requests 201 in 21ms (next.js: 17ms, application-code: 4ms)
+ POST /api/party/requests 201 in 2ms (next.js: 0.3ms, application-code: 2ms)
+ POST /api/party/requests 201 in 2ms (next.js: 0.3ms, application-code: 2ms)
+ POST /api/party/requests 400 in 2ms (next.js: 0.4ms, application-code: 1.9ms)
+ POST /api/party/requests 400 in 2ms (next.js: 0.3ms, application-code: 2ms)
+ GET /api/party/requests?bossId=extreme-kaling 200 in 3ms (next.js: 0.4ms, application-code: 3ms)
+ POST /api/party 201 in 5ms (next.js: 0.4ms, application-code: 5ms)
+ POST /api/party 400 in 3ms (next.js: 0.3ms, application-code: 3ms)
+ POST /api/party 400 in 1.8ms (next.js: 0.3ms, application-code: 1.5ms)
+ GET /api/party 200 in 2ms (next.js: 0.3ms, application-code: 1.9ms)
+ GET / 200 in 234ms (next.js: 85ms, application-code: 149ms)
+ GET /character 200 in 27ms (next.js: 6ms, application-code: 21ms)
+ GET /boss 200 in 205ms (next.js: 4ms, application-code: 201ms)
+ GET /boss?q=%EC%B9%B4%EB%A7%81 200 in 30ms (next.js: 0.5ms, application-code: 29ms)
+ GET /party 200 in 56ms (next.js: 5ms, application-code: 51ms)
+ GET / 200 in 48ms (next.js: 0.4ms, application-code: 48ms)

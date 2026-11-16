@@ -1,0 +1,214 @@
+{
+  "updatedAt": "2026-11-17T02:00:00+09:00",
+  "gates": [
+    {
+      "id": "G0",
+      "title": "준비",
+      "status": "pass",
+      "steps": [
+        {
+          "id": "G0-plan",
+          "kind": "plan",
+          "title": "기존 파일·CLI 확인, 계획·결정 문서",
+          "status": "pass",
+          "agent": "orchestrator · Opus 5.5",
+          "note": "Vercel 프로젝트 maple-boss 연결, dev-v1 기준 커밋 62727d2",
+          "evidence": [
+            "docs/dev-v1/PLAN.md",
+            "docs/dev-v1/DECISIONS.md"
+          ]
+        },
+        {
+          "id": "G0-build",
+          "kind": "build",
+          "title": "Next 16, Postgres 저장소, 하네스",
+          "status": "pass",
+          "agent": "build:foundation · Opus 5.5",
+          "note": "Next 16.4.6, PGlite/pg 어댑터, parse.ts, 시드 3명, npm test 27/27, pg 경로 8/8",
+          "evidence": [
+            "docs/dev-v1/evidence/G0/foundation.txt",
+            "docs/dev-v1/evidence/G0/tests.txt",
+            "docs/dev-v1/evidence/G0/pg-path.txt",
+            "docs/dev-v1/evidence/G0/build.txt"
+          ]
+        },
+        {
+          "id": "G0-critic",
+          "kind": "critic",
+          "title": "독립 검증 (API·데이터)",
+          "status": "pass",
+          "agent": "critic:api-data · Opus 5.5",
+          "note": "G0-1~5 통과, P0/P1 없음, P2 10건 기록",
+          "evidence": [
+            "docs/dev-v1/evidence/G1/critic-api/"
+          ]
+        },
+        {
+          "id": "G0-pass",
+          "kind": "pass",
+          "title": "PASS",
+          "status": "pass",
+          "agent": "orchestrator",
+          "note": "직접 재실행: npm test 32/32, tsc, smoke 통과",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "G1",
+      "title": "PoC",
+      "status": "pass",
+      "steps": [
+        {
+          "id": "G1-build",
+          "kind": "build",
+          "title": "/pocs/* 이동, 가져오기, 최소 API",
+          "status": "pass",
+          "agent": "build:import+harness · Opus 5.5",
+          "note": "북마클릿·/import·붙여넣기, 413/400/501, smoke·shots 하네스",
+          "evidence": [
+            "docs/dev-v1/evidence/G1/"
+          ]
+        },
+        {
+          "id": "G1-critic",
+          "kind": "critic",
+          "title": "독립 검증 (UI·흐름)",
+          "status": "fail",
+          "agent": "critic:ui-flows · Opus 5.5",
+          "note": "P1-1 375px 삭제 모달 가로 넘침, P2 8건",
+          "evidence": [
+            "docs/dev-v1/evidence/G1/critic-ui/"
+          ]
+        },
+        {
+          "id": "G1-fix",
+          "kind": "fix",
+          "title": "P1-1 수정",
+          "status": "pass",
+          "agent": "fix:r1 · Opus 5.5",
+          "note": "긴 닉네임에서도 삭제 버튼이 보이도록 모달 줄바꿈",
+          "evidence": [
+            "docs/dev-v1/evidence/G1/fix-round-1.txt"
+          ]
+        },
+        {
+          "id": "G1-recheck",
+          "kind": "recheck",
+          "title": "재검증",
+          "status": "pass",
+          "agent": "recheck:r1 · Opus 5.5",
+          "note": "P1-1 해결, 회귀 없음 (test·tsc·smoke·build·브라우저)",
+          "evidence": [
+            "docs/dev-v1/evidence/G1/recheck-1/"
+          ]
+        },
+        {
+          "id": "G1-pass",
+          "kind": "pass",
+          "title": "PASS",
+          "status": "pass",
+          "agent": "orchestrator",
+          "note": "P2 18건은 STATUS.md에 기록, G3 정리 단계에서 처리",
+          "evidence": [
+            "docs/dev-v1/STATUS.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G2",
+      "title": "통합",
+      "status": "running",
+      "steps": [
+        {
+          "id": "G2-build",
+          "kind": "build",
+          "title": "/flow 시각화, 문서 동기화, 화면 이동",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        },
+        {
+          "id": "G2-critic",
+          "kind": "critic",
+          "title": "독립 검증",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        },
+        {
+          "id": "G2-pass",
+          "kind": "pass",
+          "title": "PASS",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "G3",
+      "title": "완성·배포",
+      "status": "todo",
+      "steps": [
+        {
+          "id": "G3-build",
+          "kind": "build",
+          "title": "디자인 비교·수정, 문구 검토, 정리",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        },
+        {
+          "id": "G3-deploy",
+          "kind": "build",
+          "title": "Vercel 배포",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        },
+        {
+          "id": "G3-critic",
+          "kind": "critic",
+          "title": "배포 URL 재검증",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        },
+        {
+          "id": "G3-pass",
+          "kind": "pass",
+          "title": "PASS",
+          "status": "todo",
+          "agent": "",
+          "note": "",
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B1",
+      "title": "Neon 약관 동의 필요 (사용자)",
+      "status": "open"
+    },
+    {
+      "id": "B2",
+      "title": "Codex(GPT) 사용량 한도, 2026-11-20 18:31까지",
+      "status": "open"
+    },
+    {
+      "id": "B3",
+      "title": ".env 없음 (OpenAI 등 키)",
+      "status": "open"
+    }
+  ]
+}

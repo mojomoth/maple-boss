@@ -1,0 +1,30 @@
+# run 1 (fresh PGlite dir /private/tmp/critic-pglite/db, next start :3911)
+health: {"ok":true,"db":"pglite","persistent":true}
+characters: ['강은호', '아델', '고딩']
+import 재시작확인: 201
+request: {"ok":true}
+request: {"ok":true}
+request (stays open): {"ok":true}
+party: {"id":1,"sum":1.6647499335047844,"clearable":true}
+delete 고딩: 204
+# run 2 (same dir, after the server process exited)
+health: {"ok":true,"db":"pglite","persistent":true}
+characters: ['강은호', '아델', '재시작확인']  (고딩 must stay deleted, 재시작확인 present)
+rates 재시작확인: 60
+parties: [(1, ['재시작확인', '아델'], 1.6647, True)]
+open requests: [('강은호', 'hard-kaling', 3)]
+# run 3: write then SIGKILL
+delete 강은호: 204
+request 아델 hard-kaling: {"ok":true}
+# run 4 after SIGKILL
+health: {"ok":true,"db":"pglite","persistent":true}
+characters: ['아델', '재시작확인'] (강은호 should be gone)
+open requests: [('아델', 'hard-kaling', 4)]
+
+# The real dev server (next dev :3000, pocs/data/pglite), restarted with the CONTEXT command at 2026-11-17 00:57:39 KST
+# (old next-server pid 507 started 00:19:49 KST = 15:19:49Z). While it was stopped, the undeletable '..' probe
+# character was removed directly from PGlite (see hostile.txt / defect about '..').
+health: {"ok":true,"db":"pglite","persistent":true}
+characters after restart: ['강은호', '아델', '고딩']
+parties after restart: [(34, '2026-11-16T15:20:15.975Z', ['강은호', '아델']), (1, '2026-11-16T15:16:05.383Z', ['강은호', '아델'])]
+# party 1 was created at 15:16:05Z, before even the previous server process started (15:19:49Z): it has survived two restarts.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { Character, ClearRate } from "@/lib/types";
 import { pct } from "@/character/format";
 import { formatKorean } from "@/boss/search";
@@ -22,11 +23,16 @@ export default function CharacterPage() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [importUrl, setImportUrl] = useState(""); // 501: no crawler on this server
   const [result, setResult] = useState<Character | null>(null);
   const [list, setList] = useState<Character[]>([]);
   const [rates, setRates] = useState<(ClearRate & { label: string })[]>([]);
 
-  const refresh = () => fetch("/api/character").then((r) => r.json()).then(setList);
+  const refresh = () =>
+    fetch("/api/character")
+      .then((r) => r.json())
+      .then((d) => Array.isArray(d) && setList(d))
+      .catch(() => {});
   useEffect(() => {
     refresh();
   }, []);
@@ -35,7 +41,8 @@ export default function CharacterPage() {
     let live = true;
     fetch(`/api/character/rates?name=${encodeURIComponent(result.name)}`)
       .then((r) => r.json())
-      .then((r) => live && setRates(r));
+      .then((r) => live && setRates(Array.isArray(r) ? r : []))
+      .catch(() => live && setRates([]));
     return () => {
       live = false;
     };
@@ -46,14 +53,16 @@ export default function CharacterPage() {
     if (!name.trim() || loading) return;
     setLoading(true);
     setError("");
+    setImportUrl("");
     try {
       const res = await fetch("/api/character", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name: name.trim() }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? `오류 (${res.status})`);
+      const data = await res.json().catch(() => null);
+      if (res.status === 501 && data?.importUrl) setImportUrl(data.importUrl);
+      if (!res.ok) throw new Error(data?.error ?? `오류 (${res.status})`);
       setResult(data);
       refresh();
     } catch (err) {
@@ -88,6 +97,14 @@ export default function CharacterPage() {
         </p>
       )}
       {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
+      {importUrl && (
+        <p className="text-sm text-neutral-400">
+          <a href={importUrl} target="_blank" rel="noopener noreferrer" className="underline">
+            maplescouter에서 결과 열기
+          </a>{" "}
+          뒤 <Link href="/" className="underline">메인 화면</Link>의 캐릭터 검색 안내대로 북마크나 붙여넣기로 가져와요.
+        </p>
+      )}
 
       {result && (
         <section className="flex gap-4 rounded-xl border border-neutral-700 bg-neutral-900 p-4">

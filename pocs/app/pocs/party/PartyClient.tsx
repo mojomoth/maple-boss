@@ -8,7 +8,7 @@ import { groupBosses } from "@/party/labels";
 import { bossLabel } from "@/boss/search";
 import { pct } from "@/character/format";
 
-const field = "rounded-md border border-neutral-700 bg-neutral-950 px-2 py-1";
+const field = "max-w-full rounded-md border border-neutral-700 bg-neutral-950 px-2 py-1";
 const button = "rounded-md bg-neutral-100 px-3 py-1 font-medium text-neutral-900 disabled:opacity-40";
 
 async function post(url: string, body: unknown) {

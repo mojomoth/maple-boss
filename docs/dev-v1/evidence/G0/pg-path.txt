@@ -1,0 +1,82 @@
+# pg path: lib/db.test.ts through `pg` (the Neon code path) against a real PostgreSQL (postgres (PostgreSQL) 18.6, embedded-postgres in /tmp, not a project dependency)
+$ TEST_DATABASE_URL=postgres://postgres:<redacted>@localhost:54329/maple_test node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs lib/db.test.ts
+✔ driver (0.819334ms)
+✔ seeds load once into an empty database (13.862375ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ upsert replaces the character and all its rates (3.034ms)
+✔ party requests: one open request per character and boss (23.639208ms)
+✔ formParty sums the rates, saves the party and closes the requests (7.623917ms)
+✔ formParty rejects double booking inside the transaction (24.922ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.217667ms)
+✔ seeds do not come back after everyone is deleted (2.852542ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 235.554875
+
+# second run on the same (now used) database is refused by the guard
+AssertionError [ERR_ASSERTION]: the test database must be empty
+ℹ pass 0
+ℹ fail 1
+
+# schema as created by lib/db.ts on Postgres
+                        Table "public.characters"
+    Column    |           Type           | Collation | Nullable | Default 
+--------------+--------------------------+-----------+----------+---------
+ name         | text                     |           | not null | 
+ world        | text                     |           | not null | 
+ job          | text                     |           | not null | 
+ level        | integer                  |           | not null | 
+ image_url    | text                     |           | not null | 
+ combat_power | bigint                   |           | not null | 
+ boss300_stat | integer                  |           | not null | 
+ boss380_stat | integer                  |           | not null | 
+ source       | text                     |           | not null | 
+ fetched_at   | timestamp with time zone |           | not null | 
+ payload      | jsonb                    |           | not null | 
+Indexes:
+    "characters_pkey" PRIMARY KEY, btree (name)
+Referenced by:
+    TABLE "clear_rates" CONSTRAINT "clear_rates_character_name_fkey" FOREIGN KEY (character_name) REFERENCES characters(name) ON DELETE CASCADE
+
+                     Table "public.clear_rates"
+     Column     |       Type       | Collation | Nullable | Default 
+----------------+------------------+-----------+----------+---------
+ character_name | text             |           | not null | 
+ boss_id        | text             |           | not null | 
+ clear_rate     | double precision |           | not null | 
+ analytics      | text             |           | not null | 
+ boss_stat      | integer          |           | not null | 
+Indexes:
+    "clear_rates_pkey" PRIMARY KEY, btree (character_name, boss_id)
+Foreign-key constraints:
+    "clear_rates_character_name_fkey" FOREIGN KEY (character_name) REFERENCES characters(name) ON DELETE CASCADE
+
+                                         Table "public.party_requests"
+     Column     |           Type           | Collation | Nullable |                  Default                   
+----------------+--------------------------+-----------+----------+--------------------------------------------
+ id             | integer                  |           | not null | nextval('party_requests_id_seq'::regclass)
+ character_name | text                     |           | not null | 
+ boss_id        | text                     |           | not null | 
+ party_size     | integer                  |           | not null | 
+ status         | text                     |           | not null | 'open'::text
+ created_at     | timestamp with time zone |           | not null | now()
+Indexes:
+    "party_requests_pkey" PRIMARY KEY, btree (id)
+    "party_requests_one_open" UNIQUE, btree (character_name, boss_id) WHERE status = 'open'::text
+
+                    Table "public.party_members"
+     Column     |       Type       | Collation | Nullable | Default 
+----------------+------------------+-----------+----------+---------
+ party_id       | integer          |           | not null | 
+ character_name | text             |           | not null | 
+ ratio          | double precision |           | not null | 
+Indexes:
+    "party_members_pkey" PRIMARY KEY, btree (party_id, character_name)
+Foreign-key constraints:
+    "party_members_party_id_fkey" FOREIGN KEY (party_id) REFERENCES parties(id) ON DELETE CASCADE
+

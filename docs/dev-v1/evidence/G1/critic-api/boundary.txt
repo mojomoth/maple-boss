@@ -1,0 +1,5 @@
+0.15+0.95 (float 1.0999999999999999): POST 201 sum=1.0999999999999999 clearable=true; GET /api/party clearable=true
+0.41+0.69: POST 201 sum=1.0999999999999999 clearable=true; GET /api/party clearable=true
+0.5+0.5999 (109.99%): POST 201 sum=1.0998999999999999 clearable=false; GET /api/party clearable=false
+0.5+0.59999 (109.999%): POST 201 sum=1.09999 clearable=false; GET /api/party clearable=false
+cleanup 4 parties 8 characters

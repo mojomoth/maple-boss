@@ -1,0 +1,31 @@
+store object (208 KB) -> 201 name=impt0mi1 cp=2364320307
+store as localStorage string (double-encoded) (240 KB) -> 201 name=impt0mi2 cp=2364320307
+state (208 KB) -> 201 name=impt0mi3 cp=2364320307
+searchResult (208 KB) -> 201 name=impt0mi4 cp=2364320307
+v1 payload (7 KB) -> 201 name=impt0mi5 cp=2364320307
+store with text/plain content-type (208 KB) -> 201 name=impt0mi6 cp=2364320307
+rates 1=60 rates 2=60 rates 3=60 rates 4=60 rates 5=60 rates 6=60 
+docs/research/character-store.json (placeholder 으낭다) -> 400 {"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+placeholder store as localStorage string -> 400 {"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+malformed array -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed number -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed null -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed true -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed string -> 400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+malformed {} -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed state null -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed searchResult string -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed info only -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed calc.bossCuts null -> 400 {"error":"calc.bossCuts 값이 올바르지 않아요."}
+malformed triple-encoded string -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+malformed BOM + json -> 400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+malformed deeply nested -> 400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+size 1000925 bytes -> 413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."
+size 1000926 bytes -> 413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."
+size 1000927 bytes -> 413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."
+size 5000926 bytes -> 413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."
+korean pad 347684 chars / 1028610 bytes -> 413
+upsert impt0mi5 with 2 cuts -> 201; rates now 2 [extreme-baldrix=9.99, extreme-limbo=9.99]; level in list 250; duplicates in list 1
+upsert with 0 cuts -> 201; rates now 0
+'  name  ' -> 201 name="impt0mi5"
+cleanup: 6 characters

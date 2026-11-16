@@ -1,0 +1,55 @@
+# 2026-11-16T15:20:30Z  node v24.10.0
+# runner: node --test with type stripping + resolve-hooks.mjs (@/ alias, extensionless imports) + --conditions=react-server (server-only -> empty); no new dependency
+
+$ npm test
+
+> pocs@0.1.0 test
+> node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs "**/*.test.ts"
+
+✔ maplescouter bossCuts resolve 1:1 (0.86975ms)
+✔ seed integrity (0.167459ms)
+✔ search (0.979708ms)
+✔ formatKorean (0.136875ms)
+✔ pct (15.202333ms)
+✔ every accepted shape maps to the same character and trimmed payload (8.005625ms)
+✔ relative character_image gets the maplescouter origin (0.4235ms)
+✔ rejects the maplescouter placeholder with a clear message (0.1395ms)
+✔ rejects malformed input (1.016542ms)
+✔ accepts the edges (0.173583ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ driver (1.132083ms)
+✔ seeds load once into an empty database (17.206917ms)
+✔ upsert replaces the character and all its rates (4.786209ms)
+✔ party requests: one open request per character and boss (3.403875ms)
+✔ formParty sums the rates, saves the party and closes the requests (8.109375ms)
+✔ formParty rejects double booking inside the transaction (5.077708ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (1.74725ms)
+✔ seeds do not come back after everyone is deleted (1.838459ms)
+✔ threshold: exactly 110% clears, even with float error (0.588833ms)
+✔ shownSum never displays an unclearable sum as 110.0% (13.427834ms)
+✔ suggestParty returns the smallest clearable set, strongest first (0.499916ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.081375ms)
+✔ suggestParty does not mutate input (0.0725ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (0.733459ms)
+✔ rankParties: a solo-clearable member ranks first (0.088875ms)
+✔ rankParties: size limit, result limit, empty pool (0.072375ms)
+✔ rankParties does not mutate input (0.0995ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1420.843792
+exit=0
+
+$ npx tsc --noEmit
+exit=0
+
+$ npm run lint   (eslint flat config, eslint-config-next 16.4.6; `next lint` no longer exists)
+
+> pocs@0.1.0 lint
+> eslint
+
+exit=0

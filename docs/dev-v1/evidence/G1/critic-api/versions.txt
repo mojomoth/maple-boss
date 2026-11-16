@@ -1,0 +1,5 @@
+# next --version
+Next.js v16.4.6
+npm view next dist-tags.latest: 16.4.6
+# npx tsc --noEmit --incremental false -> exit 0
+# npx eslint . -> exit 0

@@ -1,0 +1,45 @@
+
+> pocs@0.1.0 test
+> node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs "**/*.test.ts"
+
+✔ toImportUrl trims the store to the payload parse.ts accepts, field for field (4.084333ms)
+✔ toImportUrl throws without a maplescouter result (0.266542ms)
+✔ the bookmarklet navigates to /import with the trimmed payload (2.765792ms)
+✔ the bookmarklet stays on the page and explains itself when there is nothing to send (0.461375ms)
+✔ scouterUrl encodes the nickname (0.076125ms)
+✔ maplescouter bossCuts resolve 1:1 (0.750083ms)
+✔ seed integrity (0.158708ms)
+✔ search (0.97575ms)
+✔ formatKorean (0.126416ms)
+✔ pct (14.196708ms)
+✔ every accepted shape maps to the same character and trimmed payload (6.322083ms)
+✔ relative character_image gets the maplescouter origin (0.492375ms)
+✔ rejects the maplescouter placeholder with a clear message (0.146792ms)
+✔ rejects malformed input (1.281667ms)
+✔ accepts the edges (0.208083ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ driver (1.199958ms)
+✔ seeds load once into an empty database (17.044666ms)
+✔ upsert replaces the character and all its rates (3.059417ms)
+✔ party requests: one open request per character and boss (3.537917ms)
+✔ formParty sums the rates, saves the party and closes the requests (8.064833ms)
+✔ formParty rejects double booking inside the transaction (6.039625ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (2.008958ms)
+✔ seeds do not come back after everyone is deleted (2.255834ms)
+✔ threshold: exactly 110% clears, even with float error (3.592917ms)
+✔ shownSum never displays an unclearable sum as 110.0% (12.151084ms)
+✔ suggestParty returns the smallest clearable set, strongest first (0.472375ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.085958ms)
+✔ suggestParty does not mutate input (0.068834ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (0.257709ms)
+✔ rankParties: a solo-clearable member ranks first (0.100542ms)
+✔ rankParties: size limit, result limit, empty pool (0.081875ms)
+✔ rankParties does not mutate input (0.094833ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1218.321291

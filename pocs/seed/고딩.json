@@ -1,0 +1,437 @@
+{
+ "v": 1,
+ "info": {
+  "character_name": "고딩",
+  "world_name": "루나",
+  "character_class": "팔라딘",
+  "character_level": 299,
+  "character_image": "https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDKELAHKOGHPJALMDENEBBMBKPPODKBAEHKIDGOEAOABEIJJPEMDDOMDNPLCHMPMKKDBHOJMOLMMHFBLFFADPAAIDKLBCLLPECGJPHCHJIKNNLFCOMGNOFLKEOIAAGAEEMPCBJJOJPLJNFBCCHLIPOBPFDCOPCCBELHCGPFFALEHIOMHKJNDMDKOFNKANDFMJDFGNDOKJCMGNJHLLGIKGEPKIMPKAFOPMGJLCCPHJNFEKIHJDMGABDHMOILNEKAKMDDPAACDBGOHDNPDIAJOGIIDNPFBLMGPHNKFMBOPDEIOFDFGMIPJOENOEJFMAGHIOGPLHJJGLCJPNDEOHCIMOPPDLLOHPFIEICCGAGFAGLOGOGFKEDCKJPMJFFCBJFACCDFAKJLNIBHEABHEAEMNGONNFMLDBHJAPCMHANEMHGKHKDMOOMLKHOAIEAOHNIDMDMEHKEKDJAEHMGBDMEFKOOCEPLAIEANNLMFLMKDCHNFJECLHEMPPLJNNOFNLHOLNBEKAIOCADAJFKLJJJDBCGDLOJPFEMOCFDLMCAOAMOPLNFNMLKOHJDJDHALPJALMFMDMIPJHGGDMFANDPBOFAMAOOOELOBIHPBDKCKDLPFEJGFMOKLODOBPECHGHONILANPFOKIOMNOCLILEKJFBMNLPJBGONNDCONBABBLLOMDFNEJHCEDOKLNHPOLNIINKAKJCODJAHJGEMIHMDCGILFPDAHNKODHLONOGBAIBFJIMEACOGLMANEAIEJGHCOMMGICAKCDACKOCBFJJPNMLCCAAPGPDKJINGFKLJKOAFCLAHPJNENPCBJJHOFOEGCLCECEDBDFIHFJJBHLPBJAEGPNBAEOBKNAPMBBKHDGMMMGAMKDBPFFIDOANOJGFMFNFOAODDOPPCADGBKMLLHIOCLFNJFAIOMHPPLHOJJJNHOFGGLJHKGJJGDFMPPNMNJDBMKHPMDBHHBNLBPKBAIKAIAKONHIHIEGIFCBLJFELJOINCLGJGIJHGANJEKEE?wmotion=W03"
+ },
+ "calc": {
+  "combatPower": 1957366035,
+  "boss300_stat": 144756,
+  "boss380_stat": 145476,
+  "bossCuts": [
+   {
+    "boss": "발드릭스",
+    "difficulty": "Extreme",
+    "clearRate": 1.1400382832566873,
+    "analytics": "3인 최소컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "림보",
+    "difficulty": "Extreme",
+    "clearRate": 1.3039336263120362,
+    "analytics": "3인 최소컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "유피테르",
+    "difficulty": "Hard",
+    "clearRate": 1.9210971084513662,
+    "analytics": "2인 최소컷",
+    "bossStat": 144803
+   },
+   {
+    "boss": "카링",
+    "difficulty": "Extreme",
+    "clearRate": 0.7929642844259994,
+    "analytics": "파티격 가능",
+    "bossStat": 145476
+   },
+   {
+    "boss": "대적자",
+    "difficulty": "Extreme",
+    "clearRate": 1.0394142632219185,
+    "analytics": "솔플 최소컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Extreme",
+    "clearRate": 1.3451692512292057,
+    "analytics": "솔플 가능",
+    "bossStat": 145476
+   },
+   {
+    "boss": "발드릭스",
+    "difficulty": "Destiny",
+    "clearRate": 1.6264546174462071,
+    "analytics": "솔플 가능",
+    "bossStat": 145476
+   },
+   {
+    "boss": "발드릭스",
+    "difficulty": "Hard",
+    "clearRate": 1.6264546174462071,
+    "analytics": "솔플 가능",
+    "bossStat": 145476
+   },
+   {
+    "boss": "벨로나",
+    "difficulty": "Hard",
+    "clearRate": 1.9310975326548447,
+    "analytics": "솔플 가능",
+    "bossStat": 145476
+   },
+   {
+    "boss": "림보",
+    "difficulty": "Destiny",
+    "clearRate": 2.3806169188138324,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "림보",
+    "difficulty": "Hard",
+    "clearRate": 2.3806169188138324,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "흉성",
+    "difficulty": "Hard",
+    "clearRate": 2.500920596161105,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "유피테르",
+    "difficulty": "Normal",
+    "clearRate": 2.9379850204239863,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144803
+   },
+   {
+    "boss": "대적자",
+    "difficulty": "Destiny",
+    "clearRate": 2.7666511860975502,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "대적자",
+    "difficulty": "Hard",
+    "clearRate": 3.4583139826219376,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "발드릭스",
+    "difficulty": "Normal",
+    "clearRate": 3.804813386548804,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "카링",
+    "difficulty": "Hard",
+    "clearRate": 3.822982077215106,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "세렌",
+    "difficulty": "Extreme",
+    "clearRate": 3.911492041232247,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "검은 마법사",
+    "difficulty": "Extreme",
+    "clearRate": 4.719302934202671,
+    "analytics": "솔플 여유컷",
+    "bossStat": 141222
+   },
+   {
+    "boss": "카링",
+    "difficulty": "Destiny",
+    "clearRate": 4.587578492658127,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "림보",
+    "difficulty": "Normal",
+    "clearRate": 4.88197263695795,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Destiny",
+    "clearRate": 5.764443919424571,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Chaos",
+    "clearRate": 5.764443919424571,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "벨로나",
+    "difficulty": "Normal",
+    "clearRate": 6.746742276875111,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "세렌",
+    "difficulty": "Destiny",
+    "clearRate": 9.901742374108967,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "카링",
+    "difficulty": "Normal",
+    "clearRate": 11.21832027460465,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "흉성",
+    "difficulty": "Normal",
+    "clearRate": 11.666822022277039,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "스우",
+    "difficulty": "Extreme",
+    "clearRate": 13.69404262762115,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144780
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Champion",
+    "clearRate": 19.274364463725192,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "대적자",
+    "difficulty": "Normal",
+    "clearRate": 22.76176366441019,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Normal",
+    "clearRate": 27.53480637675028,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "벨로나",
+    "difficulty": "Easy",
+    "clearRate": 35.69970688739308,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "세렌",
+    "difficulty": "Champion",
+    "clearRate": 34.65609830938138,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "카링",
+    "difficulty": "Easy",
+    "clearRate": 43.50370046249877,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "세렌",
+    "difficulty": "Hard",
+    "clearRate": 49.50871187054483,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "대적자",
+    "difficulty": "Easy",
+    "clearRate": 65.56491515611167,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "검은 마법사",
+    "difficulty": "Champion",
+    "clearRate": 74.78278138124357,
+    "analytics": "솔플 여유컷",
+    "bossStat": 141222
+   },
+   {
+    "boss": "칼로스",
+    "difficulty": "Easy",
+    "clearRate": 80.26247507647676,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "검은 마법사",
+    "difficulty": "Hard",
+    "clearRate": 99.71037517499143,
+    "analytics": "솔플 여유컷",
+    "bossStat": 141222
+   },
+   {
+    "boss": "세렌",
+    "difficulty": "Normal",
+    "clearRate": 114.3170381090463,
+    "analytics": "솔플 여유컷",
+    "bossStat": 145476
+   },
+   {
+    "boss": "진 힐라",
+    "difficulty": "Champion",
+    "clearRate": 135.36109984630536,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "진 힐라",
+    "difficulty": "Hard",
+    "clearRate": 193.37299978043623,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "듄켈",
+    "difficulty": "Hard",
+    "clearRate": 221.1004058400966,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "더스크",
+    "difficulty": "Chaos",
+    "clearRate": 232.9792001445102,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "가엔슬",
+    "difficulty": "Chaos",
+    "clearRate": 192.54148664234552,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "윌",
+    "difficulty": "Hard",
+    "clearRate": 276.7741117572743,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "루시드",
+    "difficulty": "Hard",
+    "clearRate": 138.37276667351966,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "진 힐라",
+    "difficulty": "Normal",
+    "clearRate": 386.74599956087246,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "스우",
+    "difficulty": "Champion",
+    "clearRate": 497.3774502359768,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "데미안",
+    "difficulty": "Hard",
+    "clearRate": 532.0200443145076,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "스우",
+    "difficulty": "Hard",
+    "clearRate": 710.539214622824,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "듄켈",
+    "difficulty": "Normal",
+    "clearRate": 1392.932556792609,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "더스크",
+    "difficulty": "Normal",
+    "clearRate": 1164.896000722551,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "루시드",
+    "difficulty": "Normal",
+    "clearRate": 1450.478168017301,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "윌",
+    "difficulty": "Normal",
+    "clearRate": 1383.8705587863712,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "윌",
+    "difficulty": "Easy",
+    "clearRate": 2075.8058381795563,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "루시드",
+    "difficulty": "Easy",
+    "clearRate": 2501.058149525159,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "가엔슬",
+    "difficulty": "Normal",
+    "clearRate": 3465.746759562219,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "스우",
+    "difficulty": "Normal",
+    "clearRate": 15161.187063608026,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   },
+   {
+    "boss": "데미안",
+    "difficulty": "Normal",
+    "clearRate": 15960.601329435223,
+    "analytics": "솔플 여유컷",
+    "bossStat": 144756
+   }
+  ]
+ }
+}

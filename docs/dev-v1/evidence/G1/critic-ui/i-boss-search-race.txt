@@ -1,0 +1,8 @@
+0 /?boss=normal-kaling 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=extreme-kaling&q=노말+카링"]
+1 /?boss=normal-kaling 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=extreme-kaling&q=노말+카링"]
+2 /?boss=normal-kaling 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=extreme-kaling&q=노말+카링"]
+3 /?boss=normal-kaling 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=extreme-kaling&q=노말+카링"]
+4 /?boss=normal-kaling 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=extreme-kaling&q=노말+카링"]
+ime 0 /?boss=normal-kaling&q=%EB%85%B8%EB%A7%90+%EC%B9%B4%EB%A7%81 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=normal-kaling&q=노말+카링"]
+ime 1 /?boss=normal-kaling&q=%EB%85%B8%EB%A7%90+%EC%B9%B4%EB%A7%81 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=normal-kaling&q=노말+카링"]
+ime 2 /?boss=normal-kaling&q=%EB%85%B8%EB%A7%90+%EC%B9%B4%EB%A7%81 노말 field=노말 카링 ["/?boss=extreme-kaling&q=노말+카링","/?boss=normal-kaling&q=노말+카링"]

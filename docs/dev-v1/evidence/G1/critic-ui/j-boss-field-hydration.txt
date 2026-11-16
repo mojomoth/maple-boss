@@ -1,0 +1,5 @@
+0 typed before hydration: 카링 노말 -> field after hydration: 익스트림 카링
+1 typed before hydration: 카링 노말 -> field after hydration: 익스트림 카링
+2 typed before hydration: 카링 노말 -> field after hydration: 익스트림 카링
+nickname field after hydration: "아무개"
+after 추가: msg= "캐릭터 닉네임을 입력해 주세요." guide= (none)

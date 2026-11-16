@@ -1,0 +1,12 @@
+
+> pocs@0.1.0 shots
+> node scripts/shots.mjs /tmp/critic-shots
+
+ok   / 1440x900 -> ../../../../../../tmp/critic-shots/home-1440.png  200
+ok   /pocs/character 1440x900 -> ../../../../../../tmp/critic-shots/pocs-character-1440.png  200
+ok   /pocs/boss 1440x900 -> ../../../../../../tmp/critic-shots/pocs-boss-1440.png  200
+ok   /pocs/party 1440x900 -> ../../../../../../tmp/critic-shots/pocs-party-1440.png  200
+ok   / 375x812 -> ../../../../../../tmp/critic-shots/home-375.png  200
+ok   /pocs/character 375x812 -> ../../../../../../tmp/critic-shots/pocs-character-375.png  200
+ok   /pocs/boss 375x812 -> ../../../../../../tmp/critic-shots/pocs-boss-375.png  200
+ok   /pocs/party 375x812 -> ../../../../../../tmp/critic-shots/pocs-party-375.png  200

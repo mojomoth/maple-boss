@@ -1,0 +1,25 @@
+ok   Enter on card opens modal; focus on 취소  | button [취소] inDialog=true
+ok   modal shows title, name, Lv/job, note  | 캐릭터를 삭제할까요? 검증삭제tmy Lv.298 아델  목록에서 삭제하면 추천 파티가 다시 계산돼요.  취소 삭제
+ok   dialog is modal and labelled
+     tab inside modal:
+       button [삭제] inDialog=true
+       body
+       button [닫기] inDialog=true
+       button [취소] inDialog=true
+       button [삭제] inDialog=true
+       button [닫기] inDialog=true
+ok   Tab stays inside the modal (or browser chrome), never on page content
+ok   Esc closes; focus back on the opener card  | button [검증삭제tmyLv.298아델스] inDialog=false
+ok   backdrop click closes
+ok   X closes
+ok   DELETE 500 -> modal stays open with Korean alert, focus still in modal  | 캐릭터를 삭제하지 못했어요. / button [삭제] inDialog=true
+FAIL DELETE network failure -> Korean message (not 'Failed to fetch')  | Failed to fetch
+ok   modal fits 375 width  | {"x":19,"y":160.671875,"width":337,"height":490.65625}
+FAIL Tab->삭제, Enter deletes: modal closes, card gone, count decremented, focus on 내 캐릭터 heading  | before=5
+명 after=4
+명 focus=h2#chars-title [내 캐릭터] inDialog=false
+ok   server confirms deletion (404 on second DELETE)
+ok   no page errors
+# 2 failed
+# note: the 'Tab->삭제' FAIL is a parsing bug in this script (count text is '5
+명' -> NaN); the detail shows before=5 after=4 and focus on h2#chars-title, i.e. it passed. The 'network failure' FAIL is a real P2 (raw 'Failed to fetch').
