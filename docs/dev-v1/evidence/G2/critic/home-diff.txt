@@ -1,0 +1,4 @@
+# / vs G1 baseline, pixel diff in headless Chrome (threshold sum|dRGB|>24), npm run shots /tmp/g2critic/shots-harness
+/Users/jeongyounglee/work/repo/maple-boss/docs/dev-v1/evidence/G1/home-1440.png 1440x900 vs shots-harness/home-1440.png 1440x900: 0 px differ (0.000%) box=null
+/Users/jeongyounglee/work/repo/maple-boss/docs/dev-v1/evidence/G1/home-375.png 375x812 vs shots-harness/home-375.png 375x812: 0 px differ (0.000%) box=null
+# /pocs/* differ only by the new top bar (content shifted down ~55px), see pocs-topbar-375.png

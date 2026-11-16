@@ -1,0 +1,116 @@
+# G3 prep: Vercel deployment spike, 2026-11-16T16:10Z-16:22Z (KST 2026-11-17 01:10-01:22)
+# Worktree /tmp/mb-deploy at ddcb272 (detached), deployed from the worktree ROOT. Vercel CLI 65.16.0 via `npx -y vercel@latest`.
+# No tokens or env values were read or printed. Times are from Seoul (edge icn1); the function runs in iad1.
+
+== RESULT ==
+Production URL   https://maple-boss-livid.vercel.app   (public)
+Other alias      https://maple-boss-mojomoths-projects.vercel.app   (302 -> Vercel SSO login)
+Current prod     dpl_AuF4BiCcHpUEKLvcwvoBk2grAR5z  https://maple-boss-240uxhato-mojomoths-projects.vercel.app (302 -> SSO)
+DB               pglite in /tmp, persistent:false (Neon blocked on terms, B1 still open)
+Smoke            59 ok / 0 FAIL, twice (deploy 1 and deploy 2)
+
+== 1. PROJECT SETTINGS ==
+before (vercel project inspect): Root Directory ".", Node.js 26.x, Framework Next.js
+$ vercel project update maple-boss --root-directory pocs --node-version 24.x --framework nextjs
+  -> {"changed":true,"changedSettings":["rootDirectory","nodeVersion"],"settings":{"framework":"nextjs","rootDirectory":"pocs","nodeVersion":"24.x"}}
+  The CLI can set all three; no REST PATCH was needed.
+after (vercel api /v9/projects/maple-boss, selected fields):
+  framework nextjs | rootDirectory pocs | nodeVersion 24.x | sourceFilesOutsideRootDirectory true
+  buildCommand/installCommand/outputDirectory null (defaults: npm install, next build)
+  fluid true | functionDefaultRegions [iad1] | functionDefaultTimeout 300 (s) | memory standard
+  ssoProtection {deploymentType: all_except_custom_domains} | env vars: 0
+.vercelignore at repo root (same file in worktree and /Users/.../maple-boss/.vercelignore):
+  deploy 1 uploaded 286 files; the source listing showed 188 of them were .claude/skills (7.1 MB) -> added /.claude
+  deploy 2 uploaded 98 files. Source tree kept: docs/dev-v1/{DECISIONS,PLAN,STATUS}.md + flow.json, docs/wiki, docs/*.md, pocs/** (no node_modules, .next, data, .hallmark)
+  excluded: .env* (the main tree has an untracked root .env), .claude, agent-sessions, assets, docs/{research,drafts,design,dev-v1/evidence}, pocs/{.next,data,crawler/.venv,crawler/.profile,.hallmark,*.tsbuildinfo}, node_modules
+
+== 2. DATABASE (Neon) ==
+$ vercel integration add neon --name maple-boss-db --billing-plan free_v3 --no-env-pull --json   (from the linked worktree root)
+  exit 1 {"status":"action_required","reason":"integration_terms_acceptance_required",
+          "verification_uri":"https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli"}
+  -> nothing created. Fallback: DATABASE_URL unset, PGlite at /tmp/pglite. `vercel env ls` -> no variables.
+  After the user accepts the terms, rerun the same command; then `vercel env ls` should list DATABASE_URL for Production and Preview.
+  Do not `vercel env pull` into pocs/: a local .env.local would point next dev at the production DB.
+
+== 3. DEPLOYS ==
+$ vercel deploy --prod --yes   (cwd /tmp/mb-deploy, .vercel copied from pocs/.vercel)
+  deploy 1 dpl_6q5sh3tbyHkBUx3GKLTCAtSrDcaP  CLI 49 s, build 42 s (no cache), 286 files, READY
+  deploy 2 dpl_AuF4BiCcHpUEKLvcwvoBk2grAR5z  CLI 20 s, build 16 s (cache restored), 98 files, READY   <- production now
+  build log: Node install 14 s (386 pkgs), "Detected Next.js version: 16.4.6", Next adapter ("Applying modifyConfig from Vercel", "Running onBuildComplete from Vercel"),
+             same route table as local (/, /import and /pocs/character static, the rest dynamic). only npm warnings (eslint 9.39.5 deprecated, unknown env config "cache-dir").
+  vercel inspect: every route is a lambda of the same size (8.59 MB) in iad1; they behave as ONE function (see 4).
+
+== 4. VERIFICATION ON https://maple-boss-livid.vercel.app ==
+GET /api/health            200 {"ok":true,"db":"pglite","persistent":false}
+GET /api/character         200, 3 characters: 강은호, 아델, 고딩
+GET /                      200 text/html, title "Maple Boss 파티 추천", shows "임시 저장소를 쓰고 있어요. 서버가 다시 시작되면 등록한 캐릭터와 파티가 지워져요."
+GET /pocs/party            200 text/html;  /pocs/character 200 (prerender), /pocs/boss 200, /import 200 (prerender), /flow 404 (not built yet)
+$ cd /tmp/mb-deploy/pocs && BASE_URL=https://maple-boss-livid.vercel.app npm run smoke
+  deploy 1: exit 0, 16 s, "# all passed" (59 ok). deploy 2: exit 0, "# all passed" (59 ok). Smoke deleted its own characters and party.
+  POST /api/character -> 501 + importUrl (no crawler on Vercel) as designed.
+
+Latency (curl, from Seoul):
+  cold /api/health, first hit after deploy 1          6.34 s  (PGlite wasm + initdb in /tmp + schema)
+  cold /api/character, first hit on deploy 2          6.45 s  (open + seed); then /, /pocs/party, /api/party, /api/health 0.25-0.34 s on the same instance
+  cold under a 30-request burst (new instances)       up to 8.59 s, 19 of 30 requests
+  warm /api/health TTFB x8                            0.23-0.27 s (deploy 1 warm hits: 0.48 s, 0.25 s)
+  static /maple-boss-logo.png (edge icn1, cache HIT)  0.04-0.06 s
+  -> ~0.2 s of every function call is the Seoul <-> iad1 round trip.
+
+Instances and /tmp (scripts in /tmp/mb-scripts, payload = seed/아델.json renamed 스파이크r5j3):
+  POST /api/character/import                          201 in 306 ms
+  GET /api/character x15 sequential                   15/15 contain it   (same instance; also why smoke passes)
+  GET /api/character x10 parallel                     10/10 contain it
+  GET /api/character x30 parallel                     11/30 contain it; 19 hit fresh instances (cold, freshly seeded, 3 characters)
+  GET /api/character x20 sequential right after       0/20 contain it   <- the router kept sending a single client to a new instance
+  GET /                                               does not show it
+  DELETE /api/character/스파이크r5j3 x12              404 x12 (it lives only on the first instance)
+  Deploy 1 also showed three separate ~6-7 s cold starts in its first 30 s of sequential traffic (/api/health, /, /api/character).
+  Conclusion: /tmp PGlite is per instance and the platform does not pin a client to an instance. Writes can vanish from the
+  user's view between two requests, not only "when the server restarts" as the notice says. Every redeploy also starts empty.
+  The leftover 스파이크r5j3 only exists on a deploy-1 instance; the production alias no longer reaches deploy 1.
+
+Alias switch: the CLI printed READY for deploy 2, yet the next 4 requests (~1 s) were still served by deploy 1
+  (request logs: deploymentId dpl_6q5sh... until 16:16:32.516Z, dpl_AuF4... from 16:16:32.816Z). Wait a few seconds before measuring.
+
+Deployment protection (ssoProtection all_except_custom_domains = Vercel Authentication):
+  https://maple-boss-livid.vercel.app/api/health                          200 (public production domain)
+  https://maple-boss-mojomoths-projects.vercel.app/api/health             302 -> vercel.com/sso-api
+  https://maple-boss-mbq6c9cmc-mojomoths-projects.vercel.app/api/health   302 -> vercel.com/sso-api (deployment URL)
+  Preview URLs behave like deployment URLs: smoke against them needs a protection bypass secret (`vercel curl` can create one; not done).
+
+Request body limit:
+  1.1 MB body / 1.2 MB chunked (smoke)   413 {"error":"데이터가 너무 커요(최대 1MB). ..."}  (our limit)
+  4.4 MB body                             413 same JSON (our limit, reached the function)
+  5.0 MB body                             413 text/plain "Request Entity Too Large FUNCTION_PAYLOAD_TOO_LARGE", x-vercel-error: FUNCTION_PAYLOAD_TOO_LARGE
+  -> the platform cap (4.5 MB) sits above our 1 MB cap; above 4.5 MB the body is not JSON. AddCharacter.tsx and import/page.tsx already use res.json().catch(() => null).
+
+Function max duration: defaultResourceConfig.functionDefaultTimeout 300 s (Hobby + Fluid). No route sets maxDuration; our longest call was 8.6 s.
+
+Logs:
+  $ vercel logs --deployment dpl_6q5sh... --since 1h  -> 400 "The hobby plan does not retain runtime logs for the requested time range." (use the default 30 min)
+  $ vercel logs -n 1000 --json                        -> 0 runtime records (the app only logs on errors)
+  $ vercel logs requests -n 2000 --json               -> 706 records; 5xx: 2, both POST /api/character 501 (expected). No 500s.
+  (The deployment URL also got ~230 requests from Vercel's own post-deploy screenshot bot, US, Linux Chrome UA.)
+
+== 5. /flow AND FILES OUTSIDE pocs/ (build time) ==
+Source upload contains src/docs/dev-v1/flow.json; build cwd is pocs/, so ../docs/dev-v1/flow.json exists during the build.
+Spike page app/flowcheck/page.tsx (removed afterwards):
+  `import flow from "../../../docs/dev-v1/flow.json"`  -> local next build FAILS: "Module not found: Can't resolve '../../../docs/dev-v1/flow.json'" (Turbopack, outside project root)
+  readFileSync(path.join(process.cwd(), "..", "docs", "dev-v1", "flow.json")) in a server component
+     -> local build OK, ○ /flowcheck prerendered "<pre>updatedAt,gates,blockers</pre>"
+     -> Vercel preview build dpl_85rLJYsFbZJvcLMAxemLBSJUg63S OK, "├ ○ /flowcheck" in the build log
+  -> /flow should read flow.json with fs at build (static page), not import it. A dynamic /flow would need it traced into the function.
+  The preview deployment is still there (SSO-protected): `vercel remove` requires human approval:
+     vercel remove https://maple-boss-o9qb6nquj-mojomoths-projects.vercel.app --confirm-name https://maple-boss-o9qb6nquj-mojomoths-projects.vercel.app
+
+== PROBLEMS / FOLLOW-UPS ==
+P1 /tmp PGlite is not a usable store on Vercel: data written by one request can be missing on the next (0/20 after a burst). Neon (B1) is required
+   for v1; until then the "임시 저장소" notice understates it ("서버가 다시 시작되면" -> it can happen at any time).
+P2 Cold start 6.3-8.6 s per new instance with PGlite (initdb + seed). Expect ~1 s with pg + Neon; recheck after B1.
+P2 Function region iad1 while users are in Korea: ~0.2 s per call. When Neon is added, put the DB and the function in the same region
+   (e.g. icn1/hnd1 with an Asia Neon region); latency is dominated by function<->DB once there is a DB.
+P2 Protected aliases: only maple-boss-livid.vercel.app is public; use it as BASE_URL. https://maple-boss.vercel.app is another site (/ 200, /api/health 404), hence the -livid suffix.
+P3 Static import of files outside pocs/ fails under Turbopack; use fs at build time for /flow.
+P3 CLI READY does not mean the alias already serves the new deployment (~1 s lag).
+Note: the CLI prints that the account has no 2FA; the owner can enable it at vercel.com/account/settings/authentication.

@@ -206,10 +206,11 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
           <span>
             배율: <a href="https://maplescouter.com">maplescouter.com</a>
           </span>
-          <nav aria-label="PoC 화면" className="foot-nav">
+          <nav aria-label="다른 화면" className="foot-nav">
             <Link href="/pocs/character">캐릭터 등록</Link>
             <Link href="/pocs/boss">보스 조회</Link>
             <Link href="/pocs/party">파티 편성</Link>
+            <Link href="/flow">개발 진행</Link>
           </nav>
         </div>
       </footer>

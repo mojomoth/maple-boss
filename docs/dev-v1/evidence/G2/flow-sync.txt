@@ -1,0 +1,90 @@
+# npm run flow:sync, twice (2026-11-16T16:32:13Z). STATUS.md starts from the committed version (HEAD); PLAN.md already has the
+# <!-- todo:start/end --> markers added around its TODO list by hand (one line per gate; G0's two lines merged).
+
+## run 1
+$ npm run flow:sync
+
+> pocs@0.1.0 flow:sync
+> node scripts/flow-sync.mjs
+
+갱신  ../docs/dev-v1/STATUS.md
+변경 없음  ../docs/dev-v1/PLAN.md
+exit 0
+
+$ git diff --stat -- docs/dev-v1/STATUS.md docs/dev-v1/PLAN.md
+ docs/dev-v1/PLAN.md   |  5 +++--
+ docs/dev-v1/STATUS.md | 21 +++++++++++++++------
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+## run 2
+$ npm run flow:sync
+
+> pocs@0.1.0 flow:sync
+> node scripts/flow-sync.mjs
+
+변경 없음  ../docs/dev-v1/STATUS.md
+변경 없음  ../docs/dev-v1/PLAN.md
+exit 0
+
+git diff of docs/dev-v1 after run 1: 3098b50ef8ce, after run 2: 3098b50ef8ce -> identical, run 2 changed nothing
+sha1 STATUS.md PLAN.md after run 1: e188648628dd 898766821114 / after run 2: e188648628dd 898766821114 
+
+## git diff -- docs/dev-v1/STATUS.md docs/dev-v1/PLAN.md (after both runs)
+diff --git a/docs/dev-v1/PLAN.md b/docs/dev-v1/PLAN.md
+index 9778484..1fde7f8 100644
+--- a/docs/dev-v1/PLAN.md
++++ b/docs/dev-v1/PLAN.md
+@@ -59,8 +59,9 @@
+ 
+ ## TODO
+ 
+-- [x] G0 기존 파일·CLI 확인, Vercel 프로젝트 `maple-boss` 연결, 기준 커밋(`dev-v1` 브랜치)
+-- [x] G0 Next 16, Postgres(PGlite/Neon) 저장소 전환, 하네스, 개발 서버
++<!-- todo:start -->
++- [x] G0 기존 파일·CLI 확인, Vercel 프로젝트 `maple-boss` 연결, 기준 커밋(`dev-v1` 브랜치), Next 16, Postgres(PGlite/Neon) 저장소 전환, 하네스, 개발 서버
+ - [x] G1 `/pocs/*` 이동, 가져오기(북마클릿·붙여넣기), 최소 API, Critic
+ - [ ] G2 `/flow` 시각화, 문서 동기화, 화면 이동, Critic
+ - [ ] G3 디자인 비교·수정, 문구 검토, 정리, 배포, 배포 URL 재검증
++<!-- todo:end -->
+diff --git a/docs/dev-v1/STATUS.md b/docs/dev-v1/STATUS.md
+index 0b0cafe..5b598ef 100644
+--- a/docs/dev-v1/STATUS.md
++++ b/docs/dev-v1/STATUS.md
+@@ -3,12 +3,21 @@
+ 게이트 표는 `flow.json`에서 만든다 (G2에서 `npm run flow:sync`로 자동화). 그 아래는 사람이 관리한다.
+ 
+ <!-- flow:start -->
+-| 게이트 | 상태 | 근거 |
+-|---|---|---|
+-| G0 준비 | PASS | `evidence/G0/` |
+-| G1 PoC | PASS (P1 1건 수정 후) | `evidence/G1/` |
+-| G2 통합 | 진행 중 | |
+-| G3 완성·배포 | 대기 | |
++<!-- flow:sync updatedAt=2026-11-17T02:00:00+09:00 hash=04791756e9ee -->
++`flow.json` 2026-11-17T02:00:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
++
++| 게이트 | 상태 | 단계 | 근거 |
++|---|---|---|---|
++| G0 준비 | 통과 | 계획 → 구현 → 검증 → 판정 | [`PLAN.md`](PLAN.md), [`DECISIONS.md`](DECISIONS.md), [`evidence/G0/foundation.txt`](evidence/G0/foundation.txt), [`evidence/G0/tests.txt`](evidence/G0/tests.txt), [`evidence/G0/pg-path.txt`](evidence/G0/pg-path.txt), [`evidence/G0/build.txt`](evidence/G0/build.txt), [`evidence/G1/critic-api/`](evidence/G1/critic-api/) |
++| G1 PoC | 통과 | 구현 → 검증 실패 → 수정 → 재검증 → 판정 · 수정 루프 1회 | [`evidence/G1/`](evidence/G1/), [`evidence/G1/critic-ui/`](evidence/G1/critic-ui/), [`evidence/G1/fix-round-1.txt`](evidence/G1/fix-round-1.txt), [`evidence/G1/recheck-1/`](evidence/G1/recheck-1/), [`STATUS.md`](STATUS.md) |
++| G2 통합 | 진행 중 | 구현 대기 → 검증 대기 → 판정 대기 |  |
++| G3 완성·배포 | 대기 | 구현 대기 → 구현 대기 → 검증 대기 → 판정 대기 |  |
++
++차단
++
++- B1 Neon 약관 동의 필요 (사용자) · 열림
++- B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 · 열림
++- B3 .env 없음 (OpenAI 등 키) · 열림
+ <!-- flow:end -->
+ 
+ ## P2 백로그 (G1 Critic, 2026-11-17)
+
+## invalid flow.json on temp copies (DOCS_DIR + FLOW_FILE overrides) exits 1 and writes nothing
+$ DOCS_DIR=<tmp> FLOW_FILE=<tmp>/bad.json node scripts/flow-sync.mjs
+flow:sync 실패: <tmp>/bad.json
+flow.json이 올바르지 않아요
+  - updatedAt: ISO 8601 날짜여야 해요
+  - gates[0].status: todo | running | pass | fail | blocked 중 하나여야 해요 (지금 "done")
+  - gates[0].steps: 하나 이상 있어야 해요
+exit 1
+temp STATUS.md and PLAN.md unchanged

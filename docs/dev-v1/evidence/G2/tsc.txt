@@ -1,0 +1,2 @@
+# npx tsc --noEmit (2026-11-16T16:33:24Z, Node v24.10.0)
+exit 0

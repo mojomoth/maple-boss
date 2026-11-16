@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T02:00:00+09:00",
+  "updatedAt": "2026-11-17T03:30:00+09:00",
   "gates": [
     {
       "id": "G0",
@@ -119,42 +119,61 @@
     {
       "id": "G2",
       "title": "통합",
-      "status": "running",
+      "status": "pass",
       "steps": [
         {
           "id": "G2-build",
           "kind": "build",
           "title": "/flow 시각화, 문서 동기화, 화면 이동",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "status": "pass",
+          "agent": "build:flow+nav · Opus 5.5",
+          "note": "n8n식 캔버스(노드 16개, 수정 루프 호), flow:sync 멱등, 이동 23개 x 2 해상도",
+          "evidence": [
+            "docs/dev-v1/evidence/G2/flow-shots.txt",
+            "docs/dev-v1/evidence/G2/nav-walk.txt",
+            "docs/dev-v1/evidence/G2/flow-sync.txt"
+          ]
         },
         {
           "id": "G2-critic",
           "kind": "critic",
           "title": "독립 검증",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "status": "pass",
+          "agent": "critic:g2 · Opus 5.5",
+          "note": "G2-1~4 통과, P0/P1 없음, P2 4건 기록",
+          "evidence": [
+            "docs/dev-v1/evidence/G2/critic/"
+          ]
         },
         {
           "id": "G2-pass",
           "kind": "pass",
           "title": "PASS",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "status": "pass",
+          "agent": "orchestrator",
+          "note": "flow.json 갱신 후 flow:sync로 STATUS.md·PLAN.md 반영",
+          "evidence": [
+            "docs/dev-v1/STATUS.md"
+          ]
         }
       ]
     },
     {
       "id": "G3",
       "title": "완성·배포",
-      "status": "todo",
+      "status": "running",
       "steps": [
+        {
+          "id": "G3-spike",
+          "kind": "build",
+          "title": "Vercel 배포 사전 검증",
+          "status": "pass",
+          "agent": "spike:vercel · Opus 5.5",
+          "note": "Root Directory=pocs, Node 24.x, 운영 배포에서 smoke 59/59. /tmp PGlite는 인스턴스마다 달라 실사용 불가 → Neon 필요(B1)",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/spike.txt"
+          ]
+        },
         {
           "id": "G3-build",
           "kind": "build",
@@ -197,7 +216,7 @@
   "blockers": [
     {
       "id": "B1",
-      "title": "Neon 약관 동의 필요 (사용자)",
+      "title": "Neon 약관 동의 필요 (사용자). 그 전까지 배포 저장소는 요청 사이에도 데이터가 사라질 수 있음",
       "status": "open"
     },
     {

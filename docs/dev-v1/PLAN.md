@@ -59,8 +59,9 @@
 
 ## TODO
 
-- [x] G0 기존 파일·CLI 확인, Vercel 프로젝트 `maple-boss` 연결, 기준 커밋(`dev-v1` 브랜치)
-- [x] G0 Next 16, Postgres(PGlite/Neon) 저장소 전환, 하네스, 개발 서버
+<!-- todo:start -->
+- [x] G0 기존 파일·CLI 확인, Vercel 프로젝트 `maple-boss` 연결, 기준 커밋(`dev-v1` 브랜치), Next 16, Postgres(PGlite/Neon) 저장소 전환, 하네스, 개발 서버
 - [x] G1 `/pocs/*` 이동, 가져오기(북마클릿·붙여넣기), 최소 API, Critic
-- [ ] G2 `/flow` 시각화, 문서 동기화, 화면 이동, Critic
+- [x] G2 `/flow` 시각화, 문서 동기화, 화면 이동, Critic
 - [ ] G3 디자인 비교·수정, 문구 검토, 정리, 배포, 배포 URL 재검증
+<!-- todo:end -->

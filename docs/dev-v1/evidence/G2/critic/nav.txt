@@ -1,0 +1,73 @@
+ok   1440 / -> click "캐릭터 등록" -> /pocs/character (visible=true, box=719,1000 66x22)
+ok   1440 /pocs/character page horizontal overflow = 0px
+ok   1440 /pocs/character -> click back "← 메인 화면으로" -> /
+ok   1440 / -> click "보스 조회" -> /pocs/boss (visible=true, box=801,1000 53x22)
+ok   1440 /pocs/boss page horizontal overflow = 0px
+ok   1440 /pocs/boss -> click back "← 메인 화면으로" -> /
+ok   1440 / -> click "파티 편성" -> /pocs/party (visible=true, box=870,1000 53x22)
+ok   1440 /pocs/party page horizontal overflow = 0px
+ok   1440 /pocs/party -> click back "← 메인 화면으로" -> /
+ok   1440 / -> click "개발 진행" -> /flow (visible=true, box=939,1000 53x22)
+ok   1440 /flow page horizontal overflow = 0px
+ok   1440 /flow -> click back "Maple Boss 처음으로" -> /
+ok   1440 /pocs/character -> /pocs/boss
+ok   1440 /pocs/character -> /pocs/party
+ok   1440 /pocs/character -> /flow
+ok   1440 /pocs/boss -> /pocs/character
+ok   1440 /pocs/boss -> /pocs/party
+ok   1440 /pocs/boss -> /flow
+ok   1440 /pocs/party -> /pocs/character
+ok   1440 /pocs/party -> /pocs/boss
+ok   1440 /pocs/party -> /flow
+ok   1440 /flow -> /pocs/character
+ok   1440 /flow -> /pocs/boss
+ok   1440 /flow -> /pocs/party
+ok   1440 /import empty: "가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요." back-link=true
+ok   1440 /import empty -> back -> /
+ok   1440 /import garbage: "받은 데이터가 깨져 있어요. maplescouter 결과 페이지에서 다시 보내 주세요." back-link=true
+ok   1440 /import garbage -> back -> /
+ok   1440 /import not-maplescouter: "maplescouter 캐릭터 데이터가 아니에요." back-link=true
+ok   1440 /import not-maplescouter -> back -> /
+ok   1440 /import valid -> / (name on page: 2)
+info cleanup DELETE 아델crithk9un -> 204
+info 1440 GET /pocs -> 404
+ok   1440 page errors: none
+FAIL 1440 >=400 responses: 400 http://localhost:3000/api/character/import
+ok   375 / -> click "캐릭터 등록" -> /pocs/character (visible=true, box=51,2182 66x22)
+ok   375 /pocs/character page horizontal overflow = 0px
+ok   375 /pocs/character -> click back "← 메인 화면으로" -> /
+ok   375 / -> click "보스 조회" -> /pocs/boss (visible=true, box=132,2182 53x22)
+ok   375 /pocs/boss page horizontal overflow = 0px
+ok   375 /pocs/boss -> click back "← 메인 화면으로" -> /
+ok   375 / -> click "파티 편성" -> /pocs/party (visible=true, box=202,2182 53x22)
+ok   375 /pocs/party page horizontal overflow = 0px
+ok   375 /pocs/party -> click back "← 메인 화면으로" -> /
+ok   375 / -> click "개발 진행" -> /flow (visible=true, box=271,2182 53x22)
+ok   375 /flow page horizontal overflow = 0px
+ok   375 /flow -> click back "Maple Boss 처음으로" -> /
+ok   375 /pocs/character -> /pocs/boss
+ok   375 /pocs/character -> /pocs/party
+ok   375 /pocs/character -> /flow
+ok   375 /pocs/boss -> /pocs/character
+ok   375 /pocs/boss -> /pocs/party
+ok   375 /pocs/boss -> /flow
+ok   375 /pocs/party -> /pocs/character
+ok   375 /pocs/party -> /pocs/boss
+ok   375 /pocs/party -> /flow
+ok   375 /flow -> /pocs/character
+ok   375 /flow -> /pocs/boss
+ok   375 /flow -> /pocs/party
+ok   375 /import empty: "가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요." back-link=true
+ok   375 /import empty -> back -> /
+ok   375 /import garbage: "받은 데이터가 깨져 있어요. maplescouter 결과 페이지에서 다시 보내 주세요." back-link=true
+ok   375 /import garbage -> back -> /
+ok   375 /import not-maplescouter: "maplescouter 캐릭터 데이터가 아니에요." back-link=true
+ok   375 /import not-maplescouter -> back -> /
+ok   375 /import valid -> / (name on page: 2)
+info cleanup DELETE 아델crithk9un -> 204
+info 375 GET /pocs -> 404
+ok   375 page errors: none
+FAIL 375 >=400 responses: 400 http://localhost:3000/api/character/import
+# 2 failed
+
+# critic note: the two FAIL lines on ">=400 responses" are the script being over-strict: the only 400 is POST /api/character/import from the deliberate not-maplescouter case (#{"foo":1}), which the page handles with an error message and a link back. Navigation itself: all checks ok.

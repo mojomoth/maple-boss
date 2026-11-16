@@ -1,0 +1,67 @@
+# /flow fails the build when docs/dev-v1/flow.json is missing or invalid, 2026-11-16T16:31:43Z
+# Run in a throwaway copy of pocs/ (APFS clone under /tmp, removed afterwards) so the shared docs/dev-v1/flow.json is never touched.
+
+## case 1: invalid flow.json (gates[2].steps[0].status = "done", gates[0].steps[0].evidence = ["../../etc/passwd"])
+$ next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 1684ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.9s
+  Running TypeScript ...
+  Finished TypeScript in 1723ms ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/15) ...
+  Generating static pages using 11 workers (3/15) 
+  Generating static pages using 11 workers (7/15) 
+  Generating static pages using 11 workers (11/15) 
+Error occurred prerendering page "/flow". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: /flow: <tmp>/docs/dev-v1/flow.json
+flow.json이 올바르지 않아요
+  - gates[0].steps[0].evidence[0]: 저장소 안의 상대 경로여야 해요 (지금 "../../etc/passwd")
+  - gates[2].steps[0].status: todo | running | pass | fail | blocked 중 하나여야 해요 (지금 "done")
+    at <unknown> (app/flow/page.tsx:37:11)
+    at a.s.title (app/flow/page.tsx:44:1)
+  35 |     flow = parseFlow(raw);
+  36 |   } catch (e) {
+> 37 |     throw new Error(`/flow: ${file}\n${(e as Error).message}`);
+     |           ^
+  38 |   }
+  39 |   let status = "";
+  40 |   try { {
+  digest: '3625997518'
+}
+Export encountered an error on /flow/page: /flow, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
+exit 1
+
+## case 2: docs/dev-v1/flow.json missing
+$ next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 16ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 220ms
+  Running TypeScript ...
+  Finished TypeScript in 768ms ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/15) ...
+  Generating static pages using 11 workers (3/15) 
+  Generating static pages using 11 workers (7/15) 
+  Generating static pages using 11 workers (11/15) 
+Error occurred prerendering page "/flow". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: /flow: <tmp>/docs/dev-v1/flow.json을 읽지 못했어요 (ENOENT). docs/dev-v1/flow.json이 있어야 빌드할 수 있어요.
+    at <unknown> (app/flow/page.tsx:31:11)
+    at a.s.title (app/flow/page.tsx:44:1)
+  29 |     raw = readFileSync(file, "utf8");
+  30 |   } catch (e) {
+> 31 |     throw new Error(`/flow: ${file}을 읽지 못했어요 (${(e as NodeJS.ErrnoException).code ?? e}). docs/dev-v1/flow.json이 있어야 빌드할 수 있어요.`);
+     |           ^
+  32 |   }
+  33 |   let flow: Flow;
+  34 |   try { {
+  digest: '2983958310'
+}
+Export encountered an error on /flow/page: /flow, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
+exit 1

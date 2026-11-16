@@ -1,0 +1,28 @@
+# Vercel CLI uploads (vercel deploy from the repo root; Root Directory = pocs).
+# Keep docs/dev-v1/*.json|md (the /flow page reads flow.json at build time); drop everything the app never reads.
+
+# secrets and local state
+.env
+.env.*
+**/.env
+**/.env.*
+.DS_Store
+*.log
+
+# agent skills/transcripts, design sources, research, evidence
+/.claude
+/agent-sessions
+/assets
+/docs/dev-v1/evidence
+/docs/research
+/docs/drafts
+/docs/design
+
+# app: build output, deps, local DB, crawler venv/profile, screenshots
+node_modules
+/pocs/.next
+/pocs/data
+/pocs/crawler/.venv
+/pocs/crawler/.profile
+/pocs/.hallmark
+/pocs/*.tsbuildinfo

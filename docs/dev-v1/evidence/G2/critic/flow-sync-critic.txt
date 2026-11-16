@@ -1,0 +1,104 @@
+# G2 critic: npm run flow:sync checks (2026-11-16T16:43:20Z, Node v24.10.0)
+
+## 1. real docs: two runs, byte-identical before/after (sha1)
+01faebc776ac4c218c29153a3cdfc4322a411556  docs/dev-v1/flow.json
+e188648628dd8c2fe6b1ef37dc4caaad49b0f8fb  docs/dev-v1/STATUS.md
+8987668211146923380e22c0ef3ee2feef012e61  docs/dev-v1/PLAN.md
+변경 없음  ../docs/dev-v1/STATUS.md
+변경 없음  ../docs/dev-v1/PLAN.md
+exit=0
+변경 없음  ../docs/dev-v1/STATUS.md
+변경 없음  ../docs/dev-v1/PLAN.md
+exit=0
+-> unchanged
+
+## 2. temp copy (/tmp/g2critic/docs-mod), flow.json edited: G2 + its steps pass, G3 running, B1 closed, updatedAt 09:30
+### git diff after run 1 (in the temp git repo)
+285c666 run1
+ab243f7 base
+diff --git a/PLAN.md b/PLAN.md
+index 1fde7f8..10a08be 100644
+--- a/PLAN.md
++++ b/PLAN.md
+@@ -62,6 +62,6 @@
+ <!-- todo:start -->
+ - [x] G0 기존 파일·CLI 확인, Vercel 프로젝트 `maple-boss` 연결, 기준 커밋(`dev-v1` 브랜치), Next 16, Postgres(PGlite/Neon) 저장소 전환, 하네스, 개발 서버
+ - [x] G1 `/pocs/*` 이동, 가져오기(북마클릿·붙여넣기), 최소 API, Critic
+-- [ ] G2 `/flow` 시각화, 문서 동기화, 화면 이동, Critic
++- [x] G2 `/flow` 시각화, 문서 동기화, 화면 이동, Critic
+ - [ ] G3 디자인 비교·수정, 문구 검토, 정리, 배포, 배포 URL 재검증
+ <!-- todo:end -->
+diff --git a/STATUS.md b/STATUS.md
+index 5b598ef..b97b619 100644
+--- a/STATUS.md
++++ b/STATUS.md
+@@ -3,19 +3,19 @@
+ 게이트 표는 `flow.json`에서 만든다 (G2에서 `npm run flow:sync`로 자동화). 그 아래는 사람이 관리한다.
+ 
+ <!-- flow:start -->
+-<!-- flow:sync updatedAt=2026-11-17T02:00:00+09:00 hash=04791756e9ee -->
+-`flow.json` 2026-11-17T02:00:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
++<!-- flow:sync updatedAt=2026-11-17T09:30:00+09:00 hash=e01644550318 -->
++`flow.json` 2026-11-17T09:30:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
+ 
+ | 게이트 | 상태 | 단계 | 근거 |
+ |---|---|---|---|
+ | G0 준비 | 통과 | 계획 → 구현 → 검증 → 판정 | [`PLAN.md`](PLAN.md), [`DECISIONS.md`](DECISIONS.md), [`evidence/G0/foundation.txt`](evidence/G0/foundation.txt), [`evidence/G0/tests.txt`](evidence/G0/tests.txt), [`evidence/G0/pg-path.txt`](evidence/G0/pg-path.txt), [`evidence/G0/build.txt`](evidence/G0/build.txt), [`evidence/G1/critic-api/`](evidence/G1/critic-api/) |
+ | G1 PoC | 통과 | 구현 → 검증 실패 → 수정 → 재검증 → 판정 · 수정 루프 1회 | [`evidence/G1/`](evidence/G1/), [`evidence/G1/critic-ui/`](evidence/G1/critic-ui/), [`evidence/G1/fix-round-1.txt`](evidence/G1/fix-round-1.txt), [`evidence/G1/recheck-1/`](evidence/G1/recheck-1/), [`STATUS.md`](STATUS.md) |
+-| G2 통합 | 진행 중 | 구현 대기 → 검증 대기 → 판정 대기 |  |
+-| G3 완성·배포 | 대기 | 구현 대기 → 구현 대기 → 검증 대기 → 판정 대기 |  |
++| G2 통합 | 통과 | 구현 → 검증 → 판정 | [`evidence/G2/flow-1440.png`](evidence/G2/flow-1440.png) |
++| G3 완성·배포 | 진행 중 | 구현 진행 중 → 구현 대기 → 검증 대기 → 판정 대기 |  |
+ 
+ 차단
+ 
+-- B1 Neon 약관 동의 필요 (사용자) · 열림
++- B1 Neon 약관 동의 필요 (사용자) · 해결
+ - B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 · 열림
+ - B3 .env 없음 (OpenAI 등 키) · 열림
+ <!-- flow:end -->
+### run 2
+변경 없음  ../../../../../../tmp/g2critic/docs-mod/STATUS.md
+변경 없음  ../../../../../../tmp/g2critic/docs-mod/PLAN.md
+exit=0
+git status --short (empty = no diff):
+(end)
+
+## 3. invalid flow.json via FLOW_FILE on temp copies (STATUS/PLAN sha checked afterwards)
+array.json exit=0 :: flow.json 최상위는 객체여야 해요
+bad-blocker.json exit=0 ::   - blockers[0].status: open | closed 중 하나여야 해요 (지금 "open?")
+bad-date.json exit=0 ::   - updatedAt: ISO 8601 날짜여야 해요
+bad-kind.json exit=0 ::   - gates[1].steps[0].kind: plan | build | critic | fix | recheck | pass 중 하나여야 해요 (지금 "deploy")
+bad-status.json exit=0 ::   - gates[0].status: todo | running | pass | fail | blocked 중 하나여야 해요 (지금 "done")
+date-injection.json exit=0 ::   - updatedAt: ISO 8601 날짜여야 해요
+dup-id.json exit=0 ::   - gates[1].steps[1].id: id "G1-build"가 겹쳐요
+empty-steps.json exit=0 ::   - gates[2].steps: 하나 이상 있어야 해요
+empty-title.json exit=0 ::   - gates[0].title: 비어 있지 않은 문자열이어야 해요
+empty.json exit=0 :: flow.json이 JSON이 아니에요: Unexpected end of JSON input
+evidence-abs.json exit=0 ::   - gates[0].steps[0].evidence[0]: 저장소 안의 상대 경로여야 해요 (지금 "/abs/path")
+evidence-dotdot.json exit=0 ::   - gates[0].steps[0].evidence[0]: 저장소 안의 상대 경로여야 해요 (지금 "../../etc/passwd")
+evidence-string.json exit=0 ::   - gates[0].steps[0].evidence: 배열이어야 해요
+evidence-url.json exit=0 ::   - gates[0].steps[0].evidence[0]: 저장소 안의 상대 경로여야 해요 (지금 "https://evil.example/x")
+no-gates.json exit=0 ::   - gates: 배열이어야 해요
+not-json.json exit=0 :: flow.json이 JSON이 아니에요: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+null-agent.json exit=0 ::   - gates[0].steps[0].agent: 문자열이어야 해요
+inv/STATUS.md: OK
+inv/PLAN.md: OK
+
+## 4. /flow sync badge, end-to-end via next build of an APFS clone (/tmp/g2critic/clone) with ../docs/dev-v1 swapped
+stale (edited flow.json, old STATUS.md) -> exit=0, badge: 반영 안 됨 (STATUS.md는 2026. 11. 17. 오전 2:00 흐름 기준이에요.)
+after npm run flow:sync -> exit=0, badge: 반영됨 (STATUS.md가 이 흐름과 같아요.)
+updatedAt "2026-11-17 09:30" (accepted by parseFlow) + flow:sync -> exit=0, badge: 반영 안 됨 / STATUS.md에 동기화 기록이 없어요  <- P2-1
+gates[0].status="done" -> build exit=1:
+Error: /flow: /tmp/g2critic/clone/docs/dev-v1/flow.json
+flow.json이 올바르지 않아요
+  - gates[0].status: todo | running | pass | fail | blocked 중 하나여야 해요 (지금 "done")
+    at <unknown> (app/flow/page.tsx:37:11)
+
+## 5. updatedAt formats vs stamp round-trip
+"2026-11-17 02:00" accepted; stamp parsed back=false hashMatch=false
+"Nov 17 2026 02:00" accepted; stamp parsed back=false hashMatch=false
+"2026-11-17T02:00:00+09:00" accepted; stamp parsed back=true hashMatch=true
+"2026-11-17" accepted; stamp parsed back=true hashMatch=true
+"2026/11/17" accepted; stamp parsed back=true hashMatch=true
+"17 November 2026 --> x" rejected   - updatedAt: ISO 8601 날짜여야 해요

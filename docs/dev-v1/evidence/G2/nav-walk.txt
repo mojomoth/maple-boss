@@ -1,0 +1,116 @@
+# node docs/dev-v1/evidence/G2/scripts/nav-walk.mjs (dev server :3000, system Chrome), 2026-11-16T16:33:43Z
+
+# 1440x900
+ok   hop 1 start at /  | /
+ok   hop 1: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 2 start at /flow  | /flow
+ok   hop 2: /flow --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 3 start at /  | /
+ok   hop 3: / --[footer "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 4 start at /pocs/character  | /pocs/character
+ok   hop 4: /pocs/character --[header "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 5 start at /pocs/boss  | /pocs/boss
+ok   hop 5: /pocs/boss --[header "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 6 start at /pocs/party  | /pocs/party
+ok   hop 6: /pocs/party --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 7 start at /flow  | /flow
+ok   hop 7: /flow --[footer "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 8 start at /pocs/party  | /pocs/party
+ok   hop 8: /pocs/party --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 9 start at /  | /
+ok   hop 9: / --[footer "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 10 start at /pocs/boss  | /pocs/boss
+ok   hop 10: /pocs/boss --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 11 start at /  | /
+ok   hop 11: / --[footer "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 12 start at /pocs/party  | /pocs/party
+ok   hop 12: /pocs/party --[header "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 13 start at /pocs/character  | /pocs/character
+ok   hop 13: /pocs/character --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 14 start at /flow  | /flow
+ok   hop 14: /flow --[footer "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 15 start at /pocs/boss  | /pocs/boss
+ok   hop 15: /pocs/boss --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 16 start at /flow  | /flow
+ok   hop 16: /flow --[footer "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 17 start at /pocs/character  | /pocs/character
+ok   hop 17: /pocs/character --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 18 start at /  | /
+ok   hop 18: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 19 start at /flow  | /flow
+ok   hop 19: /flow --[header "Maple Boss 처음으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 20 start at /  | /
+ok   hop 20: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 21 start at /flow  | /flow
+ok   hop 21: /flow --[footer "메인 화면"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 22: / --[bookmarklet]--> /import --[auto]--> /  | navigations /import -> /import -> /import -> /, new card 1
+ok   cleanup: DELETE 아델nav1440gizs  | 204
+ok   hop 23: /import (no payload) --[main "메인 화면으로"]--> /  | 가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요.
+  links /                -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /flow            -> / /pocs/boss /pocs/character /pocs/party
+  links /pocs/character  -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /pocs/boss       -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /pocs/party      -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /import          -> /
+ok   every screen but /import is linked from / (/import is the bookmarklet's)  | / /flow /pocs/boss /pocs/character /pocs/party
+ok   every screen has a way back to /
+ok   no page errors
+
+# 375x812
+ok   hop 1 start at /  | /
+ok   hop 1: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 2 start at /flow  | /flow
+ok   hop 2: /flow --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 3 start at /  | /
+ok   hop 3: / --[footer "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 4 start at /pocs/character  | /pocs/character
+ok   hop 4: /pocs/character --[header "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 5 start at /pocs/boss  | /pocs/boss
+ok   hop 5: /pocs/boss --[header "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 6 start at /pocs/party  | /pocs/party
+ok   hop 6: /pocs/party --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 7 start at /flow  | /flow
+ok   hop 7: /flow --[footer "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 8 start at /pocs/party  | /pocs/party
+ok   hop 8: /pocs/party --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 9 start at /  | /
+ok   hop 9: / --[footer "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 10 start at /pocs/boss  | /pocs/boss
+ok   hop 10: /pocs/boss --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 11 start at /  | /
+ok   hop 11: / --[footer "파티 편성"]--> /pocs/party  | expected /pocs/party, headings: 파티 구직·편성 / 구직 등록 / 보스별 구직 현황 / 편성된 파티
+ok   hop 12 start at /pocs/party  | /pocs/party
+ok   hop 12: /pocs/party --[header "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 13 start at /pocs/character  | /pocs/character
+ok   hop 13: /pocs/character --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 14 start at /flow  | /flow
+ok   hop 14: /flow --[footer "보스 조회"]--> /pocs/boss  | expected /pocs/boss, headings: 보스 조회 / 스우 / 데미안 / 가디언 엔젤 슬라임 / 루시드 / 윌 / 더스크 / 진 힐라 / 듄켈 / 검은 마법사 / 선택받은 세렌 / 감시자 칼로스 / 최초의 대적자 / 카링 / 찬란한 흉성 / 림보 / 발드릭스 / 벨로나 / 유피테르
+ok   hop 15 start at /pocs/boss  | /pocs/boss
+ok   hop 15: /pocs/boss --[header "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 16 start at /flow  | /flow
+ok   hop 16: /flow --[footer "캐릭터 등록"]--> /pocs/character  | expected /pocs/character, headings: 캐릭터 등록 / 등록된 캐릭터 (0)
+ok   hop 17 start at /pocs/character  | /pocs/character
+ok   hop 17: /pocs/character --[header "메인 화면으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 18 start at /  | /
+ok   hop 18: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 19 start at /flow  | /flow
+ok   hop 19: /flow --[header "Maple Boss 처음으로"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 20 start at /  | /
+ok   hop 20: / --[footer "개발 진행"]--> /flow  | expected /flow, headings: 개발 진행 / 막힌 일
+ok   hop 21 start at /flow  | /flow
+ok   hop 21: /flow --[footer "메인 화면"]--> /  | expected /, headings: 내 캐릭터 / 보스 정보 / 추천 파티
+ok   hop 22: / --[bookmarklet]--> /import --[auto]--> /  | navigations /import -> /import -> /import -> /, new card 1
+ok   cleanup: DELETE 아델nav375gop0  | 204
+ok   hop 23: /import (no payload) --[main "메인 화면으로"]--> /  | 가져올 데이터가 없어요. maplescouter 결과 페이지에서 ‘Maple Boss로 보내기’ 북마크를 눌러 주세요.
+  links /                -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /flow            -> / /pocs/boss /pocs/character /pocs/party
+  links /pocs/character  -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /pocs/boss       -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /pocs/party      -> / /flow /pocs/boss /pocs/character /pocs/party
+  links /import          -> /
+ok   every screen but /import is linked from / (/import is the bookmarklet's)  | / /flow /pocs/boss /pocs/character /pocs/party
+ok   every screen has a way back to /
+ok   no page errors
+
+all ok
+exit 0

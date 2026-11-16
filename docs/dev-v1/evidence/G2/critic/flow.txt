@@ -1,0 +1,160 @@
+ok   1440 GET /flow 200
+ok   1440 lane G0 준비: "G0 준비 통과" (expects 통과)
+ok   1440 node G0-plan icon=1 "계획 통과 기존 파일·CLI 확인, 계획·결정 문서 orchestrator · Opus 5.5"
+ok   1440 node G0-build icon=1 "구현 통과 Next 16, Postgres 저장소, 하네스 build:foundation · Opus 5.5"
+ok   1440 node G0-critic icon=1 "검증 통과 독립 검증 (API·데이터) critic:api-data · Opus 5.5"
+ok   1440 node G0-pass icon=1 "판정 통과 PASS orchestrator"
+ok   1440 lane G1 PoC: "G1 PoC 통과" (expects 통과)
+ok   1440 node G1-build icon=1 "구현 통과 /pocs/* 이동, 가져오기, 최소 API build:import+harness · Opus 5.5"
+ok   1440 node G1-critic icon=1 "검증 실패 독립 검증 (UI·흐름) critic:ui-flows · Opus 5.5"
+ok   1440 node G1-fix icon=1 "수정 통과 P1-1 수정 fix:r1 · Opus 5.5"
+ok   1440 node G1-recheck icon=1 "재검증 통과 재검증 recheck:r1 · Opus 5.5"
+ok   1440 node G1-pass icon=1 "판정 통과 PASS orchestrator"
+ok   1440 lane G2 통합: "G2 통합 진행 중" (expects 진행 중)
+ok   1440 node G2-build icon=1 "구현 대기 /flow 시각화, 문서 동기화, 화면 이동 담당 미정"
+ok   1440 node G2-critic icon=1 "검증 대기 독립 검증 담당 미정"
+ok   1440 node G2-pass icon=1 "판정 대기 PASS 담당 미정"
+ok   1440 lane G3 완성·배포: "G3 완성·배포 대기" (expects 대기)
+ok   1440 node G3-build icon=1 "구현 대기 디자인 비교·수정, 문구 검토, 정리 담당 미정"
+ok   1440 node G3-deploy icon=1 "구현 대기 Vercel 배포 담당 미정"
+ok   1440 node G3-critic icon=1 "검증 대기 배포 URL 재검증 담당 미정"
+ok   1440 node G3-pass icon=1 "판정 대기 PASS 담당 미정"
+ok   1440 nodes 16 == steps 16
+  wire G0-plan(right) -> G0-build(left)  flow-wire flow-wire--done
+  wire G0-build(right) -> G0-critic(left)  flow-wire flow-wire--done
+  wire G0-critic(right) -> G0-pass(left)  flow-wire flow-wire--done
+  wire G0-pass(right) -> G1-build(left)  flow-wire flow-wire--done
+  wire G1-build(right) -> G1-critic(left)  flow-wire flow-wire--done
+  wire G1-critic(right) -> G1-fix(left)  flow-wire flow-wire--fail
+  wire G1-fix(right) -> G1-recheck(left)  flow-wire flow-wire--done
+  wire G1-recheck(right) -> G1-pass(left)  flow-wire flow-wire--done
+  wire G1-recheck(bottom) -> G1-critic(bottom)  flow-wire flow-wire--loop
+  wire G1-pass(right) -> G2-build(left)  flow-wire flow-wire--done
+  wire G2-build(right) -> G2-critic(left)  flow-wire flow-wire--todo
+  wire G2-critic(right) -> G2-pass(left)  flow-wire flow-wire--todo
+  wire G2-pass(right) -> G3-build(left)  flow-wire flow-wire--todo
+  wire G3-build(right) -> G3-deploy(left)  flow-wire flow-wire--todo
+  wire G3-deploy(right) -> G3-critic(left)  flow-wire flow-wire--todo
+  wire G3-critic(right) -> G3-pass(left)  flow-wire flow-wire--todo
+ok   1440 wire G0-plan -> G0-build
+ok   1440 wire G0-build -> G0-critic
+ok   1440 wire G0-critic -> G0-pass
+ok   1440 wire G0-pass -> G1-build
+ok   1440 wire G1-build -> G1-critic
+ok   1440 wire G1-critic -> G1-fix
+ok   1440 wire G1-fix -> G1-recheck
+ok   1440 wire G1-recheck -> G1-pass
+ok   1440 wire G1-pass -> G2-build
+ok   1440 wire G2-build -> G2-critic
+ok   1440 wire G2-critic -> G2-pass
+ok   1440 wire G2-pass -> G3-build
+ok   1440 wire G3-build -> G3-deploy
+ok   1440 wire G3-deploy -> G3-critic
+ok   1440 wire G3-critic -> G3-pass
+ok   1440 every wire starts and ends on a node
+ok   1440 loop wire G1-recheck -> G1-critic (G1-recheck -> G1-critic)
+ok   1440 fail wire G1-critic -> G1-fix
+ok   1440 wire labels: 실패, 수정 후 다시 검증
+ok   1440 legend: "범례 계획 구현 검증 수정 재검증 판정 대기 진행 중 통과 실패 막힘 지난 흐름 남은 흐름 실패해서 수정으로 수정 후 다시 검증"
+ok   1440 blockers: "B1 Neon 약관 동의 필요 (사용자) 열림 B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 열림 B3 .env 없음 (OpenAI 등 키) 열림"
+  1440 sync: "문서 반영 반영됨 STATUS.md가 이 흐름과 같아요."
+ok   1440 page horizontal overflow 0px
+ok   1440 click G1-critic -> panel open=true: "G1 PoC · 검증 독립 검증 (UI·흐름) 실패 담당 critic:ui-flows · Opus 5.5 메모 P1-1 375px 삭제 모달 가로 넘침, P2 8건 근거 docs/dev-v1/evidence/G1/critic-ui/ 근거 링크는 GitHub의 dev-v1 브랜치로 열려요."
+ok   1440 focus moved into the panel
+  evidence hrefs: https://github.com/mojomoth/maple-boss/tree/dev-v1/docs/dev-v1/evidence/G1/critic-ui/
+ok   1440 panel box x=992 w=448
+ok   1440 Esc closes (true), focus back on G1-critic
+ok   1440 click G2-build -> panel open=true: "G2 통합 · 구현 /flow 시각화, 문서 동기화, 화면 이동 대기 담당 아직 정해지지 않았어요. 메모 아직 메모가 없어요. 근거 아직 근거 파일이 없어요. 근거 링크는 GitHub의 dev-v1 브랜치로 열려요."
+ok   1440 focus moved into the panel
+ok   1440 panel box x=992 w=448
+ok   1440 Esc closes (true), focus back on G2-build
+ok   1440 Enter on G1-fix opens panel: true
+  focused in panel: 닫기
+ok   1440 Enter on close button closes, focus back on G1-fix
+ok   1440 Space on G0-plan opens panel: true
+ok   1440 backdrop click closes panel: true
+  1440 tab order: A A G0-plan G0-build G0-critic G0-pass G1-build G1-critic G1-fix G1-recheck G1-pass G2-build G2-critic G2-pass G3-build G3-deploy G3-critic G3-pass A A A A NEXTJS-PORTAL BODY A A G0-plan G0-build G0-critic G0-pass G1-build G1-critic G1-fix G1-recheck G1-pass G2-build G2-critic G2-pass G3-build G3-deploy
+ok   1440 every node reachable by Tab
+ok   1440 errors: none
+ok   375 GET /flow 200
+ok   375 lane G0 준비: "G0 준비 통과" (expects 통과)
+ok   375 node G0-plan icon=1 "계획 통과 기존 파일·CLI 확인, 계획·결정 문서 orchestrator · Opus 5.5"
+ok   375 node G0-build icon=1 "구현 통과 Next 16, Postgres 저장소, 하네스 build:foundation · Opus 5.5"
+ok   375 node G0-critic icon=1 "검증 통과 독립 검증 (API·데이터) critic:api-data · Opus 5.5"
+ok   375 node G0-pass icon=1 "판정 통과 PASS orchestrator"
+ok   375 lane G1 PoC: "G1 PoC 통과" (expects 통과)
+ok   375 node G1-build icon=1 "구현 통과 /pocs/* 이동, 가져오기, 최소 API build:import+harness · Opus 5.5"
+ok   375 node G1-critic icon=1 "검증 실패 독립 검증 (UI·흐름) critic:ui-flows · Opus 5.5"
+ok   375 node G1-fix icon=1 "수정 통과 P1-1 수정 fix:r1 · Opus 5.5"
+ok   375 node G1-recheck icon=1 "재검증 통과 재검증 recheck:r1 · Opus 5.5"
+ok   375 node G1-pass icon=1 "판정 통과 PASS orchestrator"
+ok   375 lane G2 통합: "G2 통합 진행 중" (expects 진행 중)
+ok   375 node G2-build icon=1 "구현 대기 /flow 시각화, 문서 동기화, 화면 이동 담당 미정"
+ok   375 node G2-critic icon=1 "검증 대기 독립 검증 담당 미정"
+ok   375 node G2-pass icon=1 "판정 대기 PASS 담당 미정"
+ok   375 lane G3 완성·배포: "G3 완성·배포 대기" (expects 대기)
+ok   375 node G3-build icon=1 "구현 대기 디자인 비교·수정, 문구 검토, 정리 담당 미정"
+ok   375 node G3-deploy icon=1 "구현 대기 Vercel 배포 담당 미정"
+ok   375 node G3-critic icon=1 "검증 대기 배포 URL 재검증 담당 미정"
+ok   375 node G3-pass icon=1 "판정 대기 PASS 담당 미정"
+ok   375 nodes 16 == steps 16
+  wire G0-plan(right) -> G0-build(left)  flow-wire flow-wire--done
+  wire G0-build(right) -> G0-critic(left)  flow-wire flow-wire--done
+  wire G0-critic(right) -> G0-pass(left)  flow-wire flow-wire--done
+  wire G0-pass(right) -> G1-build(left)  flow-wire flow-wire--done
+  wire G1-build(right) -> G1-critic(left)  flow-wire flow-wire--done
+  wire G1-critic(right) -> G1-fix(left)  flow-wire flow-wire--fail
+  wire G1-fix(right) -> G1-recheck(left)  flow-wire flow-wire--done
+  wire G1-recheck(right) -> G1-pass(left)  flow-wire flow-wire--done
+  wire G1-recheck(bottom) -> G1-critic(bottom)  flow-wire flow-wire--loop
+  wire G1-pass(right) -> G2-build(left)  flow-wire flow-wire--done
+  wire G2-build(right) -> G2-critic(left)  flow-wire flow-wire--todo
+  wire G2-critic(right) -> G2-pass(left)  flow-wire flow-wire--todo
+  wire G2-pass(right) -> G3-build(left)  flow-wire flow-wire--todo
+  wire G3-build(right) -> G3-deploy(left)  flow-wire flow-wire--todo
+  wire G3-deploy(right) -> G3-critic(left)  flow-wire flow-wire--todo
+  wire G3-critic(right) -> G3-pass(left)  flow-wire flow-wire--todo
+ok   375 wire G0-plan -> G0-build
+ok   375 wire G0-build -> G0-critic
+ok   375 wire G0-critic -> G0-pass
+ok   375 wire G0-pass -> G1-build
+ok   375 wire G1-build -> G1-critic
+ok   375 wire G1-critic -> G1-fix
+ok   375 wire G1-fix -> G1-recheck
+ok   375 wire G1-recheck -> G1-pass
+ok   375 wire G1-pass -> G2-build
+ok   375 wire G2-build -> G2-critic
+ok   375 wire G2-critic -> G2-pass
+ok   375 wire G2-pass -> G3-build
+ok   375 wire G3-build -> G3-deploy
+ok   375 wire G3-deploy -> G3-critic
+ok   375 wire G3-critic -> G3-pass
+ok   375 every wire starts and ends on a node
+ok   375 loop wire G1-recheck -> G1-critic (G1-recheck -> G1-critic)
+ok   375 fail wire G1-critic -> G1-fix
+ok   375 wire labels: 실패, 수정 후 다시 검증
+ok   375 legend: "범례 계획 구현 검증 수정 재검증 판정 대기 진행 중 통과 실패 막힘 지난 흐름 남은 흐름 실패해서 수정으로 수정 후 다시 검증"
+ok   375 blockers: "B1 Neon 약관 동의 필요 (사용자) 열림 B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 열림 B3 .env 없음 (OpenAI 등 키) 열림"
+  375 sync: "문서 반영 반영됨 STATUS.md가 이 흐름과 같아요."
+ok   375 page horizontal overflow 0px
+ok   375 canvas scrollable: client 341 scroll 1296 overflow-x auto
+ok   375 canvas scrollLeft after scroll = 500
+ok   375 wheel deltaX: canvas scrollLeft 300, window.scrollX 0
+ok   375 click G1-critic -> panel open=true: "G1 PoC · 검증 독립 검증 (UI·흐름) 실패 담당 critic:ui-flows · Opus 5.5 메모 P1-1 375px 삭제 모달 가로 넘침, P2 8건 근거 docs/dev-v1/evidence/G1/critic-ui/ 근거 링크는 GitHub의 dev-v1 브랜치로 열려요."
+ok   375 focus moved into the panel
+  evidence hrefs: https://github.com/mojomoth/maple-boss/tree/dev-v1/docs/dev-v1/evidence/G1/critic-ui/
+ok   375 panel box x=40 w=335
+ok   375 Esc closes (true), focus back on G1-critic
+ok   375 click G2-build -> panel open=true: "G2 통합 · 구현 /flow 시각화, 문서 동기화, 화면 이동 대기 담당 아직 정해지지 않았어요. 메모 아직 메모가 없어요. 근거 아직 근거 파일이 없어요. 근거 링크는 GitHub의 dev-v1 브랜치로 열려요."
+ok   375 focus moved into the panel
+ok   375 panel box x=40 w=335
+ok   375 Esc closes (true), focus back on G2-build
+ok   375 Enter on G1-fix opens panel: true
+  focused in panel: 닫기
+ok   375 Enter on close button closes, focus back on G1-fix
+ok   375 Space on G0-plan opens panel: true
+ok   375 backdrop click closes panel: true
+  375 tab order: A A G0-plan G0-build G0-critic G0-pass G1-build G1-critic G1-fix G1-recheck G1-pass G2-build G2-critic G2-pass G3-build G3-deploy G3-critic G3-pass A A A A NEXTJS-PORTAL BODY A A G0-plan G0-build G0-critic G0-pass G1-build G1-critic G1-fix G1-recheck G1-pass G2-build G2-critic G2-pass G3-build G3-deploy
+ok   375 every node reachable by Tab
+ok   375 errors: none
+# all passed

@@ -1,0 +1,14 @@
+# npm run shots -- ../docs/dev-v1/evidence/G2 (dev server :3000, system Chrome), 2026-11-16T16:34:01Z
+
+> pocs@0.1.0 shots
+> node scripts/shots.mjs ../docs/dev-v1/evidence/G2
+
+ok   / 1440x900 -> ../docs/dev-v1/evidence/G2/home-1440.png  200
+ok   /pocs/character 1440x900 -> ../docs/dev-v1/evidence/G2/pocs-character-1440.png  200
+ok   /pocs/boss 1440x900 -> ../docs/dev-v1/evidence/G2/pocs-boss-1440.png  200
+ok   /pocs/party 1440x900 -> ../docs/dev-v1/evidence/G2/pocs-party-1440.png  200
+ok   / 375x812 -> ../docs/dev-v1/evidence/G2/home-375.png  200
+ok   /pocs/character 375x812 -> ../docs/dev-v1/evidence/G2/pocs-character-375.png  200
+ok   /pocs/boss 375x812 -> ../docs/dev-v1/evidence/G2/pocs-boss-375.png  200
+ok   /pocs/party 375x812 -> ../docs/dev-v1/evidence/G2/pocs-party-375.png  200
+exit 0

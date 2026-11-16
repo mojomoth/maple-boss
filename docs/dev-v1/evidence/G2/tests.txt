@@ -1,0 +1,53 @@
+# npm test (2026-11-16T16:33:28Z, Node v24.10.0)
+
+> pocs@0.1.0 test
+> node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs "**/*.test.ts"
+
+✔ toImportUrl trims the store to the payload parse.ts accepts, field for field (4.895792ms)
+✔ toImportUrl throws without a maplescouter result (0.43ms)
+✔ the bookmarklet navigates to /import with the trimmed payload (5.728833ms)
+✔ the bookmarklet stays on the page and explains itself when there is nothing to send (0.794166ms)
+✔ scouterUrl encodes the nickname (0.084916ms)
+✔ maplescouter bossCuts resolve 1:1 (0.979ms)
+✔ seed integrity (0.162584ms)
+✔ search (0.986833ms)
+✔ formatKorean (0.156125ms)
+✔ pct (26.952333ms)
+✔ every accepted shape maps to the same character and trimmed payload (10.413375ms)
+✔ relative character_image gets the maplescouter origin (0.88225ms)
+✔ rejects the maplescouter placeholder with a clear message (0.430667ms)
+✔ rejects malformed input (1.065458ms)
+✔ accepts the edges (0.60325ms)
+clear_rates: unresolved boss Normal 없는보스 (테스트A)
+✔ driver (1.39ms)
+✔ seeds load once into an empty database (22.597542ms)
+✔ upsert replaces the character and all its rates (5.124ms)
+✔ party requests: one open request per character and boss (3.223209ms)
+✔ formParty sums the rates, saves the party and closes the requests (8.717792ms)
+✔ formParty rejects double booking inside the transaction (5.723208ms)
+✔ delete removes the character, its rates and open requests; parties keep the name (1.842208ms)
+✔ seeds do not come back after everyone is deleted (1.984542ms)
+✔ threshold: exactly 110% clears, even with float error (1.312166ms)
+✔ shownSum never displays an unclearable sum as 110.0% (19.597583ms)
+✔ suggestParty returns the smallest clearable set, strongest first (0.794125ms)
+✔ suggestParty respects the size limit and falls back to the best party (0.112291ms)
+✔ suggestParty does not mutate input (0.080458ms)
+✔ rankParties: 익스트림 카링 gives the three 2-member parties, highest sum first (1.183291ms)
+✔ rankParties: a solo-clearable member ranks first (0.168542ms)
+✔ rankParties: size limit, result limit, empty pool (0.29475ms)
+✔ rankParties does not mutate input (0.135417ms)
+✔ rewrites only the marker blocks, and a second run changes nothing (91.704125ms)
+✔ checks a gate in PLAN.md once it passes and keeps its description (49.335417ms)
+✔ the stamp matches the hash /flow computes, and goes stale when flow.json changes (84.728041ms)
+✔ an invalid flow.json exits 1 with the problem's path and leaves both files alone (123.420875ms)
+✔ a missing marker exits 1 without writing (41.579292ms)
+✔ parseFlow rejects unsafe evidence paths and duplicate ids (1.23425ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1238.2665
+exit 0

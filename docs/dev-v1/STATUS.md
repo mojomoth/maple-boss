@@ -3,12 +3,21 @@
 게이트 표는 `flow.json`에서 만든다 (G2에서 `npm run flow:sync`로 자동화). 그 아래는 사람이 관리한다.
 
 <!-- flow:start -->
-| 게이트 | 상태 | 근거 |
-|---|---|---|
-| G0 준비 | PASS | `evidence/G0/` |
-| G1 PoC | PASS (P1 1건 수정 후) | `evidence/G1/` |
-| G2 통합 | 진행 중 | |
-| G3 완성·배포 | 대기 | |
+<!-- flow:sync updatedAt=2026-11-17T03:30:00+09:00 hash=c5c8e79a05ed -->
+`flow.json` 2026-11-17T03:30:00+09:00 기준. 이 블록은 `npm run flow:sync`가 다시 쓰므로 `flow.json`을 고친 뒤 실행한다.
+
+| 게이트 | 상태 | 단계 | 근거 |
+|---|---|---|---|
+| G0 준비 | 통과 | 계획 → 구현 → 검증 → 판정 | [`PLAN.md`](PLAN.md), [`DECISIONS.md`](DECISIONS.md), [`evidence/G0/foundation.txt`](evidence/G0/foundation.txt), [`evidence/G0/tests.txt`](evidence/G0/tests.txt), [`evidence/G0/pg-path.txt`](evidence/G0/pg-path.txt), [`evidence/G0/build.txt`](evidence/G0/build.txt), [`evidence/G1/critic-api/`](evidence/G1/critic-api/) |
+| G1 PoC | 통과 | 구현 → 검증 실패 → 수정 → 재검증 → 판정 · 수정 루프 1회 | [`evidence/G1/`](evidence/G1/), [`evidence/G1/critic-ui/`](evidence/G1/critic-ui/), [`evidence/G1/fix-round-1.txt`](evidence/G1/fix-round-1.txt), [`evidence/G1/recheck-1/`](evidence/G1/recheck-1/), [`STATUS.md`](STATUS.md) |
+| G2 통합 | 통과 | 구현 → 검증 → 판정 | [`evidence/G2/flow-shots.txt`](evidence/G2/flow-shots.txt), [`evidence/G2/nav-walk.txt`](evidence/G2/nav-walk.txt), [`evidence/G2/flow-sync.txt`](evidence/G2/flow-sync.txt), [`evidence/G2/critic/`](evidence/G2/critic/), [`STATUS.md`](STATUS.md) |
+| G3 완성·배포 | 진행 중 | 구현 → 구현 대기 → 구현 대기 → 검증 대기 → 판정 대기 | [`evidence/G3/spike.txt`](evidence/G3/spike.txt) |
+
+차단
+
+- B1 Neon 약관 동의 필요 (사용자). 그 전까지 배포 저장소는 요청 사이에도 데이터가 사라질 수 있음 · 열림
+- B2 Codex(GPT) 사용량 한도, 2026-11-20 18:31까지 · 열림
+- B3 .env 없음 (OpenAI 등 키) · 열림
 <!-- flow:end -->
 
 ## P2 백로그 (G1 Critic, 2026-11-17)
@@ -32,8 +41,13 @@
 | P2-4 | 붙여넣기 가져오기 성공 뒤 포커스가 body로 간다 | `app/AddCharacter.tsx` |
 | P2-6 | 반올림한 멤버 배율과 내림한 합계가 어긋날 수 있다 | `app/pocs/party/*` |
 | P2-8 | 이미 보이는 보스를 검색하면 `?q=`와 입력값이 남는다 | `app/BossSearch.tsx` |
+| G2-P2-1 | `updatedAt`에 공백이 있으면 검사는 통과하지만 /flow가 계속 '반영 안 됨' | `app/flow/flow.mjs` |
+| G2-P2-2 | 앱 404 페이지가 없어 `/pocs` 등 잘못된 주소에서 영어 기본 404, 돌아갈 링크 없음 | `app/not-found.tsx` |
+| G2-P2-4 | 화면 전환 내비에 현재 페이지 표시가 없다 | `app/pocs/layout.tsx` |
+| SPIKE | `/tmp` PGlite 콜드 스타트 6~9초, 함수 리전 iad1 (Neon 연결 시 리전 맞춤) | 배포 설정 |
 
 ## 알려진 제약
 
 - 가져오기는 데스크톱 전용에 가깝다. 모바일 브라우저는 북마크바 드래그가 안 되고, 붙여넣기에는 개발자 도구가 필요하다.
+- 배포 저장소: Neon(B1) 전까지 `/tmp` PGlite. 인스턴스마다 따로라 저장한 내용이 다음 요청에서 안 보일 수 있다 (`evidence/G3/spike.txt`).
 - 차단 B1~B3: `DECISIONS.md` 참고.
