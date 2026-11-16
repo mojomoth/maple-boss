@@ -1,0 +1,12 @@
+Tool: built-in image_gen
+Input: assets/maple-boss-logo.webp (losslessly decoded to PNG for reference)
+Output: assets/maple-boss-logo-with-text.png
+
+Use case: compositing / logo-brand.
+Asset type: final production horizontal logo on a genuinely transparent background for the Maple Boss service, a MapleStory boss battle calculator.
+Input image 1 is the EDIT TARGET: existing pixel art monkey holding a golden object. Preserve this exact mascot's identity, pose, proportions, face, tail, golden object, pixel detail, colors, and dark outline. Do not redesign the mascot or smooth its pixel art.
+Primary request: extend the canvas horizontally and add a matching text wordmark to the right of the existing mascot. The final asset is one cohesive icon + text logo. Keep the original mascot at the left, fully visible, and the text on the right, optically centered with it.
+Text (verbatim): "Maple Boss". Spell exactly M-a-p-l-e space B-o-s-s. One readable horizontal line, title case.
+Typography: bespoke bold compact pixel game lettering with stepped square corners and clear letter counters; restrained 16-bit RPG style. Warm pale cream and golden yellow letter faces, subtle ochre/dark brown pixel bevel/shadow, and a very dark brown outer outline that matches the existing sprite. The wordmark should look like it belongs to the original character. Strong readable silhouette at website header scale; avoid excessive flourishes.
+Composition: wide horizontal lockup about 3:1 overall aspect ratio; mascot occupies left quarter to third; wordmark spans the right two thirds. Text cap height roughly half to two thirds of mascot height. Balanced small gap, even transparent padding around the artwork. Both words same baseline, no extra subtitle.
+Constraints: real alpha transparency everywhere outside mascot and wordmark; no solid background and no checkerboard baked in. Preserve the provided mascot artwork and its pixel texture. Do not introduce extra maple leaves, crowns, swords, characters, frames, slogans, watermarks, or mockup presentation. Only the original mascot plus the words Maple Boss.

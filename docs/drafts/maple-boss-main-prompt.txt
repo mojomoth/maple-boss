@@ -1,0 +1,36 @@
+Use case: ui-mockup
+Asset type: a finished Korean desktop web app screen design, Maple Boss party recommender, one single flat full-page screenshot, landscape approximately 1920 x 1440.
+Primary request: Turn the supplied hand-drawn layout into a polished, realistic and implementable web interface. Preserve the sketch's exact information architecture, proportions, order and grouping. Do not put sketch numerals or hand-drawn marks in the result.
+
+Input images:
+1. /Users/jyl/work/repo/ai-agent-live/maple-boss/docs/design/1.png is the structural layout reference ONLY.
+2. /Users/jyl/work/repo/ai-agent-live/maple-boss/assets/maple-boss-logo-with-text.png is the actual logo to faithfully place in the header. Preserve the pixel monkey holding a gold coin and the words Maple Boss, transparent/clean background. Its golden pixel-art palette inspires accents and game sprites.
+3. /tmp/maple-scouter-ui-reference.png is a supporting MapleScouter UI style reference ONLY. Borrow its light sage page backdrop, white compact surfaces, tidy Korean sans-serif typography, thin borders and restrained green functional accents. Ignore all red arrows, notice banner and screenshot annotations.
+
+Overall visual language: premium but approachable MapleStory utility dashboard; pale sage ivory background (#edf0e7), white warm cards, soft gray-green borders, dark charcoal text, small muted gray labels, gold/amber focal accents from the logo, muted emerald for positive statuses. Clean 12-16px rounded modern UI cards, subtle shadows. Crisp pixel sprites for game characters and boss, clean Korean sans-serif for UI. Pixel art is limited to the existing logo and game images, not the entire interface. Every section must be fully visible, sharp, unclipped and useful. Realistic desktop application screenshot, no device frame, no perspective, no giant marketing hero.
+
+Composition:
+A white horizontal top bar, about 120px high: supplied Maple Boss logo at the far left approximately 310px wide. Two separately labeled search input groups on the right, inline: '캐릭터 검색' with placeholder '캐릭터 닉네임을 입력하세요' and a small gold '추가' button; '보스 검색' with entered value '루시드' plus magnifier icon. Both inputs equal visual priority. Logo must not become plain typography.
+Below header centered content about 1740px wide with generous 64px side margins.
+Upper content, approximately 500px high: title '내 캐릭터' and small count badge '8', muted helper on right '카드를 클릭하면 삭제할 수 있어요'. Eight equal white character cards, exactly four columns by two rows, matching the sketch. Each card has a large visibly different full-body MapleStory-style pixel character sprite, a prominent Korean nickname below, compact job and level text, small world label '스카니아', and a compact illustrative combat-power line. Plenty of breathing room, not tiny avatars. Keep cards consistent.
+Eight characters, exact distinct names, with their own memorable colorful costume and hair, shown exactly once in this collection:
+'메소도둑' / 'Lv.285 · 나이트로드' / dark-haired rogue with purple claws
+'별빛기도' / 'Lv.282 · 비숍' / white-haired cleric with gold staff and white robe
+'달빛검사' / 'Lv.283 · 히어로' / red-haired knight with sword
+'단풍마법사' / 'Lv.281 · 아크메이지(불,독)' / orange-haired mage with flame staff
+'새벽궁수' / 'Lv.280 · 보우마스터' / blond archer with blue bow
+'그림자춤' / 'Lv.284 · 섀도어' / black-haired rogue with dagger
+'은빛날개' / 'Lv.279 · 아델' / silver-haired sword wielder in lavender
+'초록바람' / 'Lv.278 · 윈드브레이커' / green-haired archer with green cape.
+A thin horizontal divider below the eight-card collection.
+
+Lower content, about 620px high: split into left boss panel at 32% width and right recommended-party panel at 68% width, with aligned top edges.
+Left: section title '보스 정보'. A spacious white card with small amber difficulty pill '하드', prominent '루시드', large attractive full-body MapleStory-inspired Lucid boss image (pink-haired butterfly fairy with a dark purple and pink butterfly wing silhouette) on subtle lavender background. Beneath image a compact aligned info list: '제한 시간 30분', '최대 인원 6명', '추천 조건 서포터 포함'. Bottom small '예시 데이터' caption. Focus is boss likeness, boss name and readable information.
+Right: title '추천 파티' with count '3' and right-aligned small sort control '추천순'. Muted short line '등록한 캐릭터로 공략 가능한 조합이에요'. Three distinct horizontal recommendation cards stacked vertically, ranked clearly '1순위', '2순위', '3순위'. First card has a fine gold outline and a small gold '가장 추천' badge; remaining rows are white with subtle borders. Each row has a left rank marker, a strip of exactly FOUR mini character cards, and compact right summary. Each mini card must contain recognizable full-body matching pixel sprite AND its exact Korean nickname underneath, readable at full size. Names must not be replaced with generic class names or omitted.
+1순위: 메소도둑, 별빛기도, 달빛검사, 단풍마법사. Summary '안정적인 공략' and '4인 파티'.
+2순위: 메소도둑, 별빛기도, 새벽궁수, 그림자춤. Summary '화력 중심' and '4인 파티'.
+3순위: 달빛검사, 별빛기도, 은빛날개, 초록바람. Summary '균형 잡힌 조합' and '4인 파티'.
+Ensure each repeated nickname uses the same appearance as its large character card above. Use compact small job text if space allows, but prioritize sprite and nickname visibility.
+
+Tiny quiet footer 'Maple Boss' and '화면의 캐릭터와 수치는 예시입니다.'
+Constraints: all UI text in Korean except exact brand Maple Boss and Lv.; visibly numbered ranking; real sprites rather than initials placeholders; no modal overlay in this main screen so all content remains readable; no extra navigation or unrelated analytics charts; no watermark; no decorative oversized coins; no dark theme. This is one main UI screen, not a collage or concept board.

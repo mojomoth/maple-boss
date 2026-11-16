@@ -1,0 +1,44 @@
+Use case: ui-mockup.
+Asset type: redesigned Korean Maple Boss desktop dashboard, dark theme, a single flat complete application screenshot, same 1448x1086 aspect ratio as the provided main screenshot.
+
+Input image 1 /Users/jyl/work/repo/ai-agent-live/maple-boss/docs/drafts/maple-boss-main-v1.png is the edit target and exact layout/content reference. Input image 2 /tmp/maple-scouter-ui-reference.png is ONLY a MapleScouter palette/style reference: use its recognizable green primary action and sage-green hue family, adapting them thoughtfully to dark mode. Ignore screenshot arrows, pale day background, banner, other branding, annotation numbers. Input image 3 /Users/jyl/work/repo/ai-agent-live/maple-boss/assets/maple-boss-logo-with-text.png is the exact Maple Boss logo reference.
+
+Primary request: Redesign this existing light dashboard as a polished DARK THEME using the MapleScouter green color family as the primary brand/UI accent. This is a carefully designed dark skin, with consistent surface hierarchy and legibility. Preserve exact layout, section proportions, character appearances, sprite sizes, labels and information architecture of image 1. Header logo and two searches; eight characters in four columns by two rows; lower left boss info; lower right three ranked party rows with four named members each. No rearrangement, no giant hero.
+
+DARK PALETTE (design adaptations of the reference, not claims of exact source tokens):
+Page background near-black neutral charcoal #141719.
+Header dark charcoal #1B1F22.
+Character cards and boss/recommendation panels #23292C.
+Inputs and inset surfaces #191E21.
+Fine subtle borders #384346.
+Primary green #429778, hover/strong green #52B18D, readable light mint text/icons #7ED4B0.
+Main headings and nicknames near-white #EEF3F1.
+Secondary labels and metadata #A7B3AF, quiet text #899690.
+Small badge backgrounds deep desaturated green #263E34, badge text pale mint.
+First ranked party only: thin crisp mint green border, left ranking strip dark forest #203A30, mint crown, mint '가장 추천' badge with dark legible text. No gold border.
+The '추가' button is green, not gold. Count badges green, combat-power figures mint green. No beige or white card backgrounds.
+Only the existing pixel monkey and 'Maple Boss' wordmark retain their original authentic gold colors. Sprite colors stay true and vivid. Boss backdrop dark purple, not pale lavender.
+Do not use blue/navy as the dominant background. Do not turn surfaces into glowing green gradients. Keep the clean restrained practical density of MapleScouter with thin borders, modest 10-14px corner radii, near-flat surfaces and carefully balanced padding.
+
+Preserve complete exact content:
+Header logo on far left; '캐릭터 검색', placeholder '캐릭터 닉네임을 입력하세요', button '추가'; '보스 검색', value '루시드', magnifier.
+Collection title '내 캐릭터', count '8'; helper '카드를 클릭하면 삭제할 수 있어요'.
+Eight unique large character cards, matching all existing sprites:
+'메소도둑' / 'Lv.285 · 나이트로드'
+'별빛기도' / 'Lv.282 · 비숍'
+'달빛검사' / 'Lv.283 · 히어로'
+'단풍마법사' / 'Lv.281 · 아크메이지(불,독)'
+'새벽궁수' / 'Lv.280 · 보우마스터'
+'그림자춤' / 'Lv.284 · 섀도어'
+'은빛날개' / 'Lv.279 · 아델'
+'초록바람' / 'Lv.278 · 윈드브레이커'.
+Each with world '스카니아', current example combat power, same large sprite on left and readable text on right.
+Below divider: '보스 정보', '하드', '루시드', same pink-haired butterfly fairy boss in dark purple scene. Three tidy rows '제한 시간 30분', '최대 인원 6명', '추천 조건 서포터 포함', small '예시 데이터'.
+Right '추천 파티', count '3', helper '등록한 캐릭터로 공략 가능한 조합이에요', sort '추천순'.
+1순위 / 가장 추천: 메소도둑, 별빛기도, 달빛검사, 단풍마법사; '안정적인 공략', '4인 파티'.
+2순위: 메소도둑, 별빛기도, 새벽궁수, 그림자춤; '화력 중심', '4인 파티'.
+3순위: 달빛검사, 별빛기도, 은빛날개, 초록바람; '균형 잡힌 조합', '4인 파티'.
+Each party member has its exact matching visible sprite AND name under it plus small job text. Keep original four-member rows fully readable.
+Quiet footer 'Maple Boss | 화면의 캐릭터와 수치는 예시입니다.'.
+
+Constraints: This is one complete crisp Korean desktop application dark theme screenshot, no browser/device frame, no perspective, no annotations, no palette swatch sheet, no mockup outside interface, no watermark. No modal in this main view. Preserve the original logo, all eight characters and all three ranked named parties. Do not simply dim the whole screenshot; redraw surface and text colors intentionally with excellent contrast.

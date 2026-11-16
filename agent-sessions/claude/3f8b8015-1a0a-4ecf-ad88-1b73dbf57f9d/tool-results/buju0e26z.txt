@@ -1,0 +1,1651 @@
+state: dict 
+  searchResult: dict 
+    userStat: dict 
+      doping: dict 
+        bigHero: bool False
+        greatIgnoreGuard: bool False
+        dragonsMeal: bool False
+        extreme: bool True
+        fish: bool True
+        guildBlessing: bool True
+        jangBi: bool True
+        legendHero: bool False
+        legendHp: bool False
+        rebootAtkPotion: bool False
+        shiningRed: bool True
+        shiningBlue: bool False
+        statPotion: bool True
+        stat: str '30'
+        superPower: bool True
+        unionsPower: bool True
+        urus: bool True
+        heroesHawl: bool True
+        noblessBoss: bool True
+        noblessDmg: bool True
+        noblessCriDmg: bool True
+        noblessIgnore: bool True
+        nobless: list 
+          [list len=4]
+        sayram: bool True
+        collector: bool True
+        buff275: bool False
+        additional1: bool True
+        additional2: bool False
+        championAll: str '0'
+        championAtk: str '0'
+        championBoss: str '0'
+        championIgnore: str '0'
+        championCriDmg: str '0'
+        authenticDmg: bool False
+        moonshine: bool False
+        cake: bool False
+        apple: bool False
+        tengu: bool False
+        candy: bool False
+        house: bool False
+        wedding: bool False
+        specialWedding: bool False
+        whiteBear: bool False
+        ultraVip: bool False
+        superVip: bool False
+        truffle: bool False
+        medal: bool False
+        hyperRainbow: bool False
+        rainbow: bool False
+        thanks: bool False
+        genePass: bool False
+        criDmgRing: str '0'
+        bossDmgRing: str '0'
+      linkSkill: dict 
+        ark: str '2'
+        illium: str '2'
+        kadena: str '2'
+        kain: str '2'
+        magician: str '6'
+        thief: str '6'
+        angel: str '2'
+        hoyoung: str '0'
+        mukhyun: str '0'
+        mihile: str '0'
+        kaiser: str '0'
+        hayato: str '0'
+        kanna: str '0'
+      special: dict 
+        isReboot: bool False
+        combat: bool True
+        epiSoul: str '0'
+        mugongSoul: str '0'
+        genesis: bool True
+        oneHandSword: bool False
+        useRuinForceShild: bool False
+        useContinuousRingAsMainRing: bool False
+        restraintRing: str '5'
+        weaponRing: str '4'
+        ringOfSum: str '4'
+        riskTaker: str '0'
+        statThird: str '8756'
+        statFourth: str '9753'
+        continuosRing: str '5'
+        challenge: bool False
+        is30min: bool False
+        destiny2ndSkill: bool False
+        famPassiveUp: bool False
+      stat: dict 
+        myClass: str '메르세데스'
+        level: str '286'
+        mainStatBase: str '7812'
+        mainStatPer: str '784'
+        mainStatAbs: str '28770'
+        subStatBase: str '4388'
+        subStatPer: str '205'
+        subStatAbs: str '710'
+        ssubStatBase: str '0'
+        ssubStatPer: str '0'
+        ssubStatAbs: str '0'
+        arcaneForce: str '1380'
+        authenticForce: str '660'
+        classForce: str '0'
+        atkBase: str '4293'
+        atkAbs: str '0'
+        dmg: str '120'
+        bossDmg: str '544'
+        normalDmg: str '37'
+        ignoreDef: str '97.2644'
+        buffDuration: str '65'
+        critical: str '213'
+        criticalDmg: str '132.9'
+        weaponAtk: str '832'
+        atkPercent: str '129'
+        coolTimeReducePercent: str '6'
+        coolTimeReduce: str '5'
+        wildhunterUnion: str '212'
+        resetCoolDown: str '7.5'
+        statusAdditionalDmg: str '14'
+        passiveSkillLevelUp: bool False
+        increaseTarget: bool False
+        summonPersistTime: str '10'
+        artifact_increaseTarget: bool True
+        artifact_finalAttack: str '30'
+        subStat_hyper: str ''
+        subStat_ability: str ''
+        subStat_union: str ''
+        subStat_doping: str ''
+        subStat_afterDoping: str ''
+        ssubStat_hyper: str ''
+        ssubStat_ability: str ''
+        ssubStat_union: str ''
+        ssubStat_doping: str ''
+        ssubStat_afterDoping: str ''
+        ignoreElementalResist: str '5'
+        maple_combatPower: str ''
+        tms_fd: str '0'
+        tms_soul: str '0'
+      hexa: dict 
+        skillCore1: str '0'
+        skillCore2: str '0'
+        skillCore3: str '0'
+        skillCore4: str '0'
+        skillCore5: str '0'
+        skillCore6: str '0'
+        masteryCore1: str '0'
+        masteryCore2: str '0'
+        masteryCore3: str '0'
+        masteryCore4: str '0'
+        reinCore1: str '0'
+        reinCore2: str '0'
+        reinCore3: str '0'
+        reinCore4: str '0'
+        generalCore2: str '0'
+        generalCore3: str '0'
+        generalCore4: str '0'
+        hexaStat: int 2
+      seedRing: dict 
+        restraintRing: dict 
+          level: str '5'
+          efficiency: float 36.496350364963504
+        weaponRing: dict 
+          level: str '4'
+          efficiency: int 0
+        ringOfSum: dict 
+          level: str '4'
+          efficiency: float 22.656154053987663
+        riskTakerRing: dict 
+          level: str '4'
+          efficiency: float 18.24817518248174
+        criDamageRing: dict 
+          level: str '4'
+          efficiency: float 9.006111289803798
+        levelRing: dict 
+          level: str '4'
+          efficiency: float 9.93589271240143
+        continuosRing: dict 
+          level: str '5'
+          efficiency: float 21.173893291798752
+        ultiRing: dict 
+          level: str '0'
+          efficiency: int 0
+        durabilityRing: dict 
+          level: str '0'
+          efficiency: int 0
+      entireStat: dict 
+        str: str '14093'
+        dex: str '97828'
+        int: str '8756'
+        luk: str '9753'
+      isGMS: bool False
+      isTMS: bool False
+      isJMS: bool False
+      isMSEA: bool False
+      power: dict 
+        mainStatBase: int 7421
+        mainStatPer: int 774
+        mainStatAbs: int 28770
+        subStatBase: int 4248
+        subStatPer: int 195
+        subStatAbs: int 710
+        ssubStatBase: int 0
+        ssubStatPer: int 0
+        ssubStatAbs: int 0
+        atk: int 4011
+        atkPer: int 129
+        bossDmg: int 569
+        criDmg: float 89.9
+      huntSkill: dict 
+        solJanus: str '30'
+        erdaShower: str '25'
+    simulatorStat: dict 
+      doping: dict 
+        bigHero: bool False
+        greatIgnoreGuard: bool False
+        dragonsMeal: bool False
+        extreme: bool True
+        fish: bool True
+        guildBlessing: bool True
+        jangBi: bool True
+        legendHero: bool False
+        legendHp: bool False
+        rebootAtkPotion: bool False
+        shiningRed: bool True
+        shiningBlue: bool False
+        statPotion: bool True
+        stat: str '30'
+        superPower: bool True
+        unionsPower: bool True
+        urus: bool True
+        heroesHawl: bool True
+        noblessBoss: bool True
+        noblessDmg: bool True
+        noblessCriDmg: bool True
+        noblessIgnore: bool True
+        nobless: list 
+          [list len=4]
+        sayram: bool True
+        collector: bool True
+        buff275: bool False
+        additional1: bool True
+        additional2: bool False
+        championAll: str '0'
+        championAtk: str '0'
+        championBoss: str '0'
+        championIgnore: str '0'
+        championCriDmg: str '0'
+        authenticDmg: bool False
+        moonshine: bool False
+        cake: bool False
+        apple: bool False
+        tengu: bool False
+        candy: bool False
+        house: bool False
+        wedding: bool False
+        specialWedding: bool False
+        whiteBear: bool False
+        ultraVip: bool False
+        superVip: bool False
+        truffle: bool False
+        medal: bool False
+        hyperRainbow: bool False
+        rainbow: bool False
+        thanks: bool False
+        genePass: bool False
+        criDmgRing: str '0'
+        bossDmgRing: str '0'
+      linkSkill: dict 
+        ark: str '2'
+        illium: str '2'
+        kadena: str '2'
+        kain: str '2'
+        magician: str '6'
+        thief: str '6'
+        angel: str '2'
+        hoyoung: str '0'
+        mukhyun: str '0'
+        mihile: str '0'
+        kaiser: str '0'
+        hayato: str '0'
+        kanna: str '0'
+      special: dict 
+        isReboot: bool False
+        combat: bool True
+        epiSoul: str '0'
+        mugongSoul: str '0'
+        genesis: bool True
+        oneHandSword: bool False
+        useRuinForceShild: bool False
+        useContinuousRingAsMainRing: bool False
+        restraintRing: str '5'
+        weaponRing: str '4'
+        ringOfSum: str '4'
+        riskTaker: str '0'
+        statThird: str '8756'
+        statFourth: str '9753'
+        continuosRing: str '5'
+        challenge: bool False
+        is30min: bool False
+        destiny2ndSkill: bool False
+        famPassiveUp: bool False
+      stat: dict 
+        myClass: str '메르세데스'
+        level: str '286'
+        mainStatBase: str '7812'
+        mainStatPer: str '784'
+        mainStatAbs: str '28770'
+        subStatBase: str '4388'
+        subStatPer: str '205'
+        subStatAbs: str '710'
+        ssubStatBase: str '0'
+        ssubStatPer: str '0'
+        ssubStatAbs: str '0'
+        arcaneForce: str '1380'
+        authenticForce: str '660'
+        classForce: str '0'
+        atkBase: str '4293'
+        atkAbs: str '0'
+        dmg: str '120'
+        bossDmg: str '544'
+        normalDmg: str '37'
+        ignoreDef: str '97.2644'
+        buffDuration: str '65'
+        critical: str '213'
+        criticalDmg: str '132.9'
+        weaponAtk: str '832'
+        atkPercent: str '129'
+        coolTimeReducePercent: str '6'
+        coolTimeReduce: str '5'
+        wildhunterUnion: str '212'
+        resetCoolDown: str '7.5'
+        statusAdditionalDmg: str '14'
+        passiveSkillLevelUp: bool False
+        increaseTarget: bool False
+        summonPersistTime: str '10'
+        artifact_increaseTarget: bool True
+        artifact_finalAttack: str '30'
+        subStat_hyper: str ''
+        subStat_ability: str ''
+        subStat_union: str ''
+        subStat_doping: str ''
+        subStat_afterDoping: str ''
+        ssubStat_hyper: str ''
+        ssubStat_ability: str ''
+        ssubStat_union: str ''
+        ssubStat_doping: str ''
+        ssubStat_afterDoping: str ''
+        ignoreElementalResist: str '5'
+        maple_combatPower: str ''
+        tms_fd: str '0'
+        tms_soul: str '0'
+      hexa: dict 
+        skillCore1: str '0'
+        skillCore2: str '0'
+        skillCore3: str '0'
+        skillCore4: str '0'
+        skillCore5: str '0'
+        skillCore6: str '0'
+        masteryCore1: str '0'
+        masteryCore2: str '0'
+        masteryCore3: str '0'
+        masteryCore4: str '0'
+        reinCore1: str '0'
+        reinCore2: str '0'
+        reinCore3: str '0'
+        reinCore4: str '0'
+        generalCore2: str '0'
+        generalCore3: str '0'
+        generalCore4: str '0'
+        hexaStat: int 2
+      seedRing: dict 
+        restraintRing: dict 
+          level: str '5'
+          efficiency: float 36.496350364963504
+        weaponRing: dict 
+          level: str '4'
+          efficiency: float 28.90477243141012
+        ringOfSum: dict 
+          level: str '4'
+          efficiency: float 22.656154053987663
+        riskTakerRing: dict 
+          level: str '4'
+          efficiency: float 18.24817518248174
+        criDamageRing: dict 
+          level: str '4'
+          efficiency: float 9.006111289803798
+        levelRing: dict 
+          level: str '4'
+          efficiency: float 9.93589271240143
+        continuosRing: dict 
+          level: str '5'
+          efficiency: float 21.173893291798752
+        ultiRing: dict 
+          level: str '0'
+          efficiency: int 0
+        durabilityRing: dict 
+          level: str '0'
+          efficiency: int 0
+      entireStat: dict 
+        str: str '14093'
+        dex: str '97828'
+        int: str '8756'
+        luk: str '9753'
+      isGMS: bool False
+      isTMS: bool False
+      isJMS: bool False
+      isMSEA: bool False
+      power: dict 
+        mainStatBase: int 7421
+        mainStatPer: int 774
+        mainStatAbs: int 28770
+        subStatBase: int 4248
+        subStatPer: int 195
+        subStatAbs: int 710
+        ssubStatBase: int 0
+        ssubStatPer: int 0
+        ssubStatAbs: int 0
+        atk: int 4011
+        atkPer: int 129
+        bossDmg: int 569
+        criDmg: float 89.9
+      huntSkill: dict 
+        solJanus: str '30'
+        erdaShower: str '25'
+    calculatedData: dict 
+      combatPower: int 856463177
+      calculatedDamage_300: float 7508300393.781591
+      calculatedDamage_380: float 7609719879.769056
+      calculatedHexaDamage_300: float 7508300393.7815895
+      calculatedHexaDamage_380: float 7609719879.769054
+      calculatedHexaDamage_kaling: float 7609719879.769054
+      mr_stat: int 0
+      mr_hexaStat: int 744293301
+      boss300_stat: int 118569
+      boss380_stat: int 119102
+      boss300_hexaStat: int 118569
+      boss380_hexaStat: int 119102
+      exchangePower: float 1191651572.6394646
+      exchangePowerHexa: float 1191651572.6394646
+      dojo_floor: NoneType None
+      dojo_image_url: str ''
+      class: str '메르세데스'
+      hexaUsed: list 
+        [list len=2]
+      isReboot: bool False
+      increasedByHexa: int 0
+      specEfficiency: dict 
+        dmgeff1: float 0.0009197149298842966
+        atkeff1: float 0.0001813905631291579
+        atkPereff1: float 0.0030595629089273935
+        cridmgeff1: float 0.0026122892535644926
+        igreff1: float 0.00019256675131362755
+        mainStateff1: float 7.549654339953915e-05
+        mainStatPereff1: float 0.0007794978202966793
+        mainStatAbseff1: float 7.980607124687067e-06
+        subStateff1: float 6.42438873537321e-06
+        subStatPereff1: float 9.696437656494728e-05
+        subStatAbseff1: float 1.995151781171822e-06
+        ssubStateff1: int 0
+        ssubStatPereff1: int 0
+        ssubStatAbseff1: int 0
+        allStatEff: float 0.0008764621968616264
+        igreffminus40: float -0.012837783420892701
+        igreffminus35: float -0.010368978916875049
+        igreffminus30: float -0.008252860770573633
+        igreffminus20: float -0.0048141687828345825
+        igreffminus15: float -0.003398236787883091
+        igreffminus10: float -0.002139630570148543
+        igreff1_380: float 0.00024517689615422
+        igreffminus40_380: float -0.01634512641026764
+        igreffminus35_380: float -0.013201832869831787
+        igreffminus30_380: float -0.010507581263743182
+        igreffminus20_380: float -0.006129422403850171
+        igreffminus15_380: float -0.004326651108599866
+        igreffminus10_380: float -0.0027241877350444588
+      hexaEffect: dict 
+        masteryCore1: float 1.0000000000000002
+        masteryCore2: float 1.0000000000000002
+        masteryCore3: float 1.0000000000000002
+        masteryCore4: float 1.0000000000000002
+        skillCore1: float 1.0000000000000002
+        skillCore2: float 1.0000000000000002
+        skillCore3: float 1.0000000000000002
+        skillCore4: float 1.0000000000000002
+        skillCore5: float 1.0000000000000002
+        skillCore6: float 1.0000000000000002
+        reinCore1: float 1.0000000000000002
+        reinCore2: float 1.0000000000000002
+        reinCore3: float 1.0000000000000002
+        reinCore4: float 1.0000000000000002
+        generalCore1: int 1
+        generalCore2: int 1
+        generalCore3: int 1
+        generalCore4: int 1
+      hexaPoss: dict 
+        masteryCore1: float 0.1251
+        masteryCore2: float 0.188
+        masteryCore3: float 0.176
+        masteryCore4: float 0.09029999999999999
+        skillCore1: float 0.0799
+        skillCore2: float 0.04071435053885423
+        reinCore1: float 0.0218
+        reinCore2: float 0.0756
+        reinCore3: float 0.1208
+        reinCore4: float 0.0861
+        generalCore1: int 0
+        generalCore2: int 0
+        generalCore3: int 0
+        generalCore4: int 0
+      maple_scouter_const: dict 
+        stat_score: int 121638
+        attack_score: int 118766
+        attackPer_score: int 122910
+        damage_score: int 111556
+        criDamage_score: int 107595
+        def_score: int 126863
+      elixir: int 3
+      usePassiveAbility: bool False
+      restraintEff1: float 0.36496350364963503
+      bossCuts: list 
+      liberationRates: dict 
+        genesis: dict 
+        destiny: dict 
+      growthTiers: list 
+    simulatorData: dict 
+      combatPower: int 856463177
+      calculatedDamage_300: float 7508300393.781591
+      calculatedDamage_380: float 7609719879.769056
+      calculatedHexaDamage_300: float 7508300393.7815895
+      calculatedHexaDamage_380: float 7609719879.769054
+      calculatedHexaDamage_kaling: float 7609719879.769054
+      mr_stat: int 0
+      mr_hexaStat: int 744293301
+      boss300_stat: int 118569
+      boss380_stat: int 119102
+      boss300_hexaStat: int 118569
+      boss380_hexaStat: int 119102
+      exchangePower: float 1191651572.6394646
+      exchangePowerHexa: float 1191651572.6394646
+      dojo_floor: NoneType None
+      dojo_image_url: str ''
+      class: str '메르세데스'
+      hexaUsed: list 
+        [list len=2]
+      isReboot: bool False
+      increasedByHexa: int 0
+      specEfficiency: dict 
+        dmgeff1: float 0.0009197149298842966
+        atkeff1: float 0.0001813905631291579
+        atkPereff1: float 0.0030595629089273935
+        cridmgeff1: float 0.0026122892535644926
+        igreff1: float 0.00019256675131362755
+        mainStateff1: float 7.549654339953915e-05
+        mainStatPereff1: float 0.0007794978202966793
+        mainStatAbseff1: float 7.980607124687067e-06
+        subStateff1: float 6.42438873537321e-06
+        subStatPereff1: float 9.696437656494728e-05
+        subStatAbseff1: float 1.995151781171822e-06
+        ssubStateff1: int 0
+        ssubStatPereff1: int 0
+        ssubStatAbseff1: int 0
+        allStatEff: float 0.0008764621968616264
+        igreffminus40: float -0.012837783420892701
+        igreffminus35: float -0.010368978916875049
+        igreffminus30: float -0.008252860770573633
+        igreffminus20: float -0.0048141687828345825
+        igreffminus15: float -0.003398236787883091
+        igreffminus10: float -0.002139630570148543
+        igreff1_380: float 0.00024517689615422
+        igreffminus40_380: float -0.01634512641026764
+        igreffminus35_380: float -0.013201832869831787
+        igreffminus30_380: float -0.010507581263743182
+        igreffminus20_380: float -0.006129422403850171
+        igreffminus15_380: float -0.004326651108599866
+        igreffminus10_380: float -0.0027241877350444588
+      hexaEffect: dict 
+        masteryCore1: float 1.0000000000000002
+        masteryCore2: float 1.0000000000000002
+        masteryCore3: float 1.0000000000000002
+        masteryCore4: float 1.0000000000000002
+        skillCore1: float 1.0000000000000002
+        skillCore2: float 1.0000000000000002
+        skillCore3: float 1.0000000000000002
+        skillCore4: float 1.0000000000000002
+        skillCore5: float 1.0000000000000002
+        skillCore6: float 1.0000000000000002
+        reinCore1: float 1.0000000000000002
+        reinCore2: float 1.0000000000000002
+        reinCore3: float 1.0000000000000002
+        reinCore4: float 1.0000000000000002
+        generalCore1: int 1
+        generalCore2: int 1
+        generalCore3: int 1
+        generalCore4: int 1
+      hexaPoss: dict 
+        masteryCore1: float 0.1251
+        masteryCore2: float 0.188
+        masteryCore3: float 0.176
+        masteryCore4: float 0.09029999999999999
+        skillCore1: float 0.0799
+        skillCore2: float 0.04071435053885423
+        reinCore1: float 0.0218
+        reinCore2: float 0.0756
+        reinCore3: float 0.1208
+        reinCore4: float 0.0861
+        generalCore1: int 0
+        generalCore2: int 0
+        generalCore3: int 0
+        generalCore4: int 0
+      maple_scouter_const: dict 
+        stat_score: int 121638
+        attack_score: int 118766
+        attackPer_score: int 122910
+        damage_score: int 111556
+        criDamage_score: int 107595
+        def_score: int 126863
+      elixir: int 3
+      usePassiveAbility: bool False
+      restraintEff1: float 0.36496350364963503
+      bossCuts: list 
+      liberationRates: dict 
+        genesis: dict 
+        destiny: dict 
+      growthTiers: list 
+    calculatedHuntData: dict 
+      erda: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      dawn: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      dusk: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      skill1: dict 
+        name: str ''
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      skill2: dict 
+        name: str ''
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+    afterPatchEfficiencyData: dict 
+      dmgeff1: float 0.0009197149298842966
+      atkeff1: float 0.0001813905631291579
+      atkPereff1: float 0.0030595629089273935
+      cridmgeff1: float 0.0026122892535644926
+      igreff1: float 0.00019256675131362755
+      mainStateff1: float 7.549654339953915e-05
+      mainStatPereff1: float 0.0007794978202966793
+      mainStatAbseff1: float 7.980607124687067e-06
+      subStateff1: float 6.42438873537321e-06
+      subStatPereff1: float 9.696437656494728e-05
+      subStatAbseff1: float 1.995151781171822e-06
+      ssubStateff1: int 0
+      ssubStatPereff1: int 0
+      ssubStatAbseff1: int 0
+      allStatEff: float 0.0008764621968616264
+      igreffminus40: float -0.012837783420892701
+      igreffminus35: float -0.010368978916875049
+      igreffminus30: float -0.008252860770573633
+      igreffminus20: float -0.0048141687828345825
+      igreffminus15: float -0.003398236787883091
+      igreffminus10: float -0.002139630570148543
+      igreff1_380: float 0.00024517689615422
+      igreffminus40_380: float -0.01634512641026764
+      igreffminus35_380: float -0.013201832869831787
+      igreffminus30_380: float -0.010507581263743182
+      igreffminus20_380: float -0.006129422403850171
+      igreffminus15_380: float -0.004326651108599866
+      igreffminus10_380: float -0.0027241877350444588
+    userApiData: dict 
+      date: NoneType None
+      keyValue: str 'null-00'
+      info: dict 
+        character_name: str '으낭다'
+        world_name: str '크로아'
+        character_class: str '아델'
+        character_level: int 250
+        character_exp_rate: str '50.190'
+        character_date_create: str '2023-01-01'
+        character_guild_name: str '2012-05-03T00:00+09:00'
+        character_guild_icon: list 
+          [list len=2]
+        character_image: str '/images/monster.png'
+        popularity: int 1
+        power: int 1
+        arcaneForce: int 0
+        authenticForce: int 0
+        arcaneForceSymbol: int 0
+        authenticForceSymbol: int 0
+        starforce: int 0
+        dojang_best_floor: int 0
+        dojang_best_time: int 0
+        union_level: int 1
+        artifact_level: int 0
+        set_option: str ''
+        weapon_addGrade: int 1
+        itemScore: int 0
+        preset_used: bool False
+        achievement_score: int 0
+        achievement_ranking: int 0
+        character_image_gif: list 
+        character_image_reverse: bool True
+        genesis_2nd_liberation: bool True
+        character_ranking: int 999999
+        class_ranking: int 999999
+        world_ranking: int 999999
+        character_ranking_ratio: int 0
+      hof: NoneType None
+      preset: dict 
+        item_preset: dict 
+          base: int 2
+          used: int 2
+        link_preset: dict 
+          base: int 1
+          used: int 1
+        union_preset: dict 
+          base: int 1
+          used: int 1
+        hyper_preset: dict 
+          base: int 1
+          used: int 1
+        ability_preset: dict 
+          base: int 1
+          used: int 1
+      original_preset: str '00000'
+      symbol: dict 
+        arcane_symbol_1: dict 
+          title: str '소멸의 여로'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOA'
+          growCount: int 0
+        arcane_symbol_2: dict 
+          title: str '츄츄 아일랜드'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOD'
+          growCount: int 0
+        arcane_symbol_3: dict 
+          title: str '레헬른'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOC'
+          growCount: int 0
+        arcane_symbol_4: dict 
+          title: str '아르카나'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOF'
+          growCount: int 0
+        arcane_symbol_5: dict 
+          title: str '모라스'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOE'
+          growCount: int 0
+        arcane_symbol_6: dict 
+          title: str '에스페라'
+          type: str '아케인심볼'
+          level: int 20
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDJHOH'
+          growCount: int 0
+        authentic_symbol_1: dict 
+          title: str '세르니움'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOB'
+          growCount: int 0
+        authentic_symbol_2: dict 
+          title: str '아르크스'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOA'
+          growCount: int 0
+        authentic_symbol_3: dict 
+          title: str '오디움'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOD'
+          growCount: int 0
+        authentic_symbol_4: dict 
+          title: str '도원경'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOC'
+          growCount: int 0
+        authentic_symbol_5: dict 
+          title: str '아르테리아'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOF'
+          growCount: int 0
+        authentic_symbol_6: dict 
+          title: str '카르시온'
+          type: str '어센틱심볼'
+          level: int 11
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDIHOE'
+          growCount: int 0
+        grand_authentic_symbol_1: dict 
+          title: str '탈라하트'
+          type: str '그랜드 어센틱심볼'
+          level: int 0
+          icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEIDPHOB'
+          growCount: int 0
+        grand_authentic_symbol_2: dict 
+          title: str '기어드락'
+          type: str '그랜드 어센틱심볼'
+          level: int 0
+          icon: str '/item/geardrak.png'
+          growCount: int 0
+      symbol_arcane_used: int 2318490000
+      symbol_authentic_used: int 35905500000
+      special: dict 
+        buffDuration: int 65
+        cooldownReduce: int 5
+        cooldownReducePercent: int 6
+        resetCoolDown: float 7.5
+        ignoreElementalResistance: int 5
+        useRuinForceShild: bool False
+        statusAdditionalDmg: int 14
+        passiveSkillLevelUp: bool False
+        increaseTarget: bool False
+        summonPersistTime: int 10
+        mugongSoul: int 0
+        epiSoul: int 0
+        genesis: bool True
+        destiny: bool False
+        destiny2ndSkill: bool False
+        hasJangBi: bool True
+        artifact_finalAttack: int 30
+        artifact_increaseTarget: bool True
+        wildhunterUnion: int 212
+        pirateWeapon: bool False
+        pirateStr: int 3379
+        pirateStrPer: int 0
+        pirateDex: int 5006
+        pirateDexPer: int 579
+      stat: dict 
+        strBase: int 4358
+        dexBase: int 7531
+        intBase: int 2812
+        lukBase: int 3024
+        hpBase: int 44286
+        strAp: int 4
+        dexAp: int 1448
+        intAp: int 4
+        lukAp: int 4
+        hpAp: int 26285
+        strAbs: int 710
+        dexAbs: int 28770
+        intAbs: int 180
+        lukAbs: int 530
+        hpAbs: int 0
+        strPer: int 205
+        dexPer: int 784
+        intPer: int 205
+        lukPer: int 205
+        hpPer: int 33
+      seedRing: dict 
+        ring: dict 
+          title: str '리스트레인트 링'
+          level: int 5
+        weaponEntireAtk: int 832
+      seedRingGuess: dict 
+        applyedSeedringGuess: bool False
+        seedRingFromDB: bool False
+        seedRingGuess: dict 
+          name: str ''
+          level: int 0
+      stat_detail: dict 
+        criRate: int 143
+        criDmg: float 93.9
+        bossDmg: int 524
+        dmg: int 70
+        ignoreGuard: float 96.3032
+        physicalAtk: int 4061
+        magicAtk: int 2617
+        physicalAtkPer: int 129
+        magicAtkPer: int 0
+        normalDmg: int 37
+      linkSkill: dict 
+        ark: int 2
+        illium: int 2
+        kadena: int 2
+        kain: int 2
+        magician: int 6
+        thief: int 6
+        angel: int 2
+        hoyoung: int 0
+        mihile: int 0
+        kaiser: int 0
+        hayato: int 0
+        kanna: int 0
+        mukhyun: int 0
+      hexaSkill: dict 
+        skillCore1: int 30
+        skillCore2: int 0
+        skillCore3: int 0
+        skillCore4: int 0
+        skillCore5: int 0
+        skillCore6: int 0
+        masteryCore1: int 30
+        masteryCore2: int 30
+        masteryCore3: int 29
+        masteryCore4: int 25
+        reinCore1: int 30
+        reinCore2: int 30
+        reinCore3: int 30
+        reinCore4: int 30
+      hexaSkill_general: dict 
+        generalCore1: int 30
+        generalCore2: int 0
+        generalCore3: int 0
+        generalCore4: int 0
+      hexaSkill_used: dict 
+        sole_Erda: int 1159
+        sole_ErdaPrice: int 32238
+      huntSkill: dict 
+        erdaShower: int 25
+      hexaStat_opened: bool True
+      guildNobless: list 
+        [list len=4]
+      entireStat: dict 
+        str: int 14093
+        dex: int 97828
+        int: int 8756
+        luk: int 9753
+      settings: dict 
+        now_union: list 
+          [list len=8]
+        now_link: list 
+          [list len=12]
+        now_hyper: list 
+          [list len=7]
+        now_specialBuff: dict 
+          skill_name: list 
+          skill_effect: list 
+          skill_icon: list 
+        now_seedRing: list 
+          [list len=5]
+        now_GuildNoblessPoint: int 60
+        now_ability: list 
+          [list len=3]
+        now_dropMeso: list 
+          [list len=2]
+        now_title: dict 
+          title_name: str 'BOSS'
+          title_icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KGICLAJI'
+          title_description: str 'BOSS 칭호이다.\n\n보스 몬스터 공격 시 데미지 +30%\n방어율 무시+30%\n공격력/마력+30\n옵션 적용 기간: 30일\n\n클릭으로 ON/OFF시킬
+          title_expire: str '2026-01-01'
+          title_shape_icon: str 'https://open.api.nexon.com/static/maplestory/item/icon/KGICLAJI'
+          title_shape_name: str 'BOSS 칭호'
+        now_champion: list 
+          [list len=5]
+      settings_wrong: list 
+      power: dict 
+        strBase: int 4248
+        strPer: int 195
+        dexBase: int 7421
+        dexPer: int 774
+        intBase: int 2702
+        intPer: int 195
+        lukBase: int 2914
+        lukPer: int 195
+        hpBase: int 42286
+        hpPer: int 33
+        mainStatBase: int 0
+        mainStatPer: int 0
+        subStatBase: int 0
+        subStatPer: int 0
+        ssubStatBase: int 0
+        ssubStatPer: int 0
+        physicalAtk: int 4011
+        magicAtk: int 2567
+        physicalAtkPer: int 129
+        magicAtkPer: int 0
+        dmg: int 60
+        bossDmg: int 509
+        criDmg: float 89.9
+      itemPure: dict 
+        mainStat: int 5653
+        mainStatPer: int 774
+        mainStatAbs: int 28200
+        subStat: int 3994
+        subStatPer: int 195
+        ssubStat: int 0
+        ssubStatPer: int 0
+        criDmg: float 38.9
+        bossDmg: int 274
+        ignoreGuard: float 78.07817418112829
+        atk: int 3850
+        atkPer: int 129
+      badge: list 
+        [list len=23]
+          badge_name: str 'donator'
+          badge_grade: str 'challenger'
+      exp: dict 
+        challengers: bool False
+        mercedesLink: int 2
+        zeroLevel: int 260
+        union: int 0
+        artifact: int 12
+        holySymbol: int 35
+        authenticSymbol: int 50
+        solJanus: int 100
+        hyperStat: int 0
+        grandSymbol: int 0
+        pendent: int 0
+        title: int 0
+        bloodRing: bool False
+        boostRing: bool False
+        eventExp: int 20
+        arcaneExp: int 35
+        grandisExp: int 45
+        monsterParkExp: int 60
+    userHistory: NoneType None
+    userEquipData: NoneType None
+    userHuntApiData: dict 
+      doping: dict 
+        bigHero: bool False
+        greatIgnoreGuard: bool False
+        dragonsMeal: bool False
+        extreme: bool True
+        fish: bool True
+        guildBlessing: bool True
+        jangBi: bool True
+        legendHero: bool False
+        legendHp: bool False
+        rebootAtkPotion: bool False
+        shiningRed: bool True
+        shiningBlue: bool False
+        statPotion: bool True
+        stat: str '30'
+        superPower: bool True
+        unionsPower: bool True
+        urus: bool True
+        heroesHawl: bool True
+        noblessBoss: bool True
+        noblessDmg: bool True
+        noblessCriDmg: bool True
+        noblessIgnore: bool True
+        nobless: list 
+          [list len=4]
+        sayram: bool True
+        collector: bool True
+        buff275: bool False
+        additional1: bool True
+        additional2: bool False
+        championAll: str '0'
+        championAtk: str '0'
+        championBoss: str '0'
+        championIgnore: str '0'
+        championCriDmg: str '0'
+        authenticDmg: bool False
+        moonshine: bool False
+        cake: bool False
+        apple: bool False
+        tengu: bool False
+        candy: bool False
+        house: bool False
+        wedding: bool False
+        specialWedding: bool False
+        whiteBear: bool False
+        ultraVip: bool False
+        superVip: bool False
+        truffle: bool False
+        medal: bool False
+        hyperRainbow: bool False
+        rainbow: bool False
+        thanks: bool False
+        genePass: bool False
+        criDmgRing: str '0'
+        bossDmgRing: str '0'
+      linkSkill: dict 
+        ark: str '2'
+        illium: str '2'
+        kadena: str '2'
+        kain: str '2'
+        magician: str '6'
+        thief: str '6'
+        angel: str '2'
+        hoyoung: str '0'
+        mukhyun: str '0'
+        mihile: str '0'
+        kaiser: str '0'
+        hayato: str '0'
+        kanna: str '0'
+      special: dict 
+        isReboot: bool False
+        combat: bool True
+        epiSoul: str '0'
+        mugongSoul: str '0'
+        genesis: bool True
+        oneHandSword: bool False
+        useRuinForceShild: bool False
+        useContinuousRingAsMainRing: bool False
+        restraintRing: str '5'
+        weaponRing: str '4'
+        ringOfSum: str '4'
+        riskTaker: str '0'
+        statThird: str '8756'
+        statFourth: str '9753'
+        continuosRing: str '5'
+        challenge: bool False
+        is30min: bool False
+        destiny2ndSkill: bool False
+        famPassiveUp: bool False
+      stat: dict 
+        myClass: str '메르세데스'
+        level: str '286'
+        mainStatBase: str '7812'
+        mainStatPer: str '784'
+        mainStatAbs: str '28770'
+        subStatBase: str '4388'
+        subStatPer: str '205'
+        subStatAbs: str '710'
+        ssubStatBase: str '0'
+        ssubStatPer: str '0'
+        ssubStatAbs: str '0'
+        arcaneForce: str '1380'
+        authenticForce: str '660'
+        classForce: str '0'
+        atkBase: str '4293'
+        atkAbs: str '0'
+        dmg: str '120'
+        bossDmg: str '544'
+        normalDmg: str '37'
+        ignoreDef: str '97.2644'
+        buffDuration: str '65'
+        critical: str '213'
+        criticalDmg: str '132.9'
+        weaponAtk: str '832'
+        atkPercent: str '129'
+        coolTimeReducePercent: str '6'
+        coolTimeReduce: str '5'
+        wildhunterUnion: str '212'
+        resetCoolDown: str '7.5'
+        statusAdditionalDmg: str '14'
+        passiveSkillLevelUp: bool False
+        increaseTarget: bool False
+        summonPersistTime: str '10'
+        artifact_increaseTarget: bool True
+        artifact_finalAttack: str '30'
+        subStat_hyper: str ''
+        subStat_ability: str ''
+        subStat_union: str ''
+        subStat_doping: str ''
+        subStat_afterDoping: str ''
+        ssubStat_hyper: str ''
+        ssubStat_ability: str ''
+        ssubStat_union: str ''
+        ssubStat_doping: str ''
+        ssubStat_afterDoping: str ''
+        ignoreElementalResist: str '5'
+        maple_combatPower: str ''
+        tms_fd: str '0'
+        tms_soul: str '0'
+      hexa: dict 
+        skillCore1: str '0'
+        skillCore2: str '0'
+        skillCore3: str '0'
+        skillCore4: str '0'
+        skillCore5: str '0'
+        skillCore6: str '0'
+        masteryCore1: str '0'
+        masteryCore2: str '0'
+        masteryCore3: str '0'
+        masteryCore4: str '0'
+        reinCore1: str '0'
+        reinCore2: str '0'
+        reinCore3: str '0'
+        reinCore4: str '0'
+        generalCore2: str '0'
+        generalCore3: str '0'
+        generalCore4: str '0'
+        hexaStat: int 2
+      seedRing: dict 
+        restraintRing: dict 
+          level: str '5'
+          efficiency: float 36.496350364963504
+        weaponRing: dict 
+          level: str '4'
+          efficiency: float 28.90477243141012
+        ringOfSum: dict 
+          level: str '4'
+          efficiency: float 22.656154053987663
+        riskTakerRing: dict 
+          level: str '4'
+          efficiency: float 18.24817518248174
+        criDamageRing: dict 
+          level: str '4'
+          efficiency: float 9.006111289803798
+        levelRing: dict 
+          level: str '4'
+          efficiency: float 9.93589271240143
+        continuosRing: dict 
+          level: str '5'
+          efficiency: float 21.173893291798752
+        ultiRing: dict 
+          level: str '0'
+          efficiency: int 0
+        durabilityRing: dict 
+          level: str '0'
+          efficiency: int 0
+      entireStat: dict 
+        str: str '14093'
+        dex: str '97828'
+        int: str '8756'
+        luk: str '9753'
+      isGMS: bool False
+      isTMS: bool False
+      isJMS: bool False
+      isMSEA: bool False
+      power: dict 
+        mainStatBase: int 7421
+        mainStatPer: int 774
+        mainStatAbs: int 28770
+        subStatBase: int 4248
+        subStatPer: int 195
+        subStatAbs: int 710
+        ssubStatBase: int 0
+        ssubStatPer: int 0
+        ssubStatAbs: int 0
+        atk: int 4011
+        atkPer: int 129
+        bossDmg: int 569
+        criDmg: float 89.9
+      huntSkill: dict 
+        solJanus: str '30'
+        erdaShower: str '25'
+    userHuntEquipData: list 
+      [list len=24]
+        slot: str '무기'
+        part: str '듀얼 보우건'
+        name: str '제네시스 듀얼보우건'
+        iconUrl: str 'https://open.api.nexon.com/static/maplestory/item/icon/KEKAJGLD'
+        starforce: str '22'
+        starforce_scroll_flag: str '미사용'
+        scroll_upgrade: str '8'
+        totalOption: dict 
+          str: str '355'
+          dex: str '327'
+          int: str '30'
+          luk: str '30'
+          max_hp: str '255'
+          max_mp: str '255'
+          attack_power: str '832'
+          magic_power: str '0'
+          armor: str '0'
+          speed: str '19'
+          jump: str '0'
+          boss_damage: str '30'
+          ignore_monster_armor: str '20'
+          all_stat: str '0'
+          damage: str '6'
+          equipment_level_decrease: int 0
+          max_hp_rate: str '0'
+          max_mp_rate: str '0'
+        baseOption: dict 
+          str: str '150'
+          dex: str '150'
+          int: str '0'
+          luk: str '0'
+          max_hp: str '0'
+          max_mp: str '0'
+          attack_power: str '318'
+          magic_power: str '0'
+          armor: str '0'
+          speed: str '19'
+          jump: str '0'
+          boss_damage: str '30'
+          ignore_monster_armor: str '20'
+          all_stat: str '0'
+          max_hp_rate: str '0'
+          max_mp_rate: str '0'
+          base_equipment_level: int 200
+          damage: str '0'
+        addOption: dict 
+          str: str '60'
+          dex: str '0'
+          int: str '30'
+          luk: str '30'
+          max_hp: str '0'
+          max_mp: str '0'
+          attack_power: str '196'
+          magic_power: str '0'
+          armor: str '0'
+          speed: str '0'
+          jump: str '0'
+          boss_damage: str '0'
+          damage: str '6'
+          all_stat: str '0'
+          equipment_level_decrease: int 0
+        etcOption: dict 
+          str: str '0'
+          dex: str '32'
+          int: str '0'
+          luk: str '0'
+          max_hp: str '0'
+          max_mp: str '0'
+          attack_power: str '72'
+          magic_power: str '0'
+          armor: str '0'
+          speed: str '0'
+          jump: str '0'
+        starforceOption: dict 
+          str: str '145'
+          dex: str '145'
+          int: str '0'
+          luk: str '0'
+          max_hp: str '255'
+          max_mp: str '255'
+          attack_power: str '246'
+          magic_power: str '0'
+          armor: str '0'
+          speed: str '0'
+          jump: str '0'
+        exceptionalOption: dict 
+          str: str '0'
+          dex: str '0'
+          int: str '0'
+          luk: str '0'
+          max_hp: str '0'
+          max_mp: str '0'
+          attack_power: str '0'
+          magic_power: str '0'
+          exceptional_upgrade: int 0
+        potential_grade: str '레전드리'
+        potential_option_1: list 
+          [list len=3]
+        additional_potential_grade: str '레전드리'
+        additional_potential_option_1: list 
+          [list len=3]
+        hasExceptional: bool False
+        soul_name: str '위대한 카링의 소울 적용'
+        soul_option: str '공격력 : +3%'
+        soul_atk: NoneType None
+        soul_potential_grade: NoneType None
+        soul_potential_amplified_grade: NoneType None
+        soul_potential_option_1: list 
+          [list len=3]
+        ring_level: int 0
+        character_name: str '고마오'
+        class_group: str '궁수'
+        cuttable_count: str '255'
+        itemScore: str '-'
+    userSpecialData: NoneType None
+    userStatHunt: dict 
+      doping: dict 
+        bigHero: bool False
+        greatIgnoreGuard: bool False
+        dragonsMeal: bool False
+        extreme: bool True
+        fish: bool True
+        guildBlessing: bool True
+        jangBi: bool True
+        legendHero: bool False
+        legendHp: bool False
+        rebootAtkPotion: bool False
+        shiningRed: bool True
+        shiningBlue: bool False
+        statPotion: bool True
+        stat: str '30'
+        superPower: bool True
+        unionsPower: bool True
+        urus: bool True
+        heroesHawl: bool True
+        noblessBoss: bool True
+        noblessDmg: bool True
+        noblessCriDmg: bool True
+        noblessIgnore: bool True
+        nobless: list 
+          [list len=4]
+        sayram: bool True
+        collector: bool True
+        buff275: bool False
+        additional1: bool True
+        additional2: bool False
+        championAll: str '0'
+        championAtk: str '0'
+        championBoss: str '0'
+        championIgnore: str '0'
+        championCriDmg: str '0'
+        authenticDmg: bool False
+        moonshine: bool False
+        cake: bool False
+        apple: bool False
+        tengu: bool False
+        candy: bool False
+        house: bool False
+        wedding: bool False
+        specialWedding: bool False
+        whiteBear: bool False
+        ultraVip: bool False
+        superVip: bool False
+        truffle: bool False
+        medal: bool False
+        hyperRainbow: bool False
+        rainbow: bool False
+        thanks: bool False
+        genePass: bool False
+        criDmgRing: str '0'
+        bossDmgRing: str '0'
+      linkSkill: dict 
+        ark: str '2'
+        illium: str '2'
+        kadena: str '2'
+        kain: str '2'
+        magician: str '6'
+        thief: str '6'
+        angel: str '2'
+        hoyoung: str '0'
+        mukhyun: str '0'
+        mihile: str '0'
+        kaiser: str '0'
+        hayato: str '0'
+        kanna: str '0'
+      special: dict 
+        isReboot: bool False
+        combat: bool True
+        epiSoul: str '0'
+        mugongSoul: str '0'
+        genesis: bool True
+        oneHandSword: bool False
+        useRuinForceShild: bool False
+        useContinuousRingAsMainRing: bool False
+        restraintRing: str '5'
+        weaponRing: str '4'
+        ringOfSum: str '4'
+        riskTaker: str '0'
+        statThird: str '8756'
+        statFourth: str '9753'
+        continuosRing: str '5'
+        challenge: bool False
+        is30min: bool False
+        destiny2ndSkill: bool False
+        famPassiveUp: bool False
+      stat: dict 
+        myClass: str '메르세데스'
+        level: str '286'
+        mainStatBase: str '7812'
+        mainStatPer: str '784'
+        mainStatAbs: str '28770'
+        subStatBase: str '4388'
+        subStatPer: str '205'
+        subStatAbs: str '710'
+        ssubStatBase: str '0'
+        ssubStatPer: str '0'
+        ssubStatAbs: str '0'
+        arcaneForce: str '1380'
+        authenticForce: str '660'
+        classForce: str '0'
+        atkBase: str '4293'
+        atkAbs: str '0'
+        dmg: str '120'
+        bossDmg: str '544'
+        normalDmg: str '37'
+        ignoreDef: str '97.2644'
+        buffDuration: str '65'
+        critical: str '213'
+        criticalDmg: str '132.9'
+        weaponAtk: str '832'
+        atkPercent: str '129'
+        coolTimeReducePercent: str '6'
+        coolTimeReduce: str '5'
+        wildhunterUnion: str '212'
+        resetCoolDown: str '7.5'
+        statusAdditionalDmg: str '14'
+        passiveSkillLevelUp: bool False
+        increaseTarget: bool False
+        summonPersistTime: str '10'
+        artifact_increaseTarget: bool True
+        artifact_finalAttack: str '30'
+        subStat_hyper: str ''
+        subStat_ability: str ''
+        subStat_union: str ''
+        subStat_doping: str ''
+        subStat_afterDoping: str ''
+        ssubStat_hyper: str ''
+        ssubStat_ability: str ''
+        ssubStat_union: str ''
+        ssubStat_doping: str ''
+        ssubStat_afterDoping: str ''
+        ignoreElementalResist: str '5'
+        maple_combatPower: str ''
+        tms_fd: str '0'
+        tms_soul: str '0'
+      hexa: dict 
+        skillCore1: str '0'
+        skillCore2: str '0'
+        skillCore3: str '0'
+        skillCore4: str '0'
+        skillCore5: str '0'
+        skillCore6: str '0'
+        masteryCore1: str '0'
+        masteryCore2: str '0'
+        masteryCore3: str '0'
+        masteryCore4: str '0'
+        reinCore1: str '0'
+        reinCore2: str '0'
+        reinCore3: str '0'
+        reinCore4: str '0'
+        generalCore2: str '0'
+        generalCore3: str '0'
+        generalCore4: str '0'
+        hexaStat: int 2
+      seedRing: dict 
+        restraintRing: dict 
+          level: str '5'
+          efficiency: float 36.496350364963504
+        weaponRing: dict 
+          level: str '4'
+          efficiency: float 28.90477243141012
+        ringOfSum: dict 
+          level: str '4'
+          efficiency: float 22.656154053987663
+        riskTakerRing: dict 
+          level: str '4'
+          efficiency: float 18.24817518248174
+        criDamageRing: dict 
+          level: str '4'
+          efficiency: float 9.006111289803798
+        levelRing: dict 
+          level: str '4'
+          efficiency: float 9.93589271240143
+        continuosRing: dict 
+          level: str '5'
+          efficiency: float 21.173893291798752
+        ultiRing: dict 
+          level: str '0'
+          efficiency: int 0
+        durabilityRing: dict 
+          level: str '0'
+          efficiency: int 0
+      entireStat: dict 
+        str: str '14093'
+        dex: str '97828'
+        int: str '8756'
+        luk: str '9753'
+      isGMS: bool False
+      isTMS: bool False
+      isJMS: bool False
+      isMSEA: bool False
+      power: dict 
+        mainStatBase: int 7421
+        mainStatPer: int 774
+        mainStatAbs: int 28770
+        subStatBase: int 4248
+        subStatPer: int 195
+        subStatAbs: int 710
+        ssubStatBase: int 0
+        ssubStatPer: int 0
+        ssubStatAbs: int 0
+        atk: int 4011
+        atkPer: int 129
+        bossDmg: int 569
+        criDmg: float 89.9
+      huntSkill: dict 
+        solJanus: str '30'
+        erdaShower: str '25'
+    huntSimulatorData: dict 
+      erda: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      dawn: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      dusk: dict 
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      skill1: dict 
+        name: str ''
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+      skill2: dict 
+        name: str ''
+        dmg_low_down: int 1
+        dmg_hi_down: int 1
+        dmg_low_up: int 1
+        dmg_hi_up: int 1
+        dmg_low_down_100: int 1
+        dmg_hi_down_100: int 1
+        dmg_low_up_100: int 1
+        dmg_hi_up_100: int 1
+    ascent_coef: int 0
+  isLoading: bool False
+  error: dict 
+    message: str '네트워크 연결을 확인해주세요.'
+    status: int 0
+    code: str 'NETWORK_ERROR'
+version: int 0
