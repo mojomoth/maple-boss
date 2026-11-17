@@ -26,6 +26,20 @@
 - G3 로컬 Critic P2 14건: 모두 처리 → [`evidence/G3/p2-resolution-g3.md`](evidence/G3/p2-resolution-g3.md)
 - G3 배포 Critic P2 4건(375px 가져오기 안내·/flow 차단 목록 넘침, 보안 헤더, 파티 API 본문 크기): 오케스트레이터가 처리 (DECISIONS D11)
 
+## 최종 운영 확인 (2026-11-17 07:27Z, 커밋 48a38db 배포)
+
+- `BASE_URL=https://maple-boss-livid.vercel.app npm run smoke`: 86 ok, 실패 0 ([`final/smoke-prod.txt`](evidence/G3/deploy/final/smoke-prod.txt))
+- 375px 가져오기 안내(18자 닉네임)와 /flow 차단 목록: 가로 넘침 없음
+- 헤더: `X-Frame-Options: DENY`, `frame-ancestors 'none'`, `nosniff`, `x-powered-by` 없음, `/.env` 404 ([`final/headers.txt`](evidence/G3/deploy/final/headers.txt))
+- `/api/health`: `pglite`, `persistent: false` (B1)
+
+## 남은 일 (B1 해결 뒤)
+
+1. 사용자가 Neon 약관에 동의 → `evidence/G3/deploy/db.txt`의 A 단계 실행 (Neon `sin1`, 함수 리전 `sin1`, `DATABASE_URL`은 Production·Preview만)
+2. 재배포 → `/api/health`가 `postgres`, `persistent: true`인지 확인 → 운영에서 시나리오 B(가져오기)·C(파티) 재검증
+3. G3 판정 PASS → `flow.json` 갱신, `npm run flow:sync`, `main`에 fast-forward
+4. 2026-11-20 18:31 뒤 Codex(GPT-6 Astra / 6.1 Sol) 교차 Critic 한 번 (B2)
+
 ## 알려진 제약
 
 - 가져오기는 데스크톱 전용에 가깝다. 모바일 브라우저는 북마크바 드래그가 안 되고, 붙여넣기에는 개발자 도구가 필요하다.

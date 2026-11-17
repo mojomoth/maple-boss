@@ -40,3 +40,8 @@
 ## [2026-11-17] lint | G3 정리와 키 노출 검사
 
 - 안 쓰는 CSS·토큰·분기·설정, 낡은 주석, 템플릿 README·favicon을 지웠고, 키 노출은 없었다([cleanup](../dev-v1/evidence/G3/cleanup.md), [secrets-scan](../dev-v1/evidence/G3/secrets-scan.txt)).
+
+## [2026-11-17] update | 배포와 영구 DB 차단
+
+- 운영 배포: https://maple-boss-livid.vercel.app (Root Directory `pocs`, Node 24.x). 운영 smoke 86/86, 보안 헤더 확인([final](../dev-v1/evidence/G3/deploy/final/)).
+- 영구 DB는 아직 없다. Neon은 약관 동의 전이고, Render 무료 자리는 다른 프로젝트가 쓰고 있다. 운영 `/tmp` PGlite는 인스턴스마다 따로라 가져온 캐릭터와 구직이 화면에 거의 나오지 않는다([db](../dev-v1/evidence/G3/deploy/db.txt), [deploy-1](../dev-v1/evidence/G3/deploy/deploy-1.txt)). G3 판정은 B1 해결 때까지 보류([DECISIONS](../dev-v1/DECISIONS.md)).

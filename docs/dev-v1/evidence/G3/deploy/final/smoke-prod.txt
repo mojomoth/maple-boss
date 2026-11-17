@@ -1,0 +1,92 @@
+
+> pocs@0.1.0 smoke
+> node scripts/smoke.mjs
+
+# smoke https://maple-boss-livid.vercel.app  temp characters: 아델smokedbwmb, 고딩smokedbwmb
+ok   GET /api/health -> { ok, db, persistent }  200 {"ok":true,"db":"pglite","persistent":false}
+ok   page / with the temporary storage notice  200 notice true
+ok   page /pocs/character with the temporary storage notice  200 notice true
+ok   page /pocs/boss  200 notice false
+ok   page /pocs/boss?q=%EC%B9%B4%EB%A7%81  200 notice false
+ok   page /pocs/boss?q=a&q=b  200 notice false
+ok   page /pocs/party with the temporary storage notice  200 notice true
+ok   page /import  200 notice false
+ok   no page at /character: 404 with the app's Korean page and a way back  404
+ok   no page at /boss: 404 with the app's Korean page and a way back  404
+ok   no page at /party: 404 with the app's Korean page and a way back  404
+ok   no page at /pocs: 404 with the app's Korean page and a way back  404
+ok   PUT /api/party -> 405 { error }  405 {"error":"이 주소는 PUT 요청을 받지 않아요."}
+ok   GET /api/character/import -> 405 { error }  405 {"error":"이 주소는 GET 요청을 받지 않아요."}
+ok   GET /api/no-such-route -> 404 { error }  404 {"error":"없는 API 주소예요."}
+ok   DELETE /api/character/%E0%A4%A (bad encoding) -> 400 from the platform before the app (status only)  400 400 Bad Request
+ok   POST /api/character/import, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/character/import text/plain, Sec-Fetch-Site: cross-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/character, Origin of another site -> 403 (never starts the crawler)  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/party/requests, Sec-Fetch-Site: same-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   DELETE /api/party/abc, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   DELETE /api/character/x, Origin null -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   GET /api/character, Origin of another site -> 200 (reads are not blocked)  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import empty, Origin of this server -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+ok   POST /api/character/import empty, Sec-Fetch-Site: same-origin -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+ok   no 아델smokedbwmb after the refused imports  false
+ok   GET /api/boss -> Boss[]  200 [{"id":"normal-lotus","name":"스우","scouterName":"스우","difficulty":"normal","level":210,"defenseRate":300,"maxParty":6,"hp":1073700000000,"fo…
+ok   GET /api/boss?q=카링 -> 카링 only  200 [{"id":"easy-kaling","name":"카링","scouterName":"카링","difficulty":"easy","level":275,"defenseRate":380,"maxParty":6,"hp":273655000000000,"for…
+ok   GET /api/boss/extreme-kaling  200 {"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseRate":380,"maxParty":6,"hp":167072000000000…
+ok   GET /api/boss/<unknown> -> 404  404 {"error":"없는 보스예요."}
+ok   GET /api/character -> Character[]  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import seed payload as 아델smokedbwmb -> 201  201 {"name":"아델smokedbwmb","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+ok   POST /api/character/import whole store (207 KB) as 고딩smokedbwmb -> 201  201 {"name":"고딩smokedbwmb","world":"루나","job":"팔라딘","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDK…
+ok   POST /api/character/import same payload again -> 201 (upsert)  201 {"name":"아델smokedbwmb","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+ok   POST /api/character/import empty -> 400  400 {"error":"가져올 데이터가 없어요."}
+ok   POST /api/character/import not JSON -> 400  400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+ok   POST /api/character/import wrong shape -> 400  400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+ok   POST /api/character/import out-of-range value -> 400  400 {"error":"info.character_level 값이 올바르지 않아요."}
+ok   POST /api/character/import name '..' -> 400 (could never be deleted)  400 {"error":"‘..’은 캐릭터 이름으로 쓸 수 없어요."}
+ok   DELETE /api/character/import with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character/import as 'import' -> 201  201 {"name":"import","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMI…
+ok   DELETE /api/character/import -> 204  204 
+ok   GET /api/character no longer lists 'import'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   DELETE /api/character/rates with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character/import as 'rates' -> 201  201 {"name":"rates","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIH…
+ok   DELETE /api/character/rates -> 204  204 
+ok   GET /api/character no longer lists 'rates'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import NUL in a name -> 400, not 500  400 {"error":"info.character_name 값에 쓸 수 없는 문자가 있어요."}
+ok   POST /api/character/import maplescouter placeholder -> 400  400 {"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+ok   POST /api/character/import 1.1 MB -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+ok   POST /api/character/import 1.2 MB chunked, no content-length -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+ok   GET /api/character lists 아델smokedbwmb and 고딩smokedbwmb  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   GET /api/character/rates?name=아델smokedbwmb -> ClearRate[] + label  200 [{"characterName":"아델smokedbwmb","bossId":"extreme-kaling","clearRate":0.8323749667523922,"analytics":"파티격 가능","bossStat":148430,"label":"익스…
+ok   GET /api/character/rates?name=고딩smokedbwmb  200 [{"characterName":"고딩smokedbwmb","bossId":"extreme-kaling","clearRate":0.7929642844259994,"analytics":"파티격 가능","bossStat":145476,"label":"익스…
+ok   GET /api/character/rates without name -> 400  400 {"error":"name 파라미터에 캐릭터 닉네임을 넣어 주세요."}
+ok   GET /api/character/rates?name=<unknown> -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character {} -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character not JSON -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character name > 20 chars -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character -> 501 + importUrl (no crawler here)  501 {"error":"이 서버는 닉네임으로 바로 불러오지 못해요. maplescouter 결과 페이지에서 가져와 주세요.","importUrl":"https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8sm…
+ok   POST /api/party/requests 아델smokedbwmb -> 201  201 {"ok":true}
+ok   POST /api/party/requests 아델smokedbwmb again, new size -> 201 (one open request)  201 {"ok":true}
+ok   POST /api/party/requests 고딩smokedbwmb -> 201  201 {"ok":true}
+ok   POST /api/party/requests unknown character -> 400  400 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/party/requests unknown boss -> 400  400 {"error":"없는 보스예요."}
+ok   POST /api/party/requests party size 9 -> 400  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests party size "2" -> 400 (integers only)  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests not JSON -> 400  400 {"error":"요청 본문이 JSON 객체가 아니에요."}
+ok   GET /api/party/requests?bossId=extreme-kaling -> Seeker[] with both  200 [{"requestId":1,"bossId":"extreme-kaling","partySize":2,"character":{"name":"아델smokedbwmb","world":"스카니아","job":"아델","level":298,"imageUrl":…
+ok   POST /api/party without members -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party no members -> 400  400 {"error":"파티 인원은 1~6명이어야 해요."}
+ok   POST /api/party unknown boss -> 400  400 {"error":"없는 보스예요."}
+ok   POST /api/party not JSON -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party 아델smokedbwmb + 고딩smokedbwmb -> 201 { id, sum, clearable }  201 {"id":1,"sum":1.6253392511783917,"clearable":true}
+ok   POST /api/party same members again -> 400 (requests closed)  400 {"error":"아델smokedbwmb, 고딩smokedbwmb 캐릭터는 이 보스에 구직 중이 아니에요."}
+ok   GET /api/party -> FormedParty[] with the new party  200 [{"id":1,"bossId":"extreme-kaling","boss":{"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseR…
+ok   GET /api/party/requests no longer lists them  200 []
+ok   DELETE /api/party/1 -> 204  204 
+ok   DELETE /api/party/1 again -> 404  404 {"error":"없는 파티예요."}
+ok   GET /api/party no longer lists it  200 []
+ok   DELETE /api/party/<not a number> -> 404  404 {"error":"없는 파티예요."}
+ok   DELETE /api/character/아델smokedbwmb -> 204  204 
+ok   DELETE /api/character/고딩smokedbwmb -> 204  204 
+ok   DELETE /api/character/아델smokedbwmb again -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   GET /api/character no longer lists them  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   GET /api/character/rates?name=아델smokedbwmb after delete -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+# all passed

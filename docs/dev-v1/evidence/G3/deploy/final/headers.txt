@@ -1,0 +1,7 @@
+# final prod check 2026-11-17T07:27:00Z
+health: {"ok":true,"db":"pglite","persistent":false}
+content-security-policy: frame-ancestors 'none'
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-vercel-id: icn1::iad1::nn5fn-1794900421259-2a0625f5925c
+/.env -> 404
