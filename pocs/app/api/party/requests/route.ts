@@ -1,5 +1,5 @@
 import { createRequest, listSeekers, PartyError } from "@/party";
-import { notAllowed } from "@/lib/http";
+import { notAllowed, readSmallJson, TOO_LARGE, tooLarge } from "@/lib/http";
 
 // GET ?bossId= (optional) -> open requests as Seeker[]
 export async function GET(req: Request) {
@@ -14,9 +14,11 @@ export async function GET(req: Request) {
 // body: { characterName, bossId, partySize } -> 201. partySize goes through as sent: createRequest takes integers only.
 export async function POST(req: Request) {
   try {
-    const b = await req.json().catch(() => null);
+    const b = await readSmallJson(req);
+    if (b === TOO_LARGE) return tooLarge("요청이 너무 커요.");
     if (!b || typeof b !== "object") throw new PartyError("요청 본문이 JSON 객체가 아니에요.");
-    await createRequest(String(b.characterName), String(b.bossId), b.partySize);
+    const { characterName, bossId, partySize } = b as Record<string, unknown>;
+    await createRequest(String(characterName), String(bossId), partySize);
     return Response.json({ ok: true }, { status: 201 });
   } catch (e) {
     if (e instanceof PartyError) return Response.json({ error: e.message }, { status: 400 });

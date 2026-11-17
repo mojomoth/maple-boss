@@ -1,0 +1,8 @@
+reached card via Tab in 6 presses: 강은호
+Tab ring: in:BUTTON:취소 > in:BUTTON:삭제 > OUT:BODY: > in:BUTTON[닫기]: > in:BUTTON:취소 > in:BUTTON:삭제 > in:BUTTON[닫기]: > in:BUTTON:취소 > in:BUTTON:삭제
+Shift+Tab ring: in:BUTTON:취소 > in:BUTTON[닫기]: > OUT:BODY: > in:BUTTON:삭제 > in:BUTTON:취소
+aria: { labelledby: 'confirm-title', title: '캐릭터를 삭제할까요?', modal: true }
+after Esc: { open: false, focus: 'card 강은호' }
+Shift+Tab from 취소 -> in:BUTTON[닫기]:
+after X: { open: false, focus: 'card 강은호' }
+seed still on page: 강은호,아델,고딩

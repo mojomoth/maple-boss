@@ -1,0 +1,33 @@
+# node scripts/flow-check.mjs 2026-11-17T05:01:38+0900 (dev :3000, no screenshots)
+ok   1440 GET /flow  | 200
+ok   1440 page does not scroll sideways  | scrollWidth 1440 vs 1440
+ok   1440 canvas scrolls inside itself (board 2028px)  | 2028 in 1342
+ok   1440 nodes, loops, failed wires as in flow.json (20, 2, 2)  | nodes 20, wires 25, loop 2, fail 2, labels 실패/수정 후 다시 검증/실패/수정 후 다시 검증
+ok   1440 문서 반영 shown  | 문서 반영반영됨STATUS.md가 이 흐름과 같아요.
+ok   1440 first node reached by Tab (3 presses) with visible focus  | {"step":"G0-plan","outline":"solid 2px","visible":true}
+ok   1440 Enter opens the panel with focus inside  | {"title":"기존 파일·CLI 확인, 계획·결정 문서","inside":true}
+ok   1440 Esc closes and focus returns to the node
+ok   1440 Space opens the next node  | {"title":"Next 16, Postgres 저장소, 하네스","active":"icon-btn"}
+ok   1440 click opens G1-critic panel  | G1 PoC · 검증 독립 검증 (UI·흐름) 실패 담당 critic:ui-flows · Opus 5.5 메모 P1-1 375px 삭제 모달 가로 넘침, P2 8건 근거 docs/dev-v1/evidence/G1/critic-ui/ 근거 링크는 GitHub의 dev-v1 브랜치로 열려요
+ok   1440 evidence links to GitHub dev-v1  | https://github.com/mojomoth/maple-boss/tree/dev-v1/docs/dev-v1/evidence/G1/critic-ui/
+ok   1440 panel is a right-side sheet inside the viewport  | 448px wide, right 1440
+ok   1440 backdrop click closes
+ok   1440 no layout shift (CLS)  | 0.0006
+ok   1440 no page errors or console warnings
+ok   375 GET /flow  | 200
+ok   375 page does not scroll sideways  | scrollWidth 375 vs 375
+ok   375 canvas scrolls inside itself (board 2028px)  | 2028 in 341
+ok   375 nodes, loops, failed wires as in flow.json (20, 2, 2)  | nodes 20, wires 25, loop 2, fail 2, labels 실패/수정 후 다시 검증/실패/수정 후 다시 검증
+ok   375 문서 반영 shown  | 문서 반영반영됨STATUS.md가 이 흐름과 같아요.
+ok   375 first node reached by Tab (3 presses) with visible focus  | {"step":"G0-plan","outline":"solid 2px","visible":true}
+ok   375 Enter opens the panel with focus inside  | {"title":"기존 파일·CLI 확인, 계획·결정 문서","inside":true}
+ok   375 Esc closes and focus returns to the node
+ok   375 Space opens the next node  | {"title":"Next 16, Postgres 저장소, 하네스","active":"icon-btn"}
+ok   375 click opens G1-critic panel  | G1 PoC · 검증 독립 검증 (UI·흐름) 실패 담당 critic:ui-flows · Opus 5.5 메모 P1-1 375px 삭제 모달 가로 넘침, P2 8건 근거 docs/dev-v1/evidence/G1/critic-ui/ 근거 링크는 GitHub의 dev-v1 브랜치로 열려요
+ok   375 evidence links to GitHub dev-v1  | https://github.com/mojomoth/maple-boss/tree/dev-v1/docs/dev-v1/evidence/G1/critic-ui/
+ok   375 panel is a right-side sheet inside the viewport  | 335px wide, right 375
+ok   375 backdrop click closes
+ok   375 no layout shift (CLS)  | 0.0001
+ok   375 no page errors or console warnings
+all ok
+exit=0

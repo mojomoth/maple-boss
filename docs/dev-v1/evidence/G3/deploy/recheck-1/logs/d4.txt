@@ -1,0 +1,65 @@
+CHECK 1440x900 home / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1440x900 modal / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (255x48); img"" x strong"강은호" (103x33); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (46x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (283x33); img"" x button.btn.btn--quiet"취소" (271x37); img"" x button.btn.btn--danger"삭제" (68x37)
+CHECK 1440x900 guide / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: button.btn.btn--quiet"가져오기" x img"" (86x44); input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x33); span.count.num"3 명" x img"" (38x30); span.count.num"3 명" x img"" (8x30); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (321x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (510x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (510x25)
+CHECK 1440x900 boss-missing /?q=zzz status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1440x900 flow /flow status 200 docW 1440/1440
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    1440x900 import-error /import status 200 docW 1440/1440
+ok    1440x900 import-broken /import#%E0%A4%A status 200 docW 1440/1440
+CHECK 1440x900 pocs-character /pocs/character status 200 docW 1440/1440
+      off-viewport: img"" -4..161
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (40x58); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); span.pick-stat"보스300 환산 152,715" x img"" (27x39); strong.num"152,715" x img"" (27x21); button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" x img"" (40x58)
+ok    1440x900 pocs-boss /pocs/boss status 200 docW 1440/1440
+ok    1440x900 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 1440/1440
+ok    1440x900 pocs-party /pocs/party status 200 docW 1440/1440
+ok    1440x900 404 /no-such-page status 404 docW 1440/1440
+CHECK 1920x1080 home / status 200 docW 1920/1920
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1920x1080 modal / status 200 docW 1920/1920
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (255x48); img"" x strong"강은호" (103x33); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (46x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (283x33); img"" x button.btn.btn--quiet"취소" (271x37); img"" x button.btn.btn--danger"삭제" (68x37)
+CHECK 1920x1080 guide / status 200 docW 1920/1920
+      overlaps: button.btn.btn--quiet"가져오기" x img"" (86x44); input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x33); span.count.num"3 명" x img"" (38x30); span.count.num"3 명" x img"" (8x30); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (321x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (510x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (510x25)
+CHECK 1920x1080 boss-missing /?q=zzz status 200 docW 1920/1920
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1920x1080 flow /flow status 200 docW 1920/1920
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    1920x1080 import-error /import status 200 docW 1920/1920
+ok    1920x1080 import-broken /import#%E0%A4%A status 200 docW 1920/1920
+CHECK 1920x1080 pocs-character /pocs/character status 200 docW 1920/1920
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (40x58); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); span.pick-stat"보스300 환산 152,715" x img"" (27x39); strong.num"152,715" x img"" (27x21); button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" x img"" (40x58)
+ok    1920x1080 pocs-boss /pocs/boss status 200 docW 1920/1920
+ok    1920x1080 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 1920/1920
+ok    1920x1080 pocs-party /pocs/party status 200 docW 1920/1920
+ok    1920x1080 404 /no-such-page status 404 docW 1920/1920
+CHECK 375x812 home / status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (238x74); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (151x74); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137); img"" x span.card-name"강은호" (64x28); img"" x span.num"Lv.299" (47x25)
+CHECK 375x812 modal / status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (186x33); img"" x strong"강은호" (77x28); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (20x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (206x65)
+CHECK 375x812 guide / status 200 docW 375/375
+      off-viewport: div.guide-head"maplescouter에서 ‘Wide이름WWWWWWWW" 33..387; button.icon-btn"가져오기 안내 닫기" 369..395; svg"" 370..394; path"" 376..388; p.section-help"이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 " 33..387; ol.steps"1 maplescouter에서 결과 열기 (새 탭) 새" 33..387
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (238x74); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (151x74); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137); img"" x span.card-name"강은호" (64x28); img"" x span.num"Lv.299" (47x25)
+CHECK 375x812 boss-missing /?q=zzz status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (238x74); p.section-help"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구" x img"" (151x74); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137); img"" x span.card-name"강은호" (64x28); img"" x span.num"Lv.299" (47x25)
+CHECK 375x812 flow /flow status 200 docW 375/375
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    375x812 import-error /import status 200 docW 375/375
+ok    375x812 import-broken /import#%E0%A4%A status 200 docW 375/375
+CHECK 375x812 pocs-character /pocs/character status 200 docW 375/375
+      off-viewport: img"" -36..129; img"" -36..129; img"" -36..129
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (113x48); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); img"" x button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" (113x35); img"" x img"" (165x95); img"" x strong"아델" (29x22)
+ok    375x812 pocs-boss /pocs/boss status 200 docW 375/375
+ok    375x812 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 375/375
+ok    375x812 pocs-party /pocs/party status 200 docW 375/375
+ok    375x812 404 /no-such-page status 404 docW 375/375
+# 18 page/viewport combos flagged for review

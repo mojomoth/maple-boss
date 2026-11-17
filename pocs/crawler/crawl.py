@@ -2,11 +2,12 @@
 
 usage:  crawl.py <name>   # opens a visible browser; a human clicks the check
 stdout: the raw state.searchResult JSON (mapped to a Character by character/parse.ts),
-        also saved to docs/research/samples/<name>.json
+        also saved to docs/research/samples/<name>.json (see sample_path)
 exit:   0 ok, 1 error/timeout, 2 character not found
 """
 
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -19,6 +20,13 @@ TIMEOUT_S = 180
 HIL_TEXT = "사람 확인이 필요해요"
 # shortcut: guessed not-found copy, never observed live; update after a real miss is seen.
 NOT_FOUND_TEXTS = ("캐릭터를 찾을 수 없", "존재하지 않는 캐릭터", "검색 결과가 없")
+
+
+def sample_path(name: str) -> Path:
+    # The name comes from POST /api/character, so it is not trusted: every character but letters (Hangul included),
+    # digits, '_' and '-' becomes '_'. No '/', backslash or '.' is left, so the file stays in SAMPLES. Real nicknames
+    # (Hangul, Latin letters, digits) keep their name.
+    return SAMPLES / f"{re.sub(r'[^\w-]', '_', name)}.json"
 
 
 def search_result(store: dict) -> dict:
@@ -84,7 +92,7 @@ def main(argv: list[str]) -> None:
     sr = crawl(argv[0])
     out = json.dumps(sr, ensure_ascii=False)
     SAMPLES.mkdir(parents=True, exist_ok=True)
-    (SAMPLES / f"{argv[0]}.json").write_text(out)
+    sample_path(argv[0]).write_text(out)
     print(out)
 
 

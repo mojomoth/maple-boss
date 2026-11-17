@@ -12,7 +12,7 @@ export default function StatusScreen({ title, children }: { title: string; child
         <div className="shell topbar-row">
           <div className="logo">
             <Link href="/" aria-label="Maple Boss 메인 화면">
-              <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
+              <Image src={logo} alt="Maple Boss" width={272} height={77} priority unoptimized />
             </Link>
           </div>
         </div>

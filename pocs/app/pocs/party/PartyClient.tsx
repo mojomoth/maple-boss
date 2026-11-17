@@ -18,6 +18,18 @@ async function post(url: string, body: unknown, what: string) {
   return data;
 }
 
+// A form's result line. An error gets the error colour and role="alert", like everywhere else; success stays a
+// polite status (FN-6). The key gives each kind its own element, so a switch is announced as the new kind.
+type Note = { text: string; error: boolean };
+function Msg({ note }: { note: Note | null }) {
+  if (!note) return null;
+  return (
+    <p key={note.error ? "error" : "ok"} className={note.error ? "msg is-error" : "msg"} role={note.error ? "alert" : "status"}>
+      {note.text}
+    </p>
+  );
+}
+
 function BossSelect({ name, bosses, value, onChange, counts }: { name: string; bosses: Boss[]; value: string; onChange: (id: string) => void; counts?: Map<string, number> }) {
   return (
     <select name={name} aria-label="보스" className="field" value={value} onChange={(e) => onChange(e.target.value)}>
@@ -79,17 +91,17 @@ export function RequestForm({ characters, bosses }: { characters: Character[]; b
   const [name, setName] = useState(characters[0].name);
   const [bossId, setBossId] = useState(bosses[0].id);
   const [size, setSize] = useState(1);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState<Note | null>(null);
   const boss = bosses.find((b) => b.id === bossId)!;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     try {
       await post("/api/party/requests", { characterName: name, bossId, partySize: size }, "구직을 등록하지");
-      setMsg(`${name} 캐릭터를 ${bossLabel(boss)} 구직에 등록했어요. 희망 인원은 ${size}명이에요.`);
+      setMsg({ text: `${name} 캐릭터를 ${bossLabel(boss)} 구직에 등록했어요. 희망 인원은 ${size}명이에요.`, error: false });
       router.refresh();
     } catch (err) {
-      setMsg(errorText(err));
+      setMsg({ text: errorText(err), error: true });
     }
   }
 
@@ -105,7 +117,7 @@ export function RequestForm({ characters, bosses }: { characters: Character[]; b
         {range(boss.maxParty).map((n) => <option key={n} value={n}>{n}인</option>)}
       </select>
       <button className="btn btn--primary">구직 등록</button>
-      {msg && <p className="msg" role="status">{msg}</p>}
+      <Msg note={msg} />
     </form>
   );
 }
@@ -118,7 +130,7 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
   const boss = bosses.find((b) => b.id === bossId) ?? bosses[0];
   const [size, setSize] = useState(boss.maxParty);
   const [picked, setPicked] = useState<string[]>([]);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState<Note | null>(null);
   // A second click while the first request is out would find the requests closed and replace the success
   // message with an error. The ref stops it at once; the state disables the button.
   const sending = useRef(false);
@@ -146,15 +158,16 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
     setBusy(true);
     try {
       const r = await post("/api/party", { bossId: boss.id, members: picked }, "파티를 편성하지");
-      setMsg(
-        r.clearable
+      setMsg({
+        text: r.clearable
           ? `#${r.id} 파티를 편성했어요. 합계 ${pct(r.sum)}로 공략 가능해요.`
           : `#${r.id} 파티를 편성했어요. 합계 ${pct(r.sum)}로, 110%까지 ${pct(shortfall(r.sum, CLEAR_THRESHOLD))} 모자라요.`,
-      );
+        error: false,
+      });
       setPicked([]);
       router.refresh();
     } catch (err) {
-      setMsg(errorText(err));
+      setMsg({ text: errorText(err), error: true });
     } finally {
       sending.current = false;
       setBusy(false);
@@ -227,11 +240,7 @@ export function PartyBuilder({ bosses, seekers }: { bosses: Boss[]; seekers: See
           {busy ? "편성 중…" : "파티 편성"}
         </button>
       </div>
-      {msg && (
-        <p className="msg" role="status">
-          {msg}
-        </p>
-      )}
+      <Msg note={msg} />
     </div>
   );
 }

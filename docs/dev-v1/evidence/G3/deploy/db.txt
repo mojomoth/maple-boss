@@ -1,0 +1,92 @@
+# G3b persistent database for production, 2026-11-16T19:10Z-19:30Z (KST 2026-11-17 04:10-04:30)
+# Vercel CLI 65.16.0 (`npx -y vercel@latest`), logged in as the team owner; Render REST API v1 with RENDER_KEY read inside commands only.
+# No connection strings, passwords or tokens were printed or written anywhere.
+
+== RESULT: BLOCKED (needs a user decision) ==
+Neither free path can be created without the user:
+  Neon (Vercel marketplace)  -> marketplace terms not accepted (B1, unchanged)
+  Render free Postgres       -> the workspace already has its one allowed active free database (another project's)
+Nothing was created. Vercel `env ls` -> no variables (DATABASE_URL unset). Function region unchanged (iad1).
+Production keeps PGlite in /tmp (per instance, writes can vanish, see spike.txt P1).
+No change to pocs/lib/db.ts, no pocs/vercel.json.
+
+== 1. NEON (tried first) ==
+Repo root linked: `vercel link --yes --project maple-boss --scope mojomoths-projects` -> .vercel/ at the root (gitignored).
+  Side effect of link: it wrote a root .env.local (VERCEL_OIDC_TOKEN only) and appended `.env*` to .gitignore.
+  Both undone: .env.local deleted, .gitignore restored with git checkout (it already ignores .env and .env.*).
+$ vercel integration add neon --name maple-boss-db --billing-plan free_v3 --no-env-pull --json
+  {"status":"action_required","reason":"integration_terms_acceptance_required",
+   "verification_uri":"https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli",
+   "policy_links":{"marketplace_addendum":"https://vercel.com/legal/integration-marketplace-end-users-addendum",
+                   "integration_privacy_policy":"https://neon.tech/privacy-policy","integration_eula":"https://neon.com/platform-terms"}}
+  CLI 65.16 also has `vercel integration accept-terms neon --yes`. Not used: accepting legal terms is the user's decision.
+Installed marketplace integrations on the team: upstash only (no Postgres; per D1 no free plan). `vercel integration list` -> no resources.
+
+== 2. RENDER (fallback) ==
+Workspace: tea-d0fqcok9c44c73bj1ehg ("My Workspace", the only owner the key sees).
+Existing Postgres in it (GET /v1/postgres):
+  desmon-db             0.1c-256mb  oregon     available  (paid, another project)
+  orok-ledger           0.1c-256mb  oregon     available  (paid, another project)
+  physiognomists-v1-db  free        singapore  available  expiresAt 2026-12-06T04:56Z  (another project)
+  no maple-boss-db -> nothing to reuse.
+$ POST /v1/postgres {"name":"maple-boss-db","plan":"free","ownerId":"tea-...","version":"18","region":"singapore"}
+  -> 400 {"message":"cannot have more than one active free tier database"}
+  Re-listed afterwards: same three databases, nothing created.
+
+== 3. PLAN TERMS (read 2026-11-17) ==
+Render Free Postgres (https://render.com/docs/free):
+  - expires 30 days after creation; then a 14-day grace period to upgrade; after that Render deletes the database and its data
+    (a database created today would have expired 2026-12-17 and been deleted 2026-12-31)
+  - fixed 1 GB storage; only ONE active free database per workspace; no backups of any kind; no managed connection pooling
+  - Render may run maintenance / restart it at any time (unavailable meanwhile); expiry reminder emails
+  - TLS (https://render.com/docs/postgresql-creating-connecting): external connections always TLS with Render-managed certificates,
+    sslmode=disable rejected, docs recommend sslmode=require and do not document a CA bundle; default IP allow list 0.0.0.0/0.
+    verify-full (what lib/db.ts uses) was NOT tested: no Render database of ours exists.
+  - API plans: free, basic_256mb, basic_1gb, ... (paid). Regions: frankfurt, oregon, ohio, singapore, virginia.
+Neon Free (https://neon.com/docs/introduction/plans), via Vercel billing plan free_v3:
+  - no expiry listed; 1 GB storage per project (20 GB across free projects); 100 CU-hours per project per month
+  - compute scales to zero after 5 min idle (cannot be disabled on Free; the first query after that waits for resume)
+  - 6 h restore history (1 GB of changes), 1 manual snapshot, 5 GB public egress per project per month
+  - Regions (https://neon.com/docs/introduction/regions): AWS us-east-1/2, us-west-2, eu-central-1, eu-west-2,
+    ap-southeast-1 (Singapore), ap-southeast-2, sa-east-1. No Seoul or Tokyo.
+
+== 4. REGION CHOICE (for whichever provider is unblocked) ==
+Users are in Korea. Vercel has icn1 (Seoul), but neither Neon nor Render has a Seoul/Tokyo database region.
+Closest database region for both: Singapore (Neon aws-ap-southeast-1 / Render singapore). Pair it with Vercel function region sin1.
+Why not function in icn1 + DB in Singapore: a page/API call runs several queries, each would pay the icn1<->Singapore round trip;
+with function and DB together only the single user<->sin1 hop remains (Seoul<->Singapore, less than the ~0.2 s Seoul<->iad1 now).
+Not applied yet: there is no DB to co-locate with, and the function region only matters once DATABASE_URL exists.
+
+== 5. NEXT STEPS ONCE THE USER CHOOSES ==
+Options (user decision):
+  A. (recommended, free, no expiry) Accept the Neon terms at
+     https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli
+  B. Approve a paid Render plan (e.g. basic_256mb, singapore). Billing: needs the user.
+  C. Free Render's single free slot (physiognomists-v1-db belongs to another project; not ours to touch). Even then: 30-day expiry, no backups.
+
+Steps for A (run from the repo root, which is linked):
+  1. vercel integration add neon --name maple-boss-db --billing-plan free_v3 --meta region=sin1 -e production -e preview --no-env-pull --json
+     (`-e production -e preview` keeps the production URL out of the Development environment, so `vercel env pull` can never
+      hand it to `next dev`. If the region key/value is rejected, the error lists the allowed values; pick Singapore.)
+  2. vercel env ls  -> DATABASE_URL for Production and Preview (Neon also adds DATABASE_URL_UNPOOLED, PG*, POSTGRES_*; lib/db.ts
+     reads only DATABASE_URL, the pooled host, and turns sslmode=require into verify-full).
+  3. Function region next to the DB (project setting, no repo file; the CLI has no flag for it):
+     echo '{"resourceConfig":{"functionDefaultRegions":["sin1"]}}' | vercel api /v9/projects/maple-boss -X PATCH --input -
+     check: vercel api /v9/projects/maple-boss -> resourceConfig.functionDefaultRegions ["sin1"]
+  4. Local check without printing the URL: get it into a file under /tmp (outside the repo, chmod 600; Neon console
+     "Connection string" or `vercel env pull --environment production /tmp/<file>` if the variable is not marked sensitive),
+     connect with node + pg using lib/db.ts' settings (sslmode=verify-full, ssl: true), `SELECT 1`, then delete the file.
+     Neon uses publicly trusted certificates, so verify-full should pass without a custom CA.
+  5. pg-path tests on a throwaway database in the same Neon project, never the production one:
+     CREATE DATABASE maple_boss_test;  then in pocs/: TEST_DATABASE_URL=<same URL, database maple_boss_test> \
+       node --test --test-force-exit --conditions=react-server --import ./resolve-hooks.mjs lib/db.test.ts   (npm test's runner)
+     DROP DATABASE maple_boss_test;   (db.test.ts refuses a database that already has rows in meta)
+  6. Redeploy from the repo root: vercel deploy --prod --yes; then on https://maple-boss-livid.vercel.app
+     GET /api/health -> {"db":"postgres","persistent":true}; BASE_URL=... npm run smoke; repeat spike.txt's
+     "import, then 30 parallel + 20 sequential GET /api/character" check (expect 50/50 contain the imported character).
+
+Switching from Render to Neon later (only if B was chosen):
+  1. Do steps A1-A3 with `--prefix NEON` (creates NEON_DATABASE_URL, leaves DATABASE_URL alone) and Neon region Singapore.
+  2. pg_dump --no-owner --no-acl "<render external URL>" | psql "<NEON_DATABASE_URL>"   (run locally, URLs from /tmp files, not echoed)
+  3. vercel env rm DATABASE_URL production / preview; add the Neon URL as DATABASE_URL (stdin) for production and preview;
+     redeploy; check /api/health and smoke; then delete the Render database (Render free would be deleted 44 days after creation anyway).

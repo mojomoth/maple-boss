@@ -1,0 +1,25 @@
+# D6 measurements 2026-11-17T04:54:42+0900, 1448x1086 like the drafts, dev :3000, system Chrome
+# tools: scripts/measure/full.mjs (modal screenshot), home-full.mjs (home screenshot), extent.mjs (text pixel box), runs.mjs (ink runs along x)
+# 'before' lines are the same tools run at 04:38 on the pre-change screen (font-size 19.2px, dot margin 0.4em)
+
+## supporting line '목록에서 삭제하면 추천 파티가 다시 계산돼요.' (text pixel box, band y 625..680)
+draft  {"minx":517,"maxx":930,"w":414,"miny":641,"maxy":660,"h":20,"size":[1448,1086]}
+before {"minx":541,"maxx":905,"w":365,"miny":640,"maxy":657,"h":18}  (19.2px)
+after  {"minx":518,"maxx":928,"w":411,"miny":640,"maxy":659,"h":20,"size":[1448,1086]}
+       (21.6px = calc(var(--text-lg) * 1.125))
+
+## modal meta 'Lv.285 · 나이트로드' / 'Lv.299 · 칼리': ink runs [Lv][dot][job]; the gaps are the dot spacing
+draft  [[698,754],[766,768],[780,871]]
+       gaps 12 / 12
+before [[699,752],[766,767],[781,812]]  gaps 14 / 14
+after  [[699,752],[764,765],[777,808]]
+       gaps 12 / 12
+
+## first card meta on / (the same .meta rule)
+draft  [[211,253],[262,264],[273,343]]
+       gaps 9 / 9
+before [[210,255],[266,267],[279,305]]  gaps 11 / 12
+after  [[210,255],[265,266],[276,302]]
+       gaps 10 / 10
+
+## colour: kept ink-2. The draft prompt asks for 'muted gray' body text; the PNG core is ~#d6d9da, between ink-2 (#b5c0bc) and ink (#eef3f1).

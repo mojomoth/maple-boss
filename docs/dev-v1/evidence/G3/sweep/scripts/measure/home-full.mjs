@@ -1,0 +1,13 @@
+import { createRequire } from "node:module";
+const require = createRequire("/Users/jeongyounglee/work/repo/maple-boss/pocs/package.json");
+const { chromium } = require("playwright-core");
+const [out, w = "1448", h = "1086"] = process.argv.slice(2);
+const b = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+const p = await b.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 1, colorScheme: "dark", locale: "ko-KR" });
+await p.goto("http://localhost:3000/", { waitUntil: "networkidle" });
+await p.addStyleTag({ content: "nextjs-portal{display:none!important}" });
+await p.evaluate(() => document.fonts.ready);
+const r = await p.evaluate(() => { const m = document.querySelector(".card .meta"); const rg = document.createRange(); rg.selectNodeContents(m); const b = rg.getBoundingClientRect(); return [Math.round(b.left), Math.round(b.top), Math.round(b.right), Math.round(b.bottom), getComputedStyle(m).fontSize, m.textContent]; });
+console.log(JSON.stringify(r));
+await p.screenshot({ path: out });
+await b.close();

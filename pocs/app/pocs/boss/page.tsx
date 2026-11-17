@@ -8,8 +8,9 @@ const names = [...new Set(listBosses().map((b) => b.name))];
 
 export const metadata: Metadata = { title: "보스 조회", description: "보스의 난이도별 레벨, HP, 방어율, 포스, 최대 인원을 봐요." };
 
-export default async function BossPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const q = (await searchParams).q ?? "";
+export default async function BossPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
+  const raw = (await searchParams).q;
+  const q = (Array.isArray(raw) ? raw[0] : raw) ?? ""; // ?q=a&q=b arrives as an array: the first one counts
   const groups = Map.groupBy(findBosses(q), (b) => b.name);
 
   return (
@@ -23,7 +24,7 @@ export default async function BossPage({ searchParams }: { searchParams: Promise
             name="q"
             defaultValue={q}
             list="boss-names"
-            placeholder="보스 이름 (예: 카링, 노말 카링, 하스우)"
+            placeholder="보스 이름 (예: 카링, 하스우)"
             aria-label="보스 이름"
             className="field field--wide"
           />

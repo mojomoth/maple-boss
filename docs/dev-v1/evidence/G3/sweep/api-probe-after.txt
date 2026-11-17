@@ -1,0 +1,20 @@
+# G3b after-probe 2026-11-17T05:01:52+0900 against http://localhost:3000 (dev), same requests as before-probe.txt plus a few
+## FN-4 repeated q on /pocs/boss
+GET /pocs/boss?q=a&q=b -> 200
+## FN-3 sibling segments answer DELETE for their own name (no such character here: 404, not 405)
+{"error":"등록되지 않은 캐릭터예요."} -> 404
+{"error":"등록되지 않은 캐릭터예요."} -> 404
+HTTP/1.1 405 Method Not Allowed
+allow: POST, DELETE
+HTTP/1.1 405 Method Not Allowed
+allow: GET, DELETE
+## FN-7 a cross-site POST or DELETE is refused before the handler
+{"error":"다른 사이트에서 보낸 요청은 받지 않아요."} -> 403
+{"error":"다른 사이트에서 보낸 요청은 받지 않아요."} -> 403
+{"error":"다른 사이트에서 보낸 요청은 받지 않아요."} -> 403  (no Sec-Fetch-Site, Origin only)
+{"error":"다른 사이트에서 보낸 요청은 받지 않아요."} -> 403  (same-site counts as another site)
+## the app's own origin, and clients that are not browsers, still reach the handler
+{"error":"가져올 데이터가 없어요."} -> 400
+{"error":"가져올 데이터가 없어요."} -> 400  (Origin only, matches Host)
+{"error":"가져올 데이터가 없어요."} -> 400  (no Origin, no Sec-Fetch-Site)
+GET /api/health with a foreign Origin -> 200 (reads are not blocked)

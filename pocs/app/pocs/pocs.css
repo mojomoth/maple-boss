@@ -20,7 +20,7 @@
 .panel-head { display: flex; align-items: center; gap: var(--space-md); }
 .panel-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
 .section-head + .form-row { margin-top: var(--space-md); }
-.form-row + .section-help { margin-top: var(--space-md); }
+.form-row + .section-help, .section-help + .form-row { margin-top: var(--space-md); }
 .form-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-sm); }
 .form-row .field { flex: 1 1 16rem; width: auto; min-width: 0; max-width: 100%; }
 .form-row select.field { flex: 0 1 auto; padding-right: var(--space-xs); }

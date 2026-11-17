@@ -1,0 +1,14 @@
+before {"requests":{"강은호@extreme-kaling":2,"아델@extreme-kaling":2},"partiesPerInstance":"000000000000000000000000000000"}
+round 0 close 강은호: 201 x1, ids 1
+round 0 close 아델: 201 x1, ids 2
+round 1 close 강은호: 201 x0, ids 
+round 1 close 아델: 201 x0, ids 
+round 2 close 강은호: 201 x0, ids 
+round 2 close 아델: 201 x0, ids 
+round 0 DELETE party 1: 204 x1
+round 0 DELETE party 2: 204 x1
+round 1 DELETE party 1: 204 x0
+round 1 DELETE party 2: 204 x0
+round 2 DELETE party 1: 204 x0
+round 2 DELETE party 2: 204 x0
+after {"requests":{},"partiesPerInstance":"000000000000000000000000000000"}

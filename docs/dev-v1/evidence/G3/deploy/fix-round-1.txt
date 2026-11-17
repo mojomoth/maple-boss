@@ -1,0 +1,240 @@
+# G3 deploy fix round 1: P1-1 (temporary storage notice) and P1-2 (smoke on production), 2026-11-17T06:46Z-07:07Z
+# (KST 15:46-16:07). Defects from deploy/critic/critic-deployed.txt. Node 24.10.0 (/opt/homebrew/bin), Vercel CLI 65.16.0
+# (`npx -y vercel@latest`), repo root linked (.vercel gitignored). No .env value was read in this round: the CLI was
+# already logged in. No tokens, keys or connection strings appear below. Nothing committed or pushed.
+
+== RESULT ==
+P1-1 fixed (copy and placement). Storage is still temporary (B1 open), so imports and seekers still do not show up
+     (0/10 reloads, 0 rows), but every place that makes or lists them now says so, and no success line promises a card.
+P1-2 fixed. Production smoke: 86 ok / 0 FAIL, exit 0, three runs (two on the first fix deploy, one on the final one).
+Production  dpl_EVb8Jqg2RT92R5YhbWiuwVB7y86U (maple-boss-8cyevtu2e-..., SSO) behind https://maple-boss-livid.vercel.app
+            (`vercel inspect https://maple-boss-livid.vercel.app` -> id dpl_EVb8..., Ready). Previous: dpl_Bx9n6x69iGxiN8ZkGuQWk9DSjpGi.
+Tree        HEAD 5d90bf6 + uncommitted working tree (G3a/G3b changes + this round). `git diff | shasum -a 256` eab1e8f06c9c3a57...
+            (tracked files only; new files: app/import/ImportScreen.tsx, app/pocs/character/CharacterScreen.tsx, and the
+            G3a untracked ones). Commit it to match production.
+
+== 1. CHANGES (pocs/) ==
+P1-1  one sentence for the notice, shown where data is made or listed, and only when dbInfo.persistent is false:
+  app/messages.ts            + TEMP_STORAGE = "임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고,
+                               나와도 언제든 사라질 수 있어요."  (was, on / only: "...등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나
+                               사라질 수 있어요." The critic saw 0/10 and 0/8, so "보통 나오지 않고" replaces "새로고침 뒤에 ... 수 있어요")
+  app/page.tsx               / uses TEMP_STORAGE; passes persistent to AddCharacter
+  app/AddCharacter.tsx       import guide help line: persistent -> unchanged ("...두 단계를 거치면 카드가 생겨요."); temporary ->
+                               "이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 단계로 가져올 수는 있지만, 임시 저장소라서 가져온 캐릭터가
+                               보통 화면에 나오지 않아요."
+                             paste result line, temporary: "‘X’ 캐릭터를 가져왔어요. 임시 저장소라 카드는 보통 안 나와요."
+  app/import/page.tsx        now a server component (metadata moved in from the deleted layout.tsx) rendering
+  app/import/ImportScreen.tsx  the old client page with a persistent prop. Temporary: "‘X’ 캐릭터를 가져왔어요. 임시 저장소라 메인 화면에는
+                               보통 안 나와요." and it STAYS on /import with the "메인 화면으로" button (no auto-redirect that would hide the
+                               message). Persistent: unchanged ("...메인 화면으로 이동해요." then router.replace("/")).
+  app/pocs/character/page.tsx  same split: server page (metadata from the deleted layout.tsx) + CharacterScreen.tsx (client) with
+  app/pocs/character/CharacterScreen.tsx  the notice under the h1.
+  app/pocs/party/page.tsx    notice under the h1 (h1 + notice wrapped in one div so the grid gap does not split them)
+  app/pocs/pocs.css          `.section-help + .form-row` gets the same md gap as `.form-row + .section-help` (character page field)
+  /pocs/boss shows no notice (it reads only boss data). /import and /pocs/character stay prerendered: dbInfo is read at build
+  time, and Vercel sets VERCEL=1 at build as well as runtime (verified: the static /pocs/character HTML carries the notice,
+  /import's RSC props carry persistent:false).
+P1-2
+  scripts/smoke.mjs          the bad-encoding check accepts the platform's own answer by status only: exactly 400 +
+                             text/plain + body "400 Bad Request" (Vercel's edge; never reaches proxy.ts). Any other answer still
+                             has to be the app's 400 { error } JSON, so next dev / next start keep the full check (a regressed
+                             proxy.ts would give Next's HTML 400 and fail). call() now also returns content-type.
+                             + pages check: /, /pocs/character, /pocs/party carry "임시 저장소를 쓰고 있어요" exactly when
+                             /api/health says persistent:false; the other pages never do.
+  proxy.ts                   comment only: on Vercel the edge refuses that path first.
+Harness/docs
+  scripts/import-e2e.mjs     temporary storage: expects the guide line, the /import result that stays + "메인 화면으로", and the
+                             paste line; header recipe builds with the same MAPLE_DB (the two pages are prerendered).
+  README.md                  where the notice shows, and that /import does not move on by itself then.
+Not changed: lib/db.ts (root fix is B1 = DATABASE_URL, a user decision), PartyClient.tsx (the page notice sits above both forms),
+APIs, Vercel project settings.
+
+== 2. LOCAL VERIFICATION ==
+npx tsc --noEmit   first run: 4 errors, all in .next/types/validator.ts from the previous build (it still named the two
+                   deleted layout.tsx files). After `npm run build`: exit 0. Final (after the rename): exit 0.
+npm run build      exit 0, 18 routes; / dynamic, /import and /pocs/character still static (○)
+npm run lint       exit 0
+npm test           40 pass, 0 fail
+dev :3000 (persistent:true)
+  npm run smoke                  exit 0, 86 ok ("page / 200 notice false" ... bad encoding -> 400 {"error":"주소에 잘못된 % 인코딩이 있어요."})
+  node scripts/nav-walk.mjs      exit 0; "hop 24: / --[bookmarklet]--> /import --[auto]--> /" (persistent: still auto-redirects)
+temporary storage like Vercel, separate `next start` on :3107 (not a second next dev; :3100 is held by an unrelated
+`node serve.mjs dev`, left alone): MAPLE_DB=/tmp/maple-e2e-pglite npm run build && VERCEL=1 MAPLE_DB=/tmp/maple-e2e-pglite next start -p 3107
+  /api/health {"ok":true,"db":"pglite","persistent":false}
+  npm run smoke                  exit 0, 86 ok; "page / with the temporary storage notice 200 notice true", same for
+                                 /pocs/character and /pocs/party; /pocs/boss and /import "notice false"
+  node scripts/import-e2e.mjs    exit 0, all passed, including
+    ok guide says the card will usually not show up
+    ok /import says it was imported and that / will usually not show it, and stays  ‘아델e2ec6gb2’ 캐릭터를 가져왔어요. 임시 저장소라 메인 화면에는 보통 안 나와요.
+    ok bookmarklet -> /import#<payload> -> [메인 화면으로] -> /
+    ok …with a confirmation under the field that says the card will usually not show up  ‘고딩e2ec6gb2’ 캐릭터를 가져왔어요. 임시 저장소라 카드는 보통 안 나와요.
+  fix-round-1/scripts/repro-p1-1.mjs (dry run)  all passed; one instance, so the cards and seekers DO show (10/10, 2 rows)
+  Screenshots reviewed at 1440 and 375: the first /pocs/party shot had a loose gap under the h1 and /pocs/character had the
+  field flush under the notice -> the div wrapper and the pocs.css rule above; re-shot, fixed. Those pre-fix local shots were
+  deleted; the production shots in fix-round-1/prod/ are the record.
+:3107 stopped afterwards (kill by port with -sTCP:LISTEN), /tmp/maple-e2e-pglite removed, normal `npm run build` redone.
+
+== 3. DEPLOYS (cwd = repo root, `npx -y vercel@latest deploy --prod --yes`) ==
+06:57:28Z  dpl_Bx9n6x69iGxiN8ZkGuQWk9DSjpGi  exit 0 in 28 s, READY, "Aliased https://maple-boss-livid.vercel.app"
+07:03:32Z  dpl_EVb8Jqg2RT92R5YhbWiuwVB7y86U  exit 0 in 28 s, READY, aliased   <- production now
+           (second deploy only renames the two client components to CharacterScreen/ImportScreen: `Character` shadowed the
+           Character type name in that file. No behaviour change; every check below was rerun on it.)
+After each: no .env.local at the root or in pocs/ (only the root .env). Vercel env still has no DATABASE_URL (health below).
+
+== 4. PRODUCTION, FINAL DEPLOY dpl_EVb8... ==
+GET /api/health -> {"ok":true,"db":"pglite","persistent":false}
+curl page HTML, count of "임시 저장소를 쓰고 있어요":  / 1, /pocs/character 1 (static, so baked at build), /pocs/party 1, /pocs/boss 0
+curl /import (static, x-vercel-cache HIT): RSC props contain persistent\":false once
+P1-2 raw: curl --http1.1 -X DELETE /api/character/%E0%A4%A -> 400 text/plain; charset=utf-8 (edge); local dev -> 400 application/json
+
+$ cd pocs && BASE_URL=https://maple-boss-livid.vercel.app npm run smoke     (07:04:32Z-07:05:09Z, exit 0)
+  
+  # smoke https://maple-boss-livid.vercel.app  temp characters: 아델smokeckcag, 고딩smokeckcag
+  ok   GET /api/health -> { ok, db, persistent }  200 {"ok":true,"db":"pglite","persistent":false}
+  ok   page / with the temporary storage notice  200 notice true
+  ok   page /pocs/character with the temporary storage notice  200 notice true
+  ok   page /pocs/boss  200 notice false
+  ok   page /pocs/boss?q=%EC%B9%B4%EB%A7%81  200 notice false
+  ok   page /pocs/boss?q=a&q=b  200 notice false
+  ok   page /pocs/party with the temporary storage notice  200 notice true
+  ok   page /import  200 notice false
+  ok   no page at /character: 404 with the app's Korean page and a way back  404
+  ok   no page at /boss: 404 with the app's Korean page and a way back  404
+  ok   no page at /party: 404 with the app's Korean page and a way back  404
+  ok   no page at /pocs: 404 with the app's Korean page and a way back  404
+  ok   PUT /api/party -> 405 { error }  405 {"error":"이 주소는 PUT 요청을 받지 않아요."}
+  ok   GET /api/character/import -> 405 { error }  405 {"error":"이 주소는 GET 요청을 받지 않아요."}
+  ok   GET /api/no-such-route -> 404 { error }  404 {"error":"없는 API 주소예요."}
+  ok   DELETE /api/character/%E0%A4%A (bad encoding) -> 400 from the platform before the app (status only)  400 400 Bad Request
+  ok   POST /api/character/import, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   POST /api/character/import text/plain, Sec-Fetch-Site: cross-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   POST /api/character, Origin of another site -> 403 (never starts the crawler)  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   POST /api/party/requests, Sec-Fetch-Site: same-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   DELETE /api/party/abc, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   DELETE /api/character/x, Origin null -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+  ok   GET /api/character, Origin of another site -> 200 (reads are not blocked)  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   POST /api/character/import empty, Origin of this server -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+  ok   POST /api/character/import empty, Sec-Fetch-Site: same-origin -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+  ok   no 아델smokeckcag after the refused imports  false
+  ok   GET /api/boss -> Boss[]  200 [{"id":"normal-lotus","name":"스우","scouterName":"스우","difficulty":"normal","level":210,"defenseRate":300,"maxParty":6,"hp":1073700000000,"fo…
+  ok   GET /api/boss?q=카링 -> 카링 only  200 [{"id":"easy-kaling","name":"카링","scouterName":"카링","difficulty":"easy","level":275,"defenseRate":380,"maxParty":6,"hp":273655000000000,"for…
+  ok   GET /api/boss/extreme-kaling  200 {"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseRate":380,"maxParty":6,"hp":167072000000000…
+  ok   GET /api/boss/<unknown> -> 404  404 {"error":"없는 보스예요."}
+  ok   GET /api/character -> Character[]  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   POST /api/character/import seed payload as 아델smokeckcag -> 201  201 {"name":"아델smokeckcag","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+  ok   POST /api/character/import whole store (207 KB) as 고딩smokeckcag -> 201  201 {"name":"고딩smokeckcag","world":"루나","job":"팔라딘","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDK…
+  ok   POST /api/character/import same payload again -> 201 (upsert)  201 {"name":"아델smokeckcag","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+  ok   POST /api/character/import empty -> 400  400 {"error":"가져올 데이터가 없어요."}
+  ok   POST /api/character/import not JSON -> 400  400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+  ok   POST /api/character/import wrong shape -> 400  400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+  ok   POST /api/character/import out-of-range value -> 400  400 {"error":"info.character_level 값이 올바르지 않아요."}
+  ok   POST /api/character/import name '..' -> 400 (could never be deleted)  400 {"error":"‘..’은 캐릭터 이름으로 쓸 수 없어요."}
+  ok   DELETE /api/character/import with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+  ok   POST /api/character/import as 'import' -> 201  201 {"name":"import","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMI…
+  ok   DELETE /api/character/import -> 204  204 
+  ok   GET /api/character no longer lists 'import'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   DELETE /api/character/rates with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+  ok   POST /api/character/import as 'rates' -> 201  201 {"name":"rates","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIH…
+  ok   DELETE /api/character/rates -> 204  204 
+  ok   GET /api/character no longer lists 'rates'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   POST /api/character/import NUL in a name -> 400, not 500  400 {"error":"info.character_name 값에 쓸 수 없는 문자가 있어요."}
+  ok   POST /api/character/import maplescouter placeholder -> 400  400 {"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+  ok   POST /api/character/import 1.1 MB -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+  ok   POST /api/character/import 1.2 MB chunked, no content-length -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+  ok   GET /api/character lists 아델smokeckcag and 고딩smokeckcag  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   GET /api/character/rates?name=아델smokeckcag -> ClearRate[] + label  200 [{"characterName":"아델smokeckcag","bossId":"extreme-kaling","clearRate":0.8323749667523922,"analytics":"파티격 가능","bossStat":148430,"label":"익스…
+  ok   GET /api/character/rates?name=고딩smokeckcag  200 [{"characterName":"고딩smokeckcag","bossId":"extreme-kaling","clearRate":0.7929642844259994,"analytics":"파티격 가능","bossStat":145476,"label":"익스…
+  ok   GET /api/character/rates without name -> 400  400 {"error":"name 파라미터에 캐릭터 닉네임을 넣어 주세요."}
+  ok   GET /api/character/rates?name=<unknown> -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+  ok   POST /api/character {} -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+  ok   POST /api/character not JSON -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+  ok   POST /api/character name > 20 chars -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+  ok   POST /api/character -> 501 + importUrl (no crawler here)  501 {"error":"이 서버는 닉네임으로 바로 불러오지 못해요. maplescouter 결과 페이지에서 가져와 주세요.","importUrl":"https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8sm…
+  ok   POST /api/party/requests 아델smokeckcag -> 201  201 {"ok":true}
+  ok   POST /api/party/requests 아델smokeckcag again, new size -> 201 (one open request)  201 {"ok":true}
+  ok   POST /api/party/requests 고딩smokeckcag -> 201  201 {"ok":true}
+  ok   POST /api/party/requests unknown character -> 400  400 {"error":"등록되지 않은 캐릭터예요."}
+  ok   POST /api/party/requests unknown boss -> 400  400 {"error":"없는 보스예요."}
+  ok   POST /api/party/requests party size 9 -> 400  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+  ok   POST /api/party/requests party size "2" -> 400 (integers only)  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+  ok   POST /api/party/requests not JSON -> 400  400 {"error":"요청 본문이 JSON 객체가 아니에요."}
+  ok   GET /api/party/requests?bossId=extreme-kaling -> Seeker[] with both  200 [{"requestId":1,"bossId":"extreme-kaling","partySize":2,"character":{"name":"아델smokeckcag","world":"스카니아","job":"아델","level":298,"imageUrl":…
+  ok   POST /api/party without members -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+  ok   POST /api/party no members -> 400  400 {"error":"파티 인원은 1~6명이어야 해요."}
+  ok   POST /api/party unknown boss -> 400  400 {"error":"없는 보스예요."}
+  ok   POST /api/party not JSON -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+  ok   POST /api/party 아델smokeckcag + 고딩smokeckcag -> 201 { id, sum, clearable }  201 {"id":1,"sum":1.6253392511783917,"clearable":true}
+  ok   POST /api/party same members again -> 400 (requests closed)  400 {"error":"아델smokeckcag, 고딩smokeckcag 캐릭터는 이 보스에 구직 중이 아니에요."}
+  ok   GET /api/party -> FormedParty[] with the new party  200 [{"id":1,"bossId":"extreme-kaling","boss":{"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseR…
+  ok   GET /api/party/requests no longer lists them  200 []
+  ok   DELETE /api/party/1 -> 204  204 
+  ok   DELETE /api/party/1 again -> 404  404 {"error":"없는 파티예요."}
+  ok   GET /api/party no longer lists it  200 []
+  ok   DELETE /api/party/<not a number> -> 404  404 {"error":"없는 파티예요."}
+  ok   DELETE /api/character/아델smokeckcag -> 204  204 
+  ok   DELETE /api/character/고딩smokeckcag -> 204  204 
+  ok   DELETE /api/character/아델smokeckcag again -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+  ok   GET /api/character no longer lists them  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+  ok   GET /api/character/rates?name=아델smokeckcag after delete -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+  # all passed
+
+$ BASE_URL=https://maple-boss-livid.vercel.app node docs/dev-v1/evidence/G3/deploy/fix-round-1/scripts/repro-p1-1.mjs fix-round-1/prod
+  (critic d2/d3 repro steps; new expectation: the screen says it, no success line promises a card; show-up is recorded)
+  # P1-1 2026-11-17T07:05:14.229Z https://maple-boss-livid.vercel.app; health {"ok":true,"db":"pglite","persistent":false}; mock http://localhost:49629; characters 아델qa7r0bf (bookmarklet), 고딩qa7r0bf (paste)
+  ok   storage is temporary on this deployment (B1 open), so the notices must show  {"ok":true,"db":"pglite","persistent":false}
+  ok   / shows the notice (new wording: usually not shown, may vanish any time)
+  ok   import guide says an import usually does not show up (no 'card appears' promise)  이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 단계로 가져올 수는 있지만, 임시 저장소라서 가져온 캐릭터가 보통 화면에 나오지 않아요.
+       screenshot p1-1-guide-1440.png
+       screenshot p1-1-guide-375.png
+  ok   /import result says it was imported and that / usually will not show it, and stays on /import  ‘아델qa7r0bf’ 캐릭터를 가져왔어요. 임시 저장소라 메인 화면에는 보통 안 나와요. | at /import | https://maple-boss-livid.vercel.app/import#%7B%22v -> https://maple-boss-livid.vercel.app/import#%7B%22v -> https://maple-boss-livid.vercel.app/import
+       screenshot p1-1-import-result-1440.png
+       screenshot p1-1-import-result-375.png
+  ok   / after /import: card 아델qa7r0bf shown, or the notice explains why not (no contradiction)  card shown false
+  ok   paste result line says the card usually will not show up  ‘고딩qa7r0bf’ 캐릭터를 가져왔어요. 임시 저장소라 카드는 보통 안 나와요.
+  ok   / after paste: card 고딩qa7r0bf shown, or the notice explains why not  card shown false
+       screenshot p1-1-after-paste-1440.png
+       screenshot p1-1-after-paste-375.png
+  info 10 reloads of /: 아델qa7r0bf shown 0/10, 고딩qa7r0bf shown 0/10 (B1: expected to be mostly 0)
+  ok   /pocs/character shows the notice
+       screenshot p1-1-pocs-character-375.png
+  ok   /pocs/party shows the notice before its forms
+  ok   seeker 강은호 registered (201), the notice still on the page  강은호 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+  ok   seeker 아델 registered (201), the notice still on the page  아델 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요.
+  info 보스별 구직 현황 for 익스트림 카링 right after: 0 rows (B1: expected 0 or fewer than 2)
+  ok   /pocs/party: seekers listed, or the notice explains why not  0 rows
+       screenshot p1-1-party-after-requests-1440.png
+       screenshot p1-1-party-375.png
+  ok   no page errors
+  # cleanup DELETE burst 아델qa7r0bf: {"204":1,"404":59}
+  # cleanup DELETE burst 고딩qa7r0bf: {"204":1,"404":59}
+  # cleanup close request 강은호 (round 0): {"201":1,"400":59}
+  # cleanup close request 아델 (round 0): {"201":1,"400":59}
+  # cleanup close request 강은호 (round 1): {"400":60}
+  # cleanup close request 아델 (round 1): {"400":60}
+  # cleanup DELETE party 2: {"204":1,"404":59}
+  # cleanup DELETE party 3: {"204":1,"404":59}
+  # after cleanup (30 parallel each): 0 list 아델qa7r0bf/고딩qa7r0bf; seeds on all true; open requests 000000000000000000000000000000; parties 000000000000000000000000000000
+  # all passed
+  Screenshots: deploy/fix-round-1/prod/p1-1-{guide,import-result,after-paste}-{1440,375}.png, p1-1-pocs-character-375.png,
+  p1-1-party-after-requests-1440.png (full page), p1-1-party-375.png.
+Leftover sweep afterwards (80 parallel GETs of /api/party/requests and /api/party, 40 of /api/character):
+  scan 0: requests {} parties {} extra characters {}
+
+== 5. PRODUCTION, FIRST FIX DEPLOY dpl_Bx9n... (same code before the rename) ==
+smoke 06:58:29Z exit 0, 86 ok; 07:01:41Z exit 0, 86 ok. Both: "DELETE /api/character/%E0%A4%A (bad encoding) -> 400 from the
+  platform before the app (status only)  400 400 Bad Request".
+repro-p1-1.mjs 06:59:09Z: all passed (same lines as section 4; 0/10 reloads for both imports, 0 seeker rows).
+Cleanup needed more than the script's bursts there: one 아델 request and party #2 (the 1-member party that closed 강은호's
+request) sat on instances the first bursts missed. Sweep: closed 아델 (party #3, deleted 204), then party #2 took
+150 x 404 and then 1 x 204 of 150 DELETEs; a final scan found no requests, parties or extra characters. Those instances
+belonged to dpl_Bx9n..., which the alias no longer serves.
+
+== 6. NOTES ==
+- Root cause unchanged: per-instance /tmp PGlite (spike.txt, deploy-1.txt section 5). Only DATABASE_URL (B1, db.txt) makes
+  imports, seekers and parties show up. Once it is set, dbInfo.persistent is true and all notices and the temporary-only
+  copy disappear on the next build (the two static pages read it at build time).
+- Local caveat: a build made without MAPLE_DB and started with MAPLE_DB=/tmp/... bakes persistent:true into /import and
+  /pocs/character (they then behave as persistent while / shows the notice). import-e2e.mjs's header recipe now builds with
+  the same MAPLE_DB. On Vercel build and runtime env are the same.
+- Evidence scripts under G3/copy-p2 still expect the old notice and paste-line text; they are G3a records and were not edited.
+- Helper scripts for the cleanup sweeps were kept out of the repo (/tmp); they only issued the GET/POST/DELETE bursts logged above.

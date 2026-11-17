@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T07:00:00+09:00",
+  "updatedAt": "2026-11-17T22:00:00+09:00",
   "gates": [
     {
       "id": "G0",
@@ -46,7 +46,7 @@
         {
           "id": "G0-pass",
           "kind": "pass",
-          "title": "PASS",
+          "title": "판정",
           "status": "pass",
           "agent": "orchestrator",
           "note": "직접 재실행: npm test 32/32, tsc, smoke 통과",
@@ -106,7 +106,7 @@
         {
           "id": "G1-pass",
           "kind": "pass",
-          "title": "PASS",
+          "title": "판정",
           "status": "pass",
           "agent": "orchestrator",
           "note": "P2 18건은 STATUS.md에 기록, G3 정리 단계에서 처리",
@@ -148,7 +148,7 @@
         {
           "id": "G2-pass",
           "kind": "pass",
-          "title": "PASS",
+          "title": "판정",
           "status": "pass",
           "agent": "orchestrator",
           "note": "flow.json 갱신 후 flow:sync로 STATUS.md·PLAN.md 반영",
@@ -161,7 +161,7 @@
     {
       "id": "G3",
       "title": "완성·배포",
-      "status": "running",
+      "status": "blocked",
       "steps": [
         {
           "id": "G3-spike",
@@ -197,8 +197,8 @@
           "agent": "critic:design-copy · critic:function-security · Opus 5.5",
           "note": "P1 3건: 저장한 파티 삭제 UI 없음, 보스 칸 이름 잘림, 뒤로/앞으로 때 검색 상태 어긋남. P2 14건",
           "evidence": [
-            "docs/dev-v1/evidence/G3/critic-design-copy/",
-            "docs/dev-v1/evidence/G3/critic-function-security/"
+            "docs/dev-v1/evidence/G3/critic-design/",
+            "docs/dev-v1/evidence/G3/critic-function/"
           ]
         },
         {
@@ -224,31 +224,72 @@
           ]
         },
         {
+          "id": "G3-sweep",
+          "kind": "build",
+          "title": "P2 14건 정리, 영구 DB 시도",
+          "status": "pass",
+          "agent": "build:p2-sweep · infra:database · Opus 5.5",
+          "note": "P2 14건 처리. Neon은 약관 동의 전, Render 무료 자리는 다른 프로젝트가 사용 중이라 DB를 만들지 못함",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/p2-resolution-g3.md",
+            "docs/dev-v1/evidence/G3/deploy/db.txt"
+          ]
+        },
+        {
           "id": "G3-deploy",
           "kind": "build",
-          "title": "P2 정리, 영구 DB, Vercel 배포",
-          "status": "running",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "title": "Vercel 운영 배포",
+          "status": "pass",
+          "agent": "deploy:prod · Opus 5.5",
+          "note": "운영 배포, 파일 121개 업로드(.env 제외). 엣지 icn1, 함수 iad1, 콜드 스타트 6.5~9초",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/deploy/deploy-1.txt"
+          ]
         },
         {
           "id": "G3-critic",
           "kind": "critic",
           "title": "배포 URL 재검증",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "status": "fail",
+          "agent": "critic:deployed · Opus 5.5",
+          "note": "P1 2건: 임시 저장소 안내가 실제보다 약함, 운영 smoke 인코딩 체크 실패. 시나리오 B·C는 B1로 막힘",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/deploy/critic/critic-deployed.txt"
+          ]
+        },
+        {
+          "id": "G3-fix",
+          "kind": "fix",
+          "title": "P1 2건 수정, 재배포",
+          "status": "pass",
+          "agent": "fix:r1 · Opus 5.5",
+          "note": "데이터를 만드는 화면 모두에 사실대로 안내, smoke가 Vercel 엣지 400을 인정",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/deploy/fix-round-1.txt"
+          ]
+        },
+        {
+          "id": "G3-recheck",
+          "kind": "recheck",
+          "title": "배포 URL 재검증",
+          "status": "pass",
+          "agent": "recheck:r1 · Opus 5.5",
+          "note": "P1 해결. P2 4건(375px 넘침 2, 보안 헤더, 파티 본문 크기)은 오케스트레이터가 처리",
+          "evidence": [
+            "docs/dev-v1/evidence/G3/deploy/recheck-1/"
+          ]
         },
         {
           "id": "G3-pass",
           "kind": "pass",
-          "title": "PASS",
-          "status": "todo",
-          "agent": "",
-          "note": "",
-          "evidence": []
+          "title": "판정",
+          "status": "blocked",
+          "agent": "orchestrator",
+          "note": "영구 저장소(B1)가 없어 운영에서 캐릭터 등록·파티 편성이 끝까지 이어지지 않음. 나머지 조건은 통과",
+          "evidence": [
+            "docs/dev-v1/STATUS.md",
+            "docs/dev-v1/evidence/G3/deploy/db.txt"
+          ]
         }
       ]
     }
@@ -256,7 +297,7 @@
   "blockers": [
     {
       "id": "B1",
-      "title": "Neon 약관 동의 필요 (사용자). 그 전까지 배포 저장소는 요청 사이에도 데이터가 사라질 수 있음",
+      "title": "영구 DB가 필요해요. Neon 약관 동의(무료, 권장) 또는 유료 DB 승인을 기다려요. 그 전까지 운영 저장소는 요청마다 달라질 수 있어요",
       "status": "open"
     },
     {
@@ -266,7 +307,7 @@
     },
     {
       "id": "B3",
-      "title": ".env 확인됨 (2026-11-17 00:49, 키 7개: JEV/GOOGLE/OPENAI/CLAUDE/VERCEL/RENDER/OPENROUTER)",
+      "title": ".env 확인됨 (2026-11-17, 키 7개)",
       "status": "closed"
     }
   ]

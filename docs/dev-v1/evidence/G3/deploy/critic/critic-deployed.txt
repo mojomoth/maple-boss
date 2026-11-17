@@ -1,0 +1,391 @@
+# G3 deployed critic (independent, gauntlet-loop) on https://maple-boss-livid.vercel.app
+# Run 2026-11-17T06:27Z-06:45Z (KST 15:27-15:45). System Chrome via playwright-core 1.65.1, curl, Node 24.10.0.
+# Judged only on what ran against the alias. No source/doc edits, no redeploy. Test characters: *qa<random>, *smoke<tag>
+# (smoke's own). Seeds 강은호/아델/고딩 were never deleted (modal opened on 강은호 only to test keyboard, closed with Esc/취소/X).
+# Secrets: .env values were read only inside a bash subshell and compared with grep -F; only counts were printed.
+
+== VERDICT: FAIL ==
+D-1 pass | D-2 blocked (B1) for card-on-/ + persistence + modal delete of the imports; the rest passes
+D-3 blocked (B1): seekers never reach the page, no party can be formed in the UI; /pocs/character, /pocs/boss pass
+D-4 pass (2 P2) | D-5 FAIL (smoke 85/86, exit 1) | D-6 FAIL: blocked by B1, but the notice understates what happens and
+is missing where parties are made | D-7 pass | D-8 pass (deploy-1.txt section 6/6b; spot checks agree)
+P1-1 the storage notice is not truthful/complete for what production does (D-6)
+P1-2 npm run smoke exits 1 against production (D-5)
+P2-1 import guide overflows at 375 px for a long unbroken nickname (close button off-screen)
+P2-2 /flow 375 px: B3 row's long key list runs past the column edge
+P2-3 no frame-ancestors / X-Frame-Options (delete confirm can be framed); x-powered-by: Next.js
+P2-4 /api/party and /api/party/requests have no body cap (1.1 MB parsed, Vercel stops at 4.5 MB); import has 1 MB
+
+== D-5 SMOKE: BASE_URL=https://maple-boss-livid.vercel.app npm run smoke (06:27:54Z) ==
+# smoke https://maple-boss-livid.vercel.app  temp characters: 아델smokeb9890, 고딩smokeb9890
+ok   GET /api/health -> { ok, db, persistent }  200 {"ok":true,"db":"pglite","persistent":false}
+ok   page /  200
+ok   page /pocs/character  200
+ok   page /pocs/boss  200
+ok   page /pocs/boss?q=%EC%B9%B4%EB%A7%81  200
+ok   page /pocs/boss?q=a&q=b  200
+ok   page /pocs/party  200
+ok   page /import  200
+ok   no page at /character: 404 with the app's Korean page and a way back  404
+ok   no page at /boss: 404 with the app's Korean page and a way back  404
+ok   no page at /party: 404 with the app's Korean page and a way back  404
+ok   no page at /pocs: 404 with the app's Korean page and a way back  404
+ok   PUT /api/party -> 405 { error }  405 {"error":"이 주소는 PUT 요청을 받지 않아요."}
+ok   GET /api/character/import -> 405 { error }  405 {"error":"이 주소는 GET 요청을 받지 않아요."}
+ok   GET /api/no-such-route -> 404 { error }  404 {"error":"없는 API 주소예요."}
+FAIL DELETE /api/character/%E0%A4%A (bad encoding) -> 400 { error }  400 400 Bad Request
+ok   POST /api/character/import, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/character/import text/plain, Sec-Fetch-Site: cross-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/character, Origin of another site -> 403 (never starts the crawler)  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   POST /api/party/requests, Sec-Fetch-Site: same-site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   DELETE /api/party/abc, Origin of another site -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   DELETE /api/character/x, Origin null -> 403  403 {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+ok   GET /api/character, Origin of another site -> 200 (reads are not blocked)  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import empty, Origin of this server -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+ok   POST /api/character/import empty, Sec-Fetch-Site: same-origin -> 400 (reaches the handler)  400 {"error":"가져올 데이터가 없어요."}
+ok   no 아델smokeb9890 after the refused imports  false
+ok   GET /api/boss -> Boss[]  200 [{"id":"normal-lotus","name":"스우","scouterName":"스우","difficulty":"normal","level":210,"defenseRate":300,"maxParty":6,"hp":1073700000000,"fo…
+ok   GET /api/boss?q=카링 -> 카링 only  200 [{"id":"easy-kaling","name":"카링","scouterName":"카링","difficulty":"easy","level":275,"defenseRate":380,"maxParty":6,"hp":273655000000000,"for…
+ok   GET /api/boss/extreme-kaling  200 {"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseRate":380,"maxParty":6,"hp":167072000000000…
+ok   GET /api/boss/<unknown> -> 404  404 {"error":"없는 보스예요."}
+ok   GET /api/character -> Character[]  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import seed payload as 아델smokeb9890 -> 201  201 {"name":"아델smokeb9890","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+ok   POST /api/character/import whole store (207 KB) as 고딩smokeb9890 -> 201  201 {"name":"고딩smokeb9890","world":"루나","job":"팔라딘","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GFFPOKDK…
+ok   POST /api/character/import same payload again -> 201 (upsert)  201 {"name":"아델smokeb9890","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDO…
+ok   POST /api/character/import empty -> 400  400 {"error":"가져올 데이터가 없어요."}
+ok   POST /api/character/import not JSON -> 400  400 {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+ok   POST /api/character/import wrong shape -> 400  400 {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+ok   POST /api/character/import out-of-range value -> 400  400 {"error":"info.character_level 값이 올바르지 않아요."}
+ok   POST /api/character/import name '..' -> 400 (could never be deleted)  400 {"error":"‘..’은 캐릭터 이름으로 쓸 수 없어요."}
+ok   DELETE /api/character/import with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character/import as 'import' -> 201  201 {"name":"import","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMI…
+ok   DELETE /api/character/import -> 204  204 
+ok   GET /api/character no longer lists 'import'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   DELETE /api/character/rates with no such character -> 404 (not 405)  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character/import as 'rates' -> 201  201 {"name":"rates","world":"스카니아","job":"아델","level":298,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/GCOCKDOBIDGMIH…
+ok   DELETE /api/character/rates -> 204  204 
+ok   GET /api/character no longer lists 'rates'  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   POST /api/character/import NUL in a name -> 400, not 500  400 {"error":"info.character_name 값에 쓸 수 없는 문자가 있어요."}
+ok   POST /api/character/import maplescouter placeholder -> 400  400 {"error":"maplescouter 기본 캐릭터(으낭다)예요. maplescouter에서 내 캐릭터를 먼저 검색해 주세요."}
+ok   POST /api/character/import 1.1 MB -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+ok   POST /api/character/import 1.2 MB chunked, no content-length -> 413  413 {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+ok   GET /api/character lists 아델smokeb9890 and 고딩smokeb9890  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   GET /api/character/rates?name=아델smokeb9890 -> ClearRate[] + label  200 [{"characterName":"아델smokeb9890","bossId":"extreme-kaling","clearRate":0.8323749667523922,"analytics":"파티격 가능","bossStat":148430,"label":"익스…
+ok   GET /api/character/rates?name=고딩smokeb9890  200 [{"characterName":"고딩smokeb9890","bossId":"extreme-kaling","clearRate":0.7929642844259994,"analytics":"파티격 가능","bossStat":145476,"label":"익스…
+ok   GET /api/character/rates without name -> 400  400 {"error":"name 파라미터에 캐릭터 닉네임을 넣어 주세요."}
+ok   GET /api/character/rates?name=<unknown> -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/character {} -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character not JSON -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character name > 20 chars -> 400  400 {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+ok   POST /api/character -> 501 + importUrl (no crawler here)  501 {"error":"이 서버는 닉네임으로 바로 불러오지 못해요. maplescouter 결과 페이지에서 가져와 주세요.","importUrl":"https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8sm…
+ok   POST /api/party/requests 아델smokeb9890 -> 201  201 {"ok":true}
+ok   POST /api/party/requests 아델smokeb9890 again, new size -> 201 (one open request)  201 {"ok":true}
+ok   POST /api/party/requests 고딩smokeb9890 -> 201  201 {"ok":true}
+ok   POST /api/party/requests unknown character -> 400  400 {"error":"등록되지 않은 캐릭터예요."}
+ok   POST /api/party/requests unknown boss -> 400  400 {"error":"없는 보스예요."}
+ok   POST /api/party/requests party size 9 -> 400  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests party size "2" -> 400 (integers only)  400 {"error":"희망 인원은 1~6 사이의 정수여야 해요."}
+ok   POST /api/party/requests not JSON -> 400  400 {"error":"요청 본문이 JSON 객체가 아니에요."}
+ok   GET /api/party/requests?bossId=extreme-kaling -> Seeker[] with both  200 [{"requestId":1,"bossId":"extreme-kaling","partySize":2,"character":{"name":"아델smokeb9890","world":"스카니아","job":"아델","level":298,"imageUrl":…
+ok   POST /api/party without members -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party no members -> 400  400 {"error":"파티 인원은 1~6명이어야 해요."}
+ok   POST /api/party unknown boss -> 400  400 {"error":"없는 보스예요."}
+ok   POST /api/party not JSON -> 400  400 {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+ok   POST /api/party 아델smokeb9890 + 고딩smokeb9890 -> 201 { id, sum, clearable }  201 {"id":1,"sum":1.6253392511783917,"clearable":true}
+ok   POST /api/party same members again -> 400 (requests closed)  400 {"error":"아델smokeb9890, 고딩smokeb9890 캐릭터는 이 보스에 구직 중이 아니에요."}
+ok   GET /api/party -> FormedParty[] with the new party  200 [{"id":1,"bossId":"extreme-kaling","boss":{"id":"extreme-kaling","name":"카링","scouterName":"카링","difficulty":"extreme","level":285,"defenseR…
+ok   GET /api/party/requests no longer lists them  200 []
+ok   DELETE /api/party/1 -> 204  204 
+ok   DELETE /api/party/1 again -> 404  404 {"error":"없는 파티예요."}
+ok   GET /api/party no longer lists it  200 []
+ok   DELETE /api/party/<not a number> -> 404  404 {"error":"없는 파티예요."}
+ok   DELETE /api/character/아델smokeb9890 -> 204  204 
+ok   DELETE /api/character/고딩smokeb9890 -> 204  204 
+ok   DELETE /api/character/아델smokeb9890 again -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+ok   GET /api/character no longer lists them  200 [{"name":"강은호","world":"스카니아","job":"칼리","level":299,"imageUrl":"https://open.api.nexon.com/static/maplestory/character/look/KKPDFCLGGHKMAFM…
+ok   GET /api/character/rates?name=아델smokeb9890 after delete -> 404  404 {"error":"등록되지 않은 캐릭터예요."}
+# 1 failed
+
+== D-5/D-7 HOSTILE + FILE PROBES (curl --http1.1) ==
+# hostile requests 2026-11-17T06:29:38Z on https://maple-boss-livid.vercel.app (curl --http1.1)
+POST /api/character/import bad JSON -> 400 ct=application/json | {"error":"JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요."}
+POST /api/party/requests bad JSON -> 400 ct=application/json | {"error":"요청 본문이 JSON 객체가 아니에요."}
+POST /api/party bad JSON -> 400 ct=application/json | {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+POST /api/party JSON array -> 400 ct=application/json | {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+POST /api/party/requests JSON null -> 400 ct=application/json | {"error":"요청 본문이 JSON 객체가 아니에요."}
+POST /api/character/import deep nesting 5000 -> 400 ct=application/json | {"error":"maplescouter 캐릭터 데이터가 아니에요."}
+POST /api/character/import 1.1MB -> 413 ct=application/json | {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+POST /api/party 1.1MB -> 400 ct=application/json | {"error":"members에 캐릭터 이름 배열을 넣어 주세요."}
+POST /api/party/requests 1.1MB -> 400 ct=application/json | {"error":"등록되지 않은 캐릭터예요."}
+POST /api/character 1.1MB -> 400 ct=application/json | {"error":"캐릭터 닉네임을 1~20자로 입력해 주세요."}
+GET /api/nope -> 404 ct=application/json | {"error":"없는 API 주소예요."}
+GET /api/character/x/y/z -> 404 ct=application/json | {"error":"없는 API 주소예요."}
+POST /api/boss/x/y -> 404 ct=application/json | {"error":"없는 API 주소예요."}
+PUT /api/character -> 405 ct=application/json | {"error":"이 주소는 PUT 요청을 받지 않아요."}
+PATCH /api/party/1 -> 405 ct=application/json | {"error":"이 주소는 PATCH 요청을 받지 않아요."}
+DELETE /api/boss -> 405 ct=application/json | {"error":"이 주소는 DELETE 요청을 받지 않아요."}
+DELETE /api/health -> 405 ct=application/json | {"error":"이 주소는 DELETE 요청을 받지 않아요."}
+POST /api/boss/extreme-kaling -> 405 ct=application/json | {"error":"이 주소는 POST 요청을 받지 않아요."}
+GET /api/party/1 -> 405 ct=application/json | {"error":"이 주소는 GET 요청을 받지 않아요."}
+GET /api/character/강은호 -> 405 ct=application/json | {"error":"이 주소는 GET 요청을 받지 않아요."}
+OPTIONS /api/party -> 204 ct= | 
+cross-site POST import (Origin evil) -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+cross-site POST party (Sec-Fetch-Site cross-site) -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+cross-site DELETE seed (Origin evil) -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+cross-site DELETE seed (Sec-Fetch-Site same-site) -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+Origin with lookalike host -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+Origin same host, X-Forwarded-Host spoof -> 403 ct=application/json | {"error":"다른 사이트에서 보낸 요청은 받지 않아요."}
+DELETE /api/character/%E0%A4%A bad enc -> 400 ct=text/plain; charset=utf-8 | 400 Bad Request
+DELETE /api/party/-1 -> 404 ct=application/json | {"error":"없는 파티예요."}
+DELETE /api/party/99999999999999999999 -> 404 ct=application/json | {"error":"없는 파티예요."}
+GET /api/character/rates?name= -> 400 ct=application/json | {"error":"name 파라미터에 캐릭터 닉네임을 넣어 주세요."}
+GET /api/boss?q=<script> -> 200 ct=application/json | []
+GET /api/boss?q=a&q=b -> 200 ct=application/json | [{"id":"normal-lotus","name":"스우","scouterName":"스우","difficulty":"normal","level":210,"defenseRate":300,"maxParty":6,"hp":1073700000000,"forceType":null,"forceRequired":null,"imageUrl":"/boss
+GET /api/character/rates?name=a&name=b -> 404 ct=application/json | {"error":"등록되지 않은 캐릭터예요."}
+GET /nope page -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /.env -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /pocs/.env -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /.env.local -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /.vercel/project.json -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /.git/config -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /package.json -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /docs/dev-v1/flow.json -> 404 ct=text/html; charset=utf-8 | <!DOCTYPE html><html lang="ko" class="_5_QQOG_variable"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/_next/st
+GET /_next/static/../../.env -> 404 ct=text/plain; charset=utf-8 | Not Found
+
+== D-8 SPOT CHECKS (06:41Z) ==
+POST /api/character/import 4.4 MB  -> 413 application/json {"error":"데이터가 너무 커요(최대 1MB)..."}  2.85 s  x-vercel-id icn1::iad1::...
+POST /api/character/import 4.6 MB  -> 413 text/plain "Request Entity Too Large / FUNCTION_PAYLOAD_TOO_LARGE", x-vercel-error FUNCTION_PAYLOAD_TOO_LARGE (edge, no function)
+GET /api/health x3 warm            -> TTFB 0.54 / 0.33 / 0.41 s, x-vercel-id icn1::iad1::... (Seoul edge, function in iad1)
+GET /flow                          -> x-vercel-cache HIT, TTFB 0.04 s, x-vercel-id icn1::... (static)
+30 parallel GET /api/character     -> slowest 8.49 s and 6.55 s in the two scans (cold instances), others < 1 s
+=> agrees with deploy-1.txt section 6 (cold 6.5-9 s, iad1, 4.5 MB platform cap vs our 1 MB, 300 s fluid timeout).
+
+== D-1 SCENARIO A (scripts/d1.mjs, run 2 with waits on the URL/field; run 1 had a 600 ms fixed wait) ==
+# / loaded in 2216 ms {"url":"/","field":"익스트림 카링","h3":"카링","diff":"익스트림","parties":["1순위 가장 추천 강은호 칼리 93.5% 아델 아델 83.2% 합계 176.7% 2인 파티","2순위 강은호 칼리 93.5% 고딩 팔라딘 79.2% 합계 172.8% 2인 파티","3순위 아델 아델 83.2% 고딩 팔라딘 79.2% 합계 162.5% 2인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰
+ok   default boss is 익스트림 카링
+ok   seeded characters shown  강은호,아델,고딩
+ok   3 recommended parties with sums  1순위 가장 추천 강은호 칼리 93.5% 아델 아델 83.2% 합계 176.7% 2인 파티 | 2순위 강은호 칼리 93.5% 고딩 팔라딘 79.2% 합계 172.8% 2인 파티 | 3순위 아델 아델 83.2% 고딩 팔라딘 79.2% 합계 162.5% 2인 파티
+ok   parties are >= 110% (verdict)
+ok   verdict copy present  등록한 캐릭터로 공략 가능한 조합이에요
+ok   temporary storage notice shown  임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요.
+# search '검은 마법사' settled in 842 ms
+# name 검은 마법사 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","h3":"검은 마법사","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 11,727.6% 1인 파티","2순위 아델 아델 합계 10,252.2% 1인 파티","3순위 고딩 팔라딘 합계 9,971.0% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보
+ok   name search '검은 마법사' -> 검은 마법사 boss  하드 검은 마법사 /?boss=hard-black-mage
+ok   field shows the boss label  하드 검은 마법사
+# search '검마' settled in 774 ms
+# alias 검마 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","h3":"검은 마법사","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 11,727.6% 1인 파티","2순위 아델 아델 합계 10,252.2% 1인 파티","3순위 고딩 팔라딘 합계 9,971.0% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나
+ok   alias '검마' -> 검은 마법사  하드 검은 마법사 /?boss=hard-black-mage
+# search '하스우' settled in 796 ms
+# shorthand 하스우 {"url":"/?boss=hard-lotus","field":"하드 스우","h3":"스우","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 83,571.7% 1인 파티","2순위 아델 아델 합계 73,057.9% 1인 파티","3순위 고딩 팔라딘 합계 71,053.9% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 
+ok   shorthand '하스우' -> 하드 스우  하드 스우 /?boss=hard-lotus
+ok   results update for 하드 스우 (parties or empty state)  1순위 가장 추천 강은호 칼리 합계 83,571.7% 1인 파티 | 2순위 아델 아델 합계 73,057.9% 1인 파티 | 3순위 고딩 팔라딘 합계 71,053.9% 1인 파티
+# search '카링' settled in 803 ms
+# 카링 {"url":"/?boss=easy-kaling","field":"이지 카링","h3":"카링","diff":"이지","parties":["1순위 가장 추천 강은호 칼리 합계 5,121.4% 1인 파티","2순위 아델 아델 합계 4,574.1% 1인 파티","3순위 고딩 팔라딘 합계 4,350.3% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요."}
+# search '없는보스zz' settled in 542 ms
+# missing {"url":"/?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz","field":"없는보스zz","h3":"카링","diff":"이지","parties":["1순위 가장 추천 강은호 칼리 합계 5,121.4% 1인 파티","2순위 아델 아델 합계 4,574.1% 1인 파티","3순위 고딩 팔라딘 합계 4,350.3% 1인 파티"],"empty":"","msg":"‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요.","cards":["강은호","아델
+ok   unknown boss -> message, field keeps typed text, boss unchanged  ‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요. field=없는보스zz 카링
+# datalist exact label typed {"url":"/?boss=hard-damien","h3":"데미안","diff":"하드","field":"하드 데미안"}
+ok   exact label submits (datalist pick path)  하드 데미안 /?boss=hard-damien
+ok   back/forward /?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz: field '없는보스zz' matches page '이지 카링'
+ok   back/forward /?boss=easy-kaling: field '이지 카링' matches page '이지 카링'
+ok   back/forward /?boss=hard-lotus: field '하드 스우' matches page '하드 스우'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /: field '익스트림 카링' matches page '익스트림 카링'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-lotus: field '하드 스우' matches page '하드 스우'
+ok   back/forward /?boss=easy-kaling: field '이지 카링' matches page '이지 카링'
+ok   back/forward /?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz: field '없는보스zz' matches page '이지 카링'
+ok   back/forward /?boss=hard-damien: field '하드 데미안' matches page '하드 데미안'
+# search '노칼' settled in 776 ms
+FAIL 노칼 -> 노말 칼로스, focus stays in field  노말 감시자 칼로스 focus=boss-q
+ok   shared /?q=검마 link -> boss shown, URL rewritten to ?boss=  /?boss=hard-black-mage
+ok   /?boss=<unknown> falls back to default  익스트림 카링
+ok   no page errors
+# 1 failed
+note: the one FAIL above is the checker expecting the name '칼로스'; the page shows 노말 '감시자 칼로스', which is correct.
+
+== D-2 SCENARIO B (scripts/d2.mjs; mock maplescouter on http://localhost:<port>) ==
+# D-2 2026-11-17T06:33:07.897Z https://maple-boss-livid.vercel.app; mock maplescouter http://localhost:62456; characters 아델qabp9si (bookmarklet), 고딩qabp9si (paste)
+ok   storage notice shown on / (health persistent:false)
+ok   import guide appears for the nickname  maplescouter에서 ‘아델qabp9si’ 가져오기
+ok   guide heading focused
+ok   maplescouter link correct (new tab, noopener)  https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8qabp9si
+ok   bookmarklet is javascript: for the production origin  1252 chars
+ok   clicking it on Maple Boss only shows the drag hint
+ok   bookmarklet on localhost mock -> production /import#<payload> -> /  2135 ms; https://maple-boss-livid.vercel.app/import#%7B%22v%22%3A1%2C%22info%22 -> https://maple-boss-livid.vercel.app/import#%7B%22v%22%3A1%2C%22info%22 -> https://maple-boss-livid.vercel.app/import -> https://maple-boss-livid.vercel.app/
+ok   no hash left in the address bar
+# api calls so far: POST /api/character/import 201
+FAIL card 아델qabp9si appears on / after the bookmarklet  cards on /: 강은호,아델,고딩
+FAIL 아델qabp9si survives 10 reloads of /  0/10 reloads show it
+FAIL 아델qabp9si in GET /api/character: 20 sequential + 30 parallel  sequential 20/20, parallel 4/30
+ok   paste non-JSON -> Korean error  JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+# api calls for paste: POST /api/character/import 201
+ok   paste confirmation under the field  ‘고딩qabp9si’ 캐릭터를 가져왔어요.
+FAIL card 고딩qabp9si appears on / after paste  cards: 강은호,아델,고딩
+FAIL 고딩qabp9si survives 10 reloads of /  0/10
+FAIL 고딩qabp9si in GET /api/character: 20 sequential + 30 parallel  sequential 20/20, parallel 3/30
+# modal keyboard test on 강은호 (seed: Esc/cancel only, never confirm)
+ok   modal opens with focus on 취소  {"inDialog":true,"text":"취소"}
+FAIL Tab / Shift+Tab never leave the dialog for page content  in:삭제 > OUT:캐릭터 검색추가보스 검색내 캐릭터3명 > in:닫기 > in:취소 > in:삭제 > in:닫기 > OUT:캐릭터 검색추가보스 검색내 캐릭터3명 > in:삭제 > in:취소
+ok   Esc closes the modal and focus returns to the card  {"open":false,"focus":"강은호"}
+ok   backdrop click closes the modal
+ok   Enter on 취소 closes without deleting
+ok   no page errors
+# cleanup DELETE burst 아델qabp9si: {"204":1,"404":59}
+# cleanup DELETE burst 고딩qabp9si: {"204":1,"404":59}
+# after cleanup: 0/30 parallel GETs still list 아델qabp9si or 고딩qabp9si
+# seeds present: true
+# 7 failed
+note: the Tab/Shift+Tab 'OUT' entries are document.body (native modal <dialog> lets focus go to the browser UI between
+      cycles); page content behind stays inert. Detail with tag names:
+reached card via Tab in 6 presses: 강은호
+Tab ring: in:BUTTON:취소 > in:BUTTON:삭제 > OUT:BODY: > in:BUTTON[닫기]: > in:BUTTON:취소 > in:BUTTON:삭제 > in:BUTTON[닫기]: > in:BUTTON:취소 > in:BUTTON:삭제
+Shift+Tab ring: in:BUTTON:취소 > in:BUTTON[닫기]: > OUT:BODY: > in:BUTTON:삭제 > in:BUTTON:취소
+aria: { labelledby: 'confirm-title', title: '캐릭터를 삭제할까요?', modal: true }
+after Esc: { open: false, focus: 'card 강은호' }
+Shift+Tab from 취소 -> in:BUTTON[닫기]:
+after X: { open: false, focus: 'card 강은호' }
+seed still on page: 강은호,아델,고딩
+
+== D-3 SCENARIO C (scripts/d3.mjs) ==
+# D-3 2026-11-17T06:35:23.561Z https://maple-boss-livid.vercel.app
+ok   /pocs/party renders
+FAIL temporary-storage notice on /pocs/party  notice only exists on /
+ok   seeker 강은호 registered for 익스트림 카링 (2인)  강은호 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요. | POST /api/party/requests 201
+ok   seeker 아델 registered for 익스트림 카링 (2인)  아델 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요. | POST /api/party/requests 201
+FAIL both seekers listed under 보스별 구직 현황  rows: (none); text: 이 보스에 구직 중인 캐릭터가 없어요.
+FAIL seekers visible across 8 reloads of /pocs/party  0/8
+FAIL party formed via UI  no selectable seekers on the page -> cannot form a party in the UI
+ok   /pocs/character renders (form + list)  캐릭터 등록 등록 등록한 캐릭터 3 강은호 스카니아 Lv.299 칼리 보스300 환산 152,715 아델 스카니아 Lv.298 아델 보스300 환산 147,690 고딩 루나 Lv.299 팔라딘 보스300 환산 144,756
+ok   /pocs/boss renders search
+ok   /pocs/boss search 검마 shows 검은 마법사 results  https://maple-boss-livid.vercel.app/pocs/boss?q=%EA%B2%80%EB%A7%88 보스 조회 검색 검은 마법사 난이도 레벨 HP 방어율 포스 최대 인원 기준 하드 275 165조 8475억 300% 아케인 1320 6명 방어율 300 익스트림 280 3257조 470억 300% 아케인 1320 6명 방어율 300 챔피언 275 165조 8475억 300% 아케인 1320 1명 방어율 300
+ok   no page errors
+# registered seekers (need cleanup): 강은호,아델
+# 4 failed
+cleanup of the two seed requests left on an API instance (scripts/cleanup-requests.mjs):
+before {"requests":{"강은호@extreme-kaling":2,"아델@extreme-kaling":2},"partiesPerInstance":"000000000000000000000000000000"}
+round 0 close 강은호: 201 x1, ids 1
+round 0 close 아델: 201 x1, ids 2
+round 1 close 강은호: 201 x0, ids 
+round 1 close 아델: 201 x0, ids 
+round 2 close 강은호: 201 x0, ids 
+round 2 close 아델: 201 x0, ids 
+round 0 DELETE party 1: 204 x0
+round 0 DELETE party 2: 204 x1
+round 1 DELETE party 1: 204 x1
+round 1 DELETE party 2: 204 x0
+round 2 DELETE party 1: 204 x0
+round 2 DELETE party 2: 204 x0
+after {"requests":{},"partiesPerInstance":"000000000000000000000000000000"}
+
+== D-4 LAYOUT SWEEP (scripts/d4.mjs; 3 viewports x 12 views) ==
+CHECK 1440x900 home / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1440x900 modal / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (255x48); img"" x strong"강은호" (103x33); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (46x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (283x33); img"" x button.btn.btn--quiet"취소" (271x37); img"" x button.btn.btn--danger"삭제" (68x37)
+CHECK 1440x900 guide / status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: button.btn.btn--quiet"가져오기" x img"" (86x44); input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x33); span.count.num"3 명" x img"" (38x30); span.count.num"3 명" x img"" (8x30); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (321x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (510x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (510x25)
+CHECK 1440x900 boss-missing /?q=zzz status 200 docW 1440/1440
+      off-viewport: img"" -141..369
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1440x900 flow /flow status 200 docW 1440/1440
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    1440x900 import-error /import status 200 docW 1440/1440
+ok    1440x900 import-broken /import#%E0%A4%A status 200 docW 1440/1440
+CHECK 1440x900 pocs-character /pocs/character status 200 docW 1440/1440
+      off-viewport: img"" -4..161
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (40x58); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); span.pick-stat"보스300 환산 152,715" x img"" (27x39); strong.num"152,715" x img"" (27x21); button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" x img"" (40x58)
+ok    1440x900 pocs-boss /pocs/boss status 200 docW 1440/1440
+ok    1440x900 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 1440/1440
+ok    1440x900 pocs-party /pocs/party status 200 docW 1440/1440
+ok    1440x900 404 /no-such-page status 404 docW 1440/1440
+CHECK 1920x1080 home / status 200 docW 1920/1920
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1920x1080 modal / status 200 docW 1920/1920
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (255x48); img"" x strong"강은호" (103x33); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (46x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (283x33); img"" x button.btn.btn--quiet"취소" (271x37); img"" x button.btn.btn--danger"삭제" (68x37)
+CHECK 1920x1080 guide / status 200 docW 1920/1920
+      overlaps: button.btn.btn--quiet"가져오기" x img"" (86x44); input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x33); span.count.num"3 명" x img"" (38x30); span.count.num"3 명" x img"" (8x30); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (321x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (510x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (510x25)
+CHECK 1920x1080 boss-missing /?q=zzz status 200 docW 1920/1920
+      overlaps: h1.logo"" x img"" (272x77); h1.logo"" x img"" (122x77); a"Maple Boss 메인 화면" x img"" (272x77); a"Maple Boss 메인 화면" x img"" (122x77); img"Maple Boss" x img"" (272x77); img"Maple Boss" x img"" (122x77); label"캐릭터 검색" x img"" (94x30); label"캐릭터 검색" x img"" (94x30)
+CHECK 1920x1080 flow /flow status 200 docW 1920/1920
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    1920x1080 import-error /import status 200 docW 1920/1920
+ok    1920x1080 import-broken /import#%E0%A4%A status 200 docW 1920/1920
+CHECK 1920x1080 pocs-character /pocs/character status 200 docW 1920/1920
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (40x58); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); span.pick-stat"보스300 환산 152,715" x img"" (27x39); strong.num"152,715" x img"" (27x21); button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" x img"" (40x58)
+ok    1920x1080 pocs-boss /pocs/boss status 200 docW 1920/1920
+ok    1920x1080 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 1920/1920
+ok    1920x1080 pocs-party /pocs/party status 200 docW 1920/1920
+ok    1920x1080 404 /no-such-page status 404 docW 1920/1920
+CHECK 375x812 home / status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x16); span.count.num"3 명" x img"" (38x14); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (238x50); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (151x50); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137)
+CHECK 375x812 modal / status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: h2#confirm-title"캐릭터를 삭제할까요?" x img"" (186x33); img"" x strong"강은호" (77x28); img"" x span.num"Lv.299" (57x30); img"" x span"칼리" (20x30); img"" x p.confirm-note"목록에서 삭제하면 추천 파티가 다시 계산돼요." (206x65)
+CHECK 375x812 guide / status 200 docW 375/375
+      off-viewport: div.guide-head"maplescouter에서 ‘Wide이름WWWWWWWW" 33..387; button.icon-btn"가져오기 안내 닫기" 369..395; svg"" 370..394; path"" 376..388; p.section-help"이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 " 33..387; ol.steps"1 maplescouter에서 결과 열기 (새 탭) 새" 33..387
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x16); span.count.num"3 명" x img"" (38x14); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (238x50); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (151x50); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137)
+CHECK 375x812 boss-missing /?q=zzz status 200 docW 375/375
+      off-viewport: img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381; img"" -66..249; img"" 66..381
+      overlaps: input#boss-q.field"" x button.icon-btn"보스 찾기" (44x44); h2#chars-title"내 캐릭터" x img"" (108x16); span.count.num"3 명" x img"" (38x14); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (238x25); p#cards-help.section-help.section-help--end"카드를 클릭하면 삭제할 수 있어요" x img"" (151x25); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (238x50); p.section-help"임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새" x img"" (151x50); button.card"강은호 Lv.299 칼리 스카니아 전투력 23억 643" x img"" (110x137)
+CHECK 375x812 flow /flow status 200 docW 375/375
+      clipped: span.flow-node-agent"build:import+harness · Opus 5." scroll 180 > client 166 (text-overflow ellipsis); span.flow-node-agent"build:design · build:copy+p2 ·" scroll 305 > client 166 (text-overflow ellipsis); span.flow-node-agent"critic:design-copy · critic:fu" scroll 295 > client 166 (text-overflow ellipsis)
+ok    375x812 import-error /import status 200 docW 375/375
+ok    375x812 import-broken /import#%E0%A4%A status 200 docW 375/375
+CHECK 375x812 pocs-character /pocs/character status 200 docW 375/375
+      off-viewport: img"" -36..129; img"" -36..129; img"" -36..129
+      overlaps: h2#list-title"등록한 캐릭터" x img"" (113x33); button.pick-row"강은호 스카니아 Lv.299 칼리 보스300 환산 15" x img"" (113x48); img"" x strong"강은호" (44x22); img"" x span.num"Lv.299" (42x19); img"" x span"칼리" (2x19); img"" x button.pick-row"아델 스카니아 Lv.298 아델 보스300 환산 147" (113x35); img"" x img"" (165x95); img"" x strong"아델" (29x22)
+ok    375x812 pocs-boss /pocs/boss status 200 docW 375/375
+ok    375x812 pocs-boss-q /pocs/boss?q=%EA%B2%80%EB%A7%88 status 200 docW 375/375
+ok    375x812 pocs-party /pocs/party status 200 docW 375/375
+ok    375x812 404 /no-such-page status 404 docW 375/375
+# 18 page/viewport combos flagged for review
+Review of the CHECK lines (screenshots in shots/):
+- img"" off-viewport/overlaps on /, the modal, /pocs/character: character sprites are larger than their frames and cropped by an
+  overflow:hidden frame (the checker does not model clipping ancestors). Visually no overlap or clipping (d4-home-*, d4-modal-*).
+- /flow span.flow-node-agent: ellipsis by design inside fixed-width nodes.
+- 375 guide with 'Wide이름WWWWWWWWWWWW' (18 chars, no break): content wider than the box, close button at 369..395 px, i.e. off-screen
+  (html/body overflow-x: clip). Same check with 아델qa12345 (9), 강은호 (3), WWWWWWWWWWWW (12): box 16..359, close inside. -> P2-1
+  (scripts/d4-guide.mjs; shots/guide-375-long-name-overflow.png)
+- /flow 375: body.scrollWidth 544 inside scroll containers; B3 row text 'JEV/GOOGLE/OPENAI/CLAUDE/VERCEL/R...' runs past the edge
+  (shots/flow-375-blockers.png) -> P2-2
+- Main screen and modal vs originals: compare-main-prod.png, compare-modal-prod.png. Same layout, colours, type scale and modal
+  composition; differences are the documented KEEPs in ../../design-diff.md (#24 boss rows, #27 no 추천순, #35 sum instead of tags).
+
+== D-6 STORAGE ==
+GET /api/health -> 200 {"ok":true,"db":"pglite","persistent":false} (06:27Z). Recorded external blocker B1 (Neon terms, DECISIONS.md;
+db.txt). Notice on / only: "임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요."
+Observed on production:
+  bookmarklet import  POST 201 -> /import "‘아델qa…’ 캐릭터를 가져왔어요. 메인 화면으로 이동해요." -> / without the card; 0/10 reloads
+  paste import        POST 201 -> "‘고딩qa…’ 캐릭터를 가져왔어요." under the field -> no card; 0/10 reloads
+  API reads           20/20 sequential (keep-alive, same instance) but 4/30 and 3/30 parallel
+  /pocs/party         2 x "…구직에 등록했어요." (201) -> "이 보스에 구직 중인 캐릭터가 없어요."; 0/8 reloads; no notice on this page
+  cleanup             DELETE bursts: 1 x 204 of 60 per character (the other instances answer 404)
+=> The pages never show what the API stored (not "may, after a refresh"). The notice is shown on / and is true as far as it goes,
+   but it understates the effect, and /pocs/party, /pocs/character, /import and the import guide's success line carry no warning.
+
+== D-7 KEYS (scripts/fetch-assets.mjs: 13 pages+API bodies, RSC payloads, 16 JS + 5 CSS + font refs, headers) ==
+source maps served for the 16 JS chunks: 0
+JEV_KEY: files with full value: 0, files with its first 12 chars: 0
+GOOGLE_KEY: files with full value: 0, files with its first 12 chars: 0
+OPENAI_KEY: files with full value: 0, files with its first 12 chars: 0
+CLAUDE_KEY: files with full value: 0, files with its first 12 chars: 0
+VERCEL_KEY: files with full value: 0, files with its first 12 chars: 0
+RENDER_KEY: files with full value: 0, files with its first 12 chars: 0
+OPENROUTER_KEY: files with full value: 0, files with its first 12 chars: 0
+patterns over the same 44 files (sk-, sk-ant-, sk-or-, AIza, gh*_, github_pat_, xox, rnd_, npg_, JWT, PRIVATE KEY, postgres://,
+DATABASE_URL, POSTGRES_, PGPASSWORD, VERCEL_OIDC, process.env, *_KEY names, /Users/, local user name, localhost:3000, 127.0.0.1,
+Bearer, tea-, prj_, team_): 0 files each. Headers: no set-cookie; server Vercel; HSTS; x-powered-by: Next.js on dynamic pages;
+no CSP / X-Frame-Options / frame-ancestors. .env values in docs/ and pocs/ (working tree): 0 files each.
+/.env /pocs/.env /.env.local /.vercel/project.json /.git/config /package.json /docs/dev-v1/flow.json -> 404 (app HTML 404).
+
+== CLEANUP (06:43Z, scripts/sweep.mjs scan) ==
+scan 30 parallel: seeds-all-present 30/30, non-seed names: {} ms max 6550
+parties per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+requests per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]

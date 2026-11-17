@@ -1,0 +1,6 @@
+# npm run lint 2026-11-17T04:59:39+0900 (cwd pocs/)
+
+> pocs@0.1.0 lint
+> eslint
+
+exit=0

@@ -1,0 +1,214 @@
+# G3b production deploy 1 (third production deploy overall; spike.txt had deploys 1-2) + platform verification
+# Deploy and first checks 2026-11-16T20:03Z-20:10Z (KST 2026-11-17 05:03-05:10); second round 2026-11-17T04:48Z-06:20Z
+# (KST 13:48-15:20). Nothing ran against production between 20:10Z and 04:48Z.
+# Vercel CLI 65.16.0 (`npx -y vercel@latest`), repo root linked (.vercel gitignored). Node 24.10.0 locally.
+# No tokens, keys or connection strings were printed or written. The root .env was read only inside one subshell
+# (section 7), which printed variable names, lengths and match counts, never values.
+
+== RESULT ==
+Deployment     dpl_B8gHhbsCtyYJygFZxeL93WcuyEnT  (https://maple-boss-98798c0ah-mojomoths-projects.vercel.app, SSO-protected)
+Alias          https://maple-boss-livid.vercel.app  -> serves dpl_B8gH... (all 511 request-log records 20:03-20:09Z carry it;
+               that query was not filtered by deployment)
+Pre-flight     npm test 40/40, tsc 0 errors, lint 0, next build OK (18 routes)
+DB             /api/health 200 {"ok":true,"db":"pglite","persistent":false}  <- DATABASE_URL still unset (B1, see db.txt)
+Smoke          85 ok / 1 FAIL, twice (FAIL = malformed % path answered by Vercel's edge, not by the app; section 4)
+Persistence    FAIL as expected without DATABASE_URL: parallel reads miss the import, deletes hit the wrong instance,
+               and pages (/, /pocs/party) never show what the API imported (0/32), so import -> / fails (section 5)
+Key exposure   none found (section 7)
+Status         deployed and serving; persistence blocked on the database decision (db.txt); one smoke check needs a fix
+
+== 1. DB AGENT REPORT, RE-CHECKED BEFORE DEPLOY ==
+vercel env ls                        -> "No Environment Variables found for mojomoths-projects/maple-boss"
+vercel integration list              -> "No resources found."
+vercel api /v9/projects/maple-boss   -> rootDirectory pocs, nodeVersion 24.x, framework nextjs,
+                                        resourceConfig {fluid true, functionDefaultRegions [iad1]}, functionDefaultTimeout 300,
+                                        functionDefaultMemoryType standard, ssoProtection all_except_custom_domains
+Root: only .env (gitignored); no .env.local at the root or in pocs/. git status: .gitignore unchanged.
+=> matches the DB agent's BLOCKED report. Nothing was created or accepted here (no terms, no billing).
+
+== 2. PRE-FLIGHT (pocs/, PATH=/opt/homebrew/bin) ==
+npm test           exit 0  tests 40, pass 40, fail 0 (1.1 s)
+npx tsc --noEmit   exit 0
+npm run lint       exit 0
+npm run build      exit 0  Next.js 16.4.6 (Turbopack); / and /pocs/boss, /pocs/party, /api/* dynamic; /flow, /import,
+                           /pocs/character static. The running next dev (port 3000, .next/dev) kept answering during the build.
+Tree deployed: HEAD 5d90bf6 + uncommitted working tree (18 files modified, +195/-61; untracked pocs/app/api/character/remove.ts,
+  scripts/flow-check.mjs, scripts/nav-walk.mjs; `git diff | shasum -a 256` 063d0d202ee39cbf...). Commit it to match prod.
+
+== 3. DEPLOY ==
+$ npx -y vercel@latest deploy --prod --yes      (cwd = repo root)
+  20:03:37Z start, exit 0 after 31 s. createdAt 20:03:40Z, READY 20:04:08Z. build 27 s (cache 210.8 MiB restored), basic 2 vCPU.
+  "Aliased https://maple-boss-livid.vercel.app"; inspect lists aliases maple-boss-livid.vercel.app, maple-boss-mojomoths-projects.vercel.app
+Uploaded source (GET /v6/deployments/<id>/files): 121 files = .vercelignore 1, docs 16, pocs 104.
+  No .env*, .vercel, evidence, pocs/data, .claude or agent-sessions in it.
+Output: `vercel inspect` lists one λ per route, all the same bundle (8.61 MB) in iad1 (the deployment API says
+  "lambdas": 1). fluid, functionTimeout 300 s, memory "standard", active CPU billing. No vercel.json, no `maxDuration`
+  export in the app. Observed (sections 5b, 6b): page routes and API routes do NOT share instances on this deploy, unlike
+  spike.txt's "they behave as ONE function". A cold / is followed by a cold /api/health and the other way round.
+First production requests: 20:04:08.975Z GET / from Vercel's own screenshot bot (HeadlessChrome, edge sfo1, 2 page loads +
+  46 assets). It, not us, triggers the first cold start after each deploy, and with PGlite it seeds that instance.
+Request logs 20:03:00Z-20:08:53Z (all deployments): 0 records from the previous deployment dpl_AuF4... (spike.txt saw
+  a ~1 s overlap after READY; none here, our first request came 10 s after READY).
+
+== 4. VERIFICATION ON https://maple-boss-livid.vercel.app ==
+GET /api/health              200 {"ok":true,"db":"pglite","persistent":false}
+GET /api/character           200, 3 seeded characters: 강은호, 아델, 고딩
+GET /                        200 "파티 추천 · Maple Boss", 3 recommended parties (강은호+아델 176.7%, 강은호+고딩 172.8%, 아델+고딩 162.5%),
+                             notice "임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요."
+GET /flow                    200 "개발 진행 · Maple Boss" (prerendered, edge cache HIT; it was 404 on the previous deploy)
+GET /import                  200 "캐릭터 가져오기 · Maple Boss" (prerendered)
+GET /pocs/party              200 "파티 편성 · Maple Boss"
+GET /pocs/character          200 "캐릭터 등록 · Maple Boss" (prerendered)
+GET /pocs/boss               200 "보스 조회 · Maple Boss"
+GET /pocs                    404 app's Korean 404 page (no index route; same locally; smoke expects it)
+
+$ cd pocs && BASE_URL=https://maple-boss-livid.vercel.app npm run smoke
+  run 1 20:05:12Z  exit 1, 30 s: 85 ok, 1 FAIL       run 2 04:51:33Z  exit 1: 85 ok, 1 FAIL (same check)
+  FAIL DELETE /api/character/%E0%A4%A (bad encoding) -> 400 { error }  400 400 Bad Request
+  Cause: Vercel's edge rejects a path with broken percent-encoding before routing. proxy.ts never runs, and the request
+  is missing from `vercel logs requests`.
+    HTTP/1.1 (node fetch, curl --http1.1): 400, content-type text/plain, body "400 Bad Request", connection: close
+    HTTP/2 (curl default): stream reset, PROTOCOL_ERROR, no response at all
+    local next dev: 400 application/json {"error":"주소에 잘못된 % 인코딩이 있어요."}
+  The status (400) is right; only the JSON body can't be produced on Vercel. This check was added in G3a (5d90bf6), after
+  the spike, so it had never run against Vercel. Not changed here: the smoke check must accept the platform 400 on Vercel
+  (or skip the body check for non-local BASE_URL). That is a decision for the fix step.
+  Smoke cleanup: its own "no longer lists them" checks passed. A 60-DELETE parallel sweep per name afterwards found
+  nothing left (all 404), and 30 parallel GETs list only the 3 seeds.
+
+Browser import flow (scripts/import-e2e.mjs, system Chrome, fresh context, no permissions granted), 04:49Z:
+  ok   no crawler (POST /api/character -> 501), storage notice shown (persistent:false), guide, focus, step-1 link,
+       javascript: bookmarklet for this origin, bookmarklet -> /import#<payload> -> /, trimmed payload 15085 vs 224219 chars,
+       hash removed from the address bar
+  FAIL card 아델e2e7q9y9 is on /     <- POST /api/character/import was 201 (request log), but GET / renders on a page
+       instance that never sees API writes (section 5b). The script stopped there, so the paste fallback was not reached.
+  cleanup DELETE 204; a 60-DELETE parallel sweep found nothing left.
+
+== 5. PERSISTENCE (/tmp PGlite, DATABASE_URL unset) ==
+Script: import seed/아델.json renamed, read GET /api/character 30x sequential + 30x parallel, DELETE (up to 15 tries while
+404), then 30x sequential + 30x parallel. ">2 s" = a request that met a cold, freshly seeded instance.
+                                     run 1 (20:06Z, 아델d39x3h)            run 2 (04:52Z, 아델d3eamc)
+  POST /api/character/import         201, 396 ms                            201, 544 ms
+  read x30 sequential, contain it    30/30 (keep-alive client, 1 instance)  30/30
+  read x30 parallel, contain it      23/30 (7 cold, list = 3 seeds)         4/30 (2 cold; warm instances without it)
+  DELETE, 15 tries                   404 x15 (other instances)              404 x15
+  after delete, x30 seq, gone        30/30 (but see the next line)          30/30
+  after delete, x30 parallel, gone   26/30 (4 instances still list it)      29/30
+  Required: all 60 reads see it, then 30/30 gone. Both runs FAIL.
+  The leftovers were removed with parallel DELETE bursts: 1 x 204 out of 60 each time, then 0/30 parallel GETs list them.
+5b. Pages vs API (06:19Z, 아델rs9w6u): POST /api/character/import 201 (9.75 s, cold), then 8 sequential reads per path, twice:
+  GET /api/character   16/16 contain it (0.30-0.48 s)
+  GET /                 0/16 (first 7.28 s cold, rest 0.23-0.49 s); the page lists the 3 seeds
+  GET /pocs/party       0/16 (0.22-0.48 s); the page lists the 3 seeds
+  -> the main screen never shows a character imported through the API, even from one client on warm instances.
+  This is why the browser import flow fails on production now. Removed afterwards (parallel DELETE burst: 1 x 204 of 60).
+=> Worse than the spike: each instance has its own /tmp/pglite, and pages and the API run on different instances. A write
+   is visible only on the API instance that took it, never on the main screen; a DELETE can 404 for a character the user
+   can still see; deleted data can come back on the next request.
+   Needs DATABASE_URL (db.txt, option A or B). Not fixable on the Vercel side alone.
+
+== 6. PLATFORM CONSTRAINTS OBSERVED ==
+Region (x-vercel-id): functions "icn1::iad1::..." = Seoul edge, function in iad1 (Washington DC).
+  Prerendered/static: "icn1::..." only (served from the Seoul edge cache).
+Latency from this machine (Seoul, curl, new TLS connection each time; TTFB):
+  right after READY:
+  cold /api/health, first API hit after READY                       6.53 s (connect 0.14 s)
+  cold / (12 s later; the screenshot bot's / instance not reused)   8.39 s
+  cold /api/health (24 s after READY, another new instance)         7.39 s
+  cold under 30 parallel GETs /api/character                        up to 9.11 s (7 of 30), 8.14 s, 6.62 s
+  after 15 min idle (6b): / 7.52 s, then /api/health 7.75 s; after 15 more: /api/health 7.52 s, then / 7.01 s
+  warm /            x7   0.26-0.63 s (total 0.31-0.67 s); after idle x3 0.30-0.36 s
+  warm /api/health  x7   0.33-0.43 s; after idle x3 0.36-0.47 s
+  warm GET /api/character (node fetch, keep-alive) median 0.31 s, min 0.29 s
+  prerendered /flow, /import, /pocs/character (edge HIT)   0.39-0.68 s incl. TLS
+  -> cold starts cost 6.5-9 s (PGlite wasm + initdb in /tmp + schema + seed); about 0.25-0.3 s of every warm function call
+     is the Seoul <-> iad1 round trip.
+  (idle cold starts: section 6b)
+Request body limit (POST /api/character/import, our limit 1 MB):
+  0.99 MB JSON                     400 application/json {"error":"maplescouter 캐릭터 데이터가 아니에요."}  (reaches the parser)
+  1.1 MB, content-length           413 application/json {"error":"데이터가 너무 커요(최대 1MB). maplescouter 캐릭터 데이터만 보내 주세요."}
+  1.1 MB, chunked (no length)      413 application/json, same body (stream cut off by readText)
+  4.4 MB                           413 application/json, same body (our limit)
+  4.6 MB                           413 text/plain "Request Entity Too Large / FUNCTION_PAYLOAD_TOO_LARGE",
+                                   x-vercel-error FUNCTION_PAYLOAD_TOO_LARGE (Vercel's 4.5 MB limit, never reaches the function)
+  -> our 1 MB limit is below Vercel's, so users get our Korean 413 for 1-4.5 MB. Above 4.5 MB they get Vercel's text 413:
+     /import and the paste form fall back to "캐릭터를 가져오지 못했어요 (413). 잠시 뒤 다시 시도해 주세요." (res.json() fails
+     -> generic message). Our 413's `connection: close` header is not passed through on HTTP/2 (expected).
+Function max duration: functionTimeout 300 s (project default, fluid). No route sets maxDuration; the slowest call seen
+  was a 9.1 s cold start.
+/tmp when DATABASE_URL is set: NOT observable yet (DATABASE_URL unset; prod uses /tmp/pglite, health persistent:false).
+  By code: lib/db.ts takes the `pg` branch when DATABASE_URL is set; mkdirSync and new PGlite run only in the else branch,
+  so /tmp is not touched. dbInfo then reports postgres/persistent:true. Re-check after the DB exists (db.txt step A6).
+Browser permissions: none needed.
+  Shipped code (21 static files: 16 JS, 5 CSS; plus the 6 pages) has no navigator.permissions, geolocation,
+  Notification/requestPermission, getUserMedia/getDisplayMedia, clipboard read/write, requestStorageAccess,
+  serviceWorker/PushManager, file pickers, bluetooth/usb/serial/hid, MIDI, device orientation, window.open,
+  sessionStorage, indexedDB.
+  localStorage appears only inside the bookmarklet string, which runs on maplescouter.com and reads its own
+  'character-store'. document.cookie appears only in Vercel's injected toolbar loader (checks __vercel_toolbar=1).
+  The import flow ran in a fresh Chrome context with no granted permissions (navigation + fetch only) with no prompt
+  and no page error.
+vercel logs (Hobby keeps runtime logs ~30 min: `--since 1h` -> "The hobby plan does not retain runtime logs for the
+  requested time range"; check errors within 30 min of a run):
+  runtime, deployment dpl_B8gH..., 20:03:00Z-20:08:43Z  0 records;  04:45:00Z-04:52:53Z  0 records
+  runtime level:error/fatal/warning, 04:45Z-04:52Z     0 records (the app logs only on 500s and DB errors)
+  requests 20:03Z-20:08:53Z  511: 200x248 201x10 204x6 400x24 403x6 404x208 405x2 413x6 501x1;
+                             only 5xx = POST /api/character 501 (no crawler on Vercel, by design).
+                             The 404s are mostly the persistence DELETE retries and sweeps.
+  requests 04:45Z-04:52:57Z  737: 200x286 201x11 204x7 304x5 400x23 403x6 404x388 405x2 413x2 499x5 501x2;
+                             499 = 5 static assets the e2e browser dropped while navigating; only 5xx = the designed 501s.
+  runtime 06:00Z-06:20:55Z   0 records;  requests 06:18Z-06:21Z  157: 200x96 201x1 204x1 404x59, no 5xx (section 5b)
+
+== 6b. COLD START AFTER IDLE ==
+`vercel logs requests` for 04:54:00-05:08:50Z and 05:09:10-05:24:05Z each hold exactly one record: our own first
+request below (logged at its start). So both idle windows really had no traffic. curl from Seoul, TTFB:
+  05:08:54Z  /            7.52 s   cold
+  05:08:55Z  /            0.36 s, 0.34 s
+  05:09:03Z  /api/health  7.75 s   cold again: a warm page instance does not serve the API
+  05:09:04Z  /api/health  0.47 s
+Another 15 min without traffic:
+  05:24:11Z  /api/health  7.52 s   cold
+  05:24:12Z  /api/health  0.36 s, 0.43 s
+  05:24:19Z  /            7.01 s   cold again
+  05:24:20Z  /            0.30 s
+-> After 15 min idle every instance is gone. The first visitor waits ~7-7.5 s for the page, and the first API call on
+   that page (import, delete) waits another ~7.5 s. With DATABASE_URL the PGlite init (wasm + initdb + seed) goes away,
+   so re-measure then. The function region (iad1) adds ~0.25-0.3 s to every warm call from Korea (db.txt section 4).
+
+== 7. KEY EXPOSURE ON PRODUCTION ==
+Downloaded (into an empty /tmp dir, never executed) the HTML of /, /flow, /import, /pocs/character, /pocs/boss, /pocs/party
+and every /_next/static JS/CSS file they reference, following references inside the chunks too: 21 files (16 JS, 5 CSS),
+~919 K chars. The local build also has 21 chunk files, so nothing was missed.
+Actual secret values: each variable in the root .env (JEV_KEY, GOOGLE_KEY, OPENAI_KEY, CLAUDE_KEY, VERCEL_KEY, RENDER_KEY,
+  OPENROUTER_KEY; values 32-164 chars) grepped as a fixed string over the 27 files, the saved headers and every probe
+  response body of this run -> 0 files for each. Values were never printed.
+Patterns, files matching (27 files):
+  sk-..., sk-ant-, sk-or-, AIza..., gh[pousr]_..., github_pat_, xox?-, rnd_..., npg_..., JWT eyJ...eyJ, -----BEGIN   0
+  postgres:// / postgresql://, DATABASE_URL, POSTGRES_, PGPASSWORD, VERCEL_OIDC, NEXT_PUBLIC_, process.env, Bearer   0
+  JEV_KEY|GOOGLE_KEY|OPENAI_KEY|CLAUDE_KEY|VERCEL_KEY|RENDER_KEY|OPENROUTER_KEY                                   0
+  render.com, onrender, neon.tech / neon.com                                                                         0
+  /Users/, the local user name, /home/, localhost:3000, 127.0.0.1, Render owner id tea-..., prj_..., team_...        0
+  [A-Z]..._KEY   1 file: Next's router constants (PAGE_SEGMENT_KEY, DEFAULT_SEGMENT_KEY, HEAD_REQUEST_KEY) -> not secrets
+  password       2 files: the URL polyfill (s.password=r.password) and React DOM input types -> not secrets
+  secret         1 file: /flow's link to docs/dev-v1/evidence/G3/secrets-scan.txt -> a file name
+  dpl_...        1 file: Vercel's toolbar loader carries data-deployment-id (public by design)
+  github.com/mojomoth   /flow links 19 evidence files in the repo, which is PUBLIC (gh repo view: visibility PUBLIC).
+                        So everything under docs/dev-v1/evidence is public: keep secrets out of it.
+Response headers (/, /flow, /import, /pocs/*, /api/health, a static chunk):
+  no set-cookie, no env values, no internal hosts. server: Vercel; HSTS max-age=63072000; includeSubDomains; preload.
+  Dynamic pages: cache-control private, no-cache, no-store; x-powered-by: Next.js (version not shown).
+  Prerendered pages and static files: access-control-allow-origin: * (Vercel default for static files; /api/* does not
+  send it). No Content-Security-Policy, X-Frame-Options/frame-ancestors, Referrer-Policy or Permissions-Policy.
+=> No key or connection string is exposed. Two hardening notes, not leaks: the pages can be framed by any site
+   (clickjacking on the delete confirm; add frame-ancestors 'none' / X-Frame-Options DENY via next.config headers) and
+   x-powered-by can be dropped (poweredByHeader: false). Left for the backlog; not changed in this step.
+
+== 8. FOR THE NEXT STEP ==
+1. Database (blocks persistence, B1): user picks db.txt option A (accept Neon terms) or B (paid Render). Then db.txt
+   steps A1-A6, redeploy, and repeat section 5 (expect 60/60 and 30/30) and 5b (/ and /pocs/party show the import),
+   rerun scripts/import-e2e.mjs on the alias, plus health postgres/persistent:true, the /tmp check and 6b cold starts.
+   Until then the production import flow is broken for users: the main screen never shows an imported character.
+2. Smoke: make the bad-encoding check accept Vercel's edge 400 (text/plain) when BASE_URL is not local, or check status
+   only. Until then a Vercel smoke run ends "1 failed" even when the app is right.
+3. Optional hardening from section 7 (frame-ancestors, poweredByHeader).
+4. Commit the working tree so the repo matches what production runs (section 2).

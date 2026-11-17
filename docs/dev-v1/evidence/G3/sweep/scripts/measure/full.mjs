@@ -1,0 +1,13 @@
+import { createRequire } from "node:module";
+const require = createRequire("/Users/jeongyounglee/work/repo/maple-boss/pocs/package.json");
+const { chromium } = require("playwright-core");
+const b = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+const p = await b.newPage({ viewport: { width: 1448, height: 1086 }, deviceScaleFactor: 1, colorScheme: "dark", locale: "ko-KR" });
+await p.goto("http://localhost:3000/", { waitUntil: "networkidle" });
+await p.addStyleTag({ content: "nextjs-portal{display:none!important}" });
+await p.evaluate(() => document.fonts.ready);
+await p.click("button.card");
+await p.waitForFunction(() => document.querySelector("dialog.confirm")?.open);
+await p.waitForTimeout(300);
+await p.screenshot({ path: process.argv[2] });
+await b.close();

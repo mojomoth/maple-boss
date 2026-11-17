@@ -1,0 +1,6 @@
+scan 30 parallel: seeds-all-present 30/30, non-seed names: {} ms max 534
+parties per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+requests per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+scan 30 parallel: seeds-all-present 30/30, non-seed names: {} ms max 432
+parties per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+requests per instance: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]

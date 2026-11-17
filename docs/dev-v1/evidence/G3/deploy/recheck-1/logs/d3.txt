@@ -1,0 +1,19 @@
+# D-3 2026-11-17T07:13:28.448Z https://maple-boss-livid.vercel.app
+ok   /pocs/party renders
+ok   temporary-storage notice on /pocs/party says requests/parties usually do not show up  임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요.
+ok   notice comes before the request form
+ok   seeker 강은호 registered for 익스트림 카링 (2인)  강은호 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요. | POST /api/party/requests 201
+ok   seeker 아델 registered for 익스트림 카링 (2인)  아델 캐릭터를 익스트림 카링 구직에 등록했어요. 희망 인원은 2명이에요. | POST /api/party/requests 201
+ok   seekers listed under 보스별 구직 현황, or the page notice explains why not  listed false
+info both seekers listed under 보스별 구직 현황: false rows: (none); text: 이 보스에 구직 중인 캐릭터가 없어요.
+info seekers visible across 8 reloads of /pocs/party: 0/8 (B1: expected 0)
+BLOCKED party formed via UI: no selectable seekers on the page (B1) -> cannot form/save/delete a party in the UI
+ok   /pocs/character renders (form + list)  캐릭터 등록 임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요. 등록 등록한 캐릭터 3 강은호 스카니아 Lv.299 칼리 보스300 환산 152,715 아델 스카니아 Lv.298 아델 보스300 환산 147,690 고딩 루나 Lv.299 팔라딘 보스300 환산 144,756
+ok   /pocs/character shows the notice  임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요.
+ok   /pocs/character register on Vercel -> 501 explained with the way to import  이 서버는 닉네임으로 바로 불러오지 못해요. maplescouter 결과 페이지에서 가져와 주세요. / 가져오는 방법은 메인 화면에서 닉네임을 넣고 ‘추가’를 누르면 나와요. maplescouter에서 결과 열기
+(새 탭) | POST /api/character 501
+ok   /pocs/boss renders search
+ok   /pocs/boss search 검마 shows 검은 마법사 results  https://maple-boss-livid.vercel.app/pocs/boss?q=%EA%B2%80%EB%A7%88 보스 조회 검색 검은 마법사 난이도 레벨 HP 방어율 포스 최대 인원 기준 하드 275 165조 8475억 300% 아케인 1320 6명 방어율 300 익스트림 280 3257조 470억 300% 아케인 1320 6명 방어율 300 챔피언 275 165조 8475억 300% 아케인 1320 1명 방어율 300
+ok   no page errors
+# registered seekers (need cleanup): 강은호,아델
+# all passed

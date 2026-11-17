@@ -14,6 +14,7 @@ import logo from "@/public/maple-boss-logo.png";
 import AddCharacter from "./AddCharacter";
 import BossSearch from "./BossSearch";
 import CharacterGrid from "./CharacterGrid";
+import { TEMP_STORAGE } from "./messages";
 import { BoltIcon, CrownIcon, HeartIcon, LevelIcon, PeopleIcon, ShieldIcon, Sprite } from "./ui";
 
 export const metadata: Metadata = {
@@ -78,10 +79,10 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         <div className="shell topbar-row">
           <h1 className="logo">
             <Link href="/" aria-label="Maple Boss 메인 화면">
-              <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
+              <Image src={logo} alt="Maple Boss" width={272} height={77} priority unoptimized />
             </Link>
           </h1>
-          <AddCharacter crawler={crawlerAvailable()} />
+          <AddCharacter crawler={crawlerAvailable()} persistent={dbInfo.persistent} />
           <BossSearch
             labels={listBosses().map(bossLabel)}
             value={q && !found ? q : bossLabel(boss)}
@@ -108,11 +109,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
               </p>
             )}
           </div>
-          {!dbInfo.persistent && (
-            // Vercel without DATABASE_URL: PGlite in /tmp, one per instance, so a later request may land on one
-            // that never saw the data. Restarts are only part of it.
-            <p className="section-help">임시 저장소를 쓰고 있어요. 등록한 캐릭터와 파티가 새로고침 뒤에 안 보이거나 사라질 수 있어요.</p>
-          )}
+          {!dbInfo.persistent && <p className="section-help">{TEMP_STORAGE}</p>}
           {characters.length ? (
             <CharacterGrid characters={characters} />
           ) : (

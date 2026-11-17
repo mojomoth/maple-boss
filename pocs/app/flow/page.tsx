@@ -78,7 +78,7 @@ export default function FlowPage() {
         <div className="shell flow-top">
           <h1 className="logo">
             <Link href="/" aria-label="Maple Boss 메인 화면">
-              <Image src={logo} alt="Maple Boss" width={272} height={91} priority unoptimized />
+              <Image src={logo} alt="Maple Boss" width={272} height={77} priority unoptimized />
             </Link>
           </h1>
           <Link className="btn btn--quiet" href="/">

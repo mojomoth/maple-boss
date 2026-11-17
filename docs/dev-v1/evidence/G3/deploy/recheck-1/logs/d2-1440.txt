@@ -1,0 +1,37 @@
+# D-2/P1-1 recheck 2026-11-17T07:11:12.583Z https://maple-boss-livid.vercel.app @1440; health {"ok":true,"db":"pglite","persistent":false}; mock http://localhost:50367; characters 아델qavcb3l (bookmarklet), 고딩qavcb3l (paste)
+ok   / shows the temporary-storage notice once (health persistent:false)  임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요.
+ok   notice says imports and requests/parties usually do not show up  임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요.
+ok   import guide appears for the nickname  maplescouter에서 ‘아델qavcb3l’ 가져오기
+ok   guide heading focused
+ok   guide help line warns that imports usually do not show (no '카드가 생겨요' promise)  이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 단계로 가져올 수는 있지만, 임시 저장소라서 가져온 캐릭터가 보통 화면에 나오지 않아요.
+ok   maplescouter link correct (new tab, noopener)  https://maplescouter.com/ko/result?name=%EC%95%84%EB%8D%B8qavcb3l
+ok   bookmarklet is javascript: for the production origin  1252 chars
+ok   clicking it on Maple Boss only shows the drag hint
+ok   bookmarklet on localhost mock -> production /import#<payload>  3627 ms; https://maple-boss-livid.vercel.app/import#%7B%22v%22%3A1%2C -> https://maple-boss-livid.vercel.app/import#%7B%22v%22%3A1%2C -> https://maple-boss-livid.vercel.app/import
+ok   no hash left in the address bar  https://maple-boss-livid.vercel.app/import
+# api calls: POST /api/character/import 201
+ok   /import result says imported AND that / usually will not show it  ‘아델qavcb3l’ 캐릭터를 가져왔어요. 임시 저장소라 메인 화면에는 보통 안 나와요.
+ok   /import stays (no auto-redirect that would hide the message)  https://maple-boss-livid.vercel.app/import
+ok   /import offers the way back ('메인 화면으로')
+ok   / after /import: card 아델qavcb3l shown, or the notice explains why not  card shown false; cards 강은호,아델,고딩
+info 아델qavcb3l: on / in 0/10 reloads (B1: expected 0 / unstable)
+info 아델qavcb3l: GET /api/character sequential 10/10, parallel 4/30
+ok   paste non-JSON -> Korean error  JSON 형식이 아니에요. maplescouter에서 복사한 값을 그대로 붙여 넣어 주세요.
+# api calls for paste: POST /api/character/import 201
+ok   paste line says imported AND that the card usually will not show  ‘고딩qavcb3l’ 캐릭터를 가져왔어요. 임시 저장소라 카드는 보통 안 나와요.
+ok   / after paste: card 고딩qavcb3l shown, or the screen explains why not  card shown false; cards 강은호,아델,고딩
+info 고딩qavcb3l: on / in 0/10 reloads (B1: expected 0 / unstable)
+# modal keyboard test on 강은호 (seed: Esc/cancel/X only, never confirm; created cards are not on / -> modal delete of them blocked by B1)
+ok   modal opens with focus on 취소  {"inDialog":true,"text":"취소"}
+ok   dialog is modal with a title
+FAIL Tab / Shift+Tab never reach page content behind the modal  in:삭제 > OUT:캐릭터 검색추가보스 검색내 캐릭터3명 > in:닫기 > in:취소 > in:삭제 > in:닫기 > OUT:캐릭터 검색추가보스 검색내 캐릭터3명 > in:삭제 > in:취소
+ok   Esc closes the modal and focus returns to the card  {"open":false,"focus":"강은호"}
+ok   X (닫기) by keyboard closes, focus back on the card  닫기 {"open":false,"focus":"강은호"}
+ok   backdrop click closes the modal
+ok   Enter on 취소 closes without deleting
+ok   no page errors
+# cleanup DELETE burst 아델qavcb3l: {"204":1,"404":59}
+# cleanup DELETE burst 고딩qavcb3l: {"204":1,"404":59}
+# after cleanup: 0/30 parallel GETs still list 아델qavcb3l or 고딩qavcb3l
+# seeds present: true
+# 1 failed

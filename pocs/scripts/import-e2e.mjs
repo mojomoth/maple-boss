@@ -1,5 +1,6 @@
 // The maplescouter import flow in the system Chrome, against a server WITHOUT the crawler (as on Vercel), e.g.
-//   npm run build && VERCEL=1 MAPLE_DB=/tmp/maple-e2e-pglite npx next start -p 3100
+//   MAPLE_DB=/tmp/maple-e2e-pglite npm run build && VERCEL=1 MAPLE_DB=/tmp/maple-e2e-pglite npx next start -p 3100
+// (/import and /pocs/character are prerendered, so the build needs the same MAPLE_DB to know the storage is temporary)
 //   BASE_URL=http://localhost:3100 node scripts/import-e2e.mjs [shots dir]
 // A mock maplescouter page on another port puts a renamed docs/research/samples/아델.json into
 // localStorage['character-store'], the bookmarklet taken from the guide on / runs there, and the character must show
@@ -55,6 +56,7 @@ try {
   await page.goto(BASE + "/");
   const note = page.getByText("임시 저장소를 쓰고 있어요");
   check(`storage notice ${health.persistent ? "hidden" : "shown"} (persistent: ${health.persistent})`, (await note.count()) === (health.persistent ? 0 : 1));
+  const TEMP = "임시 저장소라"; // what the guide, its result line and /import add when the storage is temporary
 
   // 1. nickname -> guide
   await page.fill("#character-name", A);
@@ -63,6 +65,7 @@ try {
   await guide.waitFor();
   check("guide opens for the nickname", (await guide.locator("h2").innerText()).includes(A));
   check("guide heading has focus", await page.evaluate(() => document.activeElement?.id === "guide-title"));
+  check(`guide ${health.persistent ? "promises a card" : "says the card will usually not show up"}`, (await guide.getByText(health.persistent ? "카드가 생겨요" : TEMP).count()) === 1);
   const step1 = guide.getByRole("link", { name: /maplescouter에서 결과 열기/ });
   const href1 = await step1.getAttribute("href");
   check("step 1 opens maplescouter's result page in a new tab", href1 === `https://maplescouter.com/ko/result?name=${encodeURIComponent(A)}` &&
@@ -84,9 +87,19 @@ try {
   await page.goto(`${MOCK}/ko/result?name=${encodeURIComponent(A)}`);
   await page.locator("#s", { hasText: "ready" }).waitFor();
   seen.length = 0;
-  await Promise.all([page.waitForURL(BASE + "/", { timeout: 30_000 }), page.evaluate(decodeURIComponent(js.slice("javascript:".length))).catch(() => {})]);
+  const run = page.evaluate(decodeURIComponent(js.slice("javascript:".length))).catch(() => {});
+  if (health.persistent) await Promise.all([page.waitForURL(BASE + "/", { timeout: 30_000 }), run]);
+  else {
+    // temporary storage: /import says the card will usually not show up and stays, with the way back
+    const done = page.locator(".empty-title", { hasText: "가져왔어요" });
+    await Promise.all([done.waitFor({ timeout: 30_000 }), run]);
+    const text = await done.innerText();
+    check("/import says it was imported and that / will usually not show it, and stays", text === `‘${A}’ 캐릭터를 가져왔어요. ${TEMP} 메인 화면에는 보통 안 나와요.` && new URL(page.url()).pathname === "/import", text);
+    await shot(page, "import-temporary-1440.png");
+    await Promise.all([page.waitForURL(BASE + "/", { timeout: 30_000 }), page.getByRole("link", { name: "메인 화면으로" }).click()]);
+  }
   const landing = seen.find((u) => u.startsWith(`${BASE}/import#`));
-  check("bookmarklet -> /import#<payload> -> /", !!landing && seen.at(-1) === BASE + "/", `${seen.map((u) => u.slice(0, 60)).join(" -> ")}`);
+  check(`bookmarklet -> /import#<payload> -> ${health.persistent ? "" : "[메인 화면으로] -> "}/`, !!landing && seen.at(-1) === BASE + "/", `${seen.map((u) => u.slice(0, 60)).join(" -> ")}`);
   check("payload in the fragment is the trimmed one", !!landing && landing.length < 64_000, `${landing?.length} chars vs ${storeA.length} in the store`);
   const cardA = page.locator(".card-name", { hasText: A });
   await cardA.waitFor({ timeout: 15_000 }).catch(() => {});
@@ -111,7 +124,10 @@ try {
   const cardB = page.locator(".card-name", { hasText: B });
   await cardB.waitFor({ timeout: 15_000 }).catch(() => {});
   if (check(`paste imports ${B}, closes the guide and shows its card`, (await cardB.count()) === 1)) imported.push(B);
-  check("…with a confirmation under the field", (await page.locator("#add-msg").innerText()).includes(`‘${B}’ 캐릭터를 가져왔어요.`), await page.locator("#add-msg").innerText());
+  const added = await page.locator("#add-msg").innerText();
+  check(`…with a confirmation under the field${health.persistent ? "" : " that says the card will usually not show up"}`,
+    added === `‘${B}’ 캐릭터를 가져왔어요.${health.persistent ? "" : ` ${TEMP} 카드는 보통 안 나와요.`}`, added);
+  await shot(page, "after-paste-1440.png");
 
   // 4. /import error states
   const big = encodeURIComponent(JSON.stringify({ v: 1, pad: "x".repeat(1_100_000) }));

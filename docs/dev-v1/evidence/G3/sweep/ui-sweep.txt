@@ -1,0 +1,157 @@
+# ui-sweep 2026-11-17T04:59:50+0900 BASE_URL=http://localhost:3000 (dev), system Chrome
+ok   setup: import WWWWWWWWWWWW  | 201
+ok   setup: import 스윕tj05  | 201
+
+# 1440
+ok   1440 D3 logo 272x77, clear of both searches, no sideways scroll  | logo 272x77, bar 80px, doc 1440/1440
+     screenshot d3-header-1440.png
+ok   1440 D4 boss field hover: no native × or ▾ glyph  | 0 bright pixels in the strip
+ok   1440 D4 boss field focus: no native × or ▾ glyph  | 0 bright pixels in the strip
+     screenshot d4-field-focus-1440.png
+ok   1440 D4 datalist still attached  | {"id":"boss-list","n":60}
+ok   1440 D4 typed search still works (하스우 -> 하드 스우)  | 하드 스우 ?boss=hard-lotus
+ok   1440 FN-10 name: one line, ellipsis when cut  | cut true, text-overflow ellipsis
+ok   1440 FN-10 Lv · job: one line (no wrapped '·'), ellipsis on the job  | job cut true
+ok   1440 FN-10 nothing spills out of the card; the card text keeps the full name and job
+     screenshot fn10-card-1440.png
+ok   1440 FN-10 party row: the name stays inside its member column  | 0 elements
+     screenshot fn10-party-1440.png
+ok   1440 FN-10 /pocs/character row: nothing spills out  | 0 elements
+ok   1440 D6 supporting line 21.6px  | 21.6px, 1 line(s), widest 414px
+ok   1440 D6 one line about as wide as the draft's (414px)  | 414px
+ok   1440 D6 dialog inside the viewport, no sideways scroll  | dialog 400..1040..640 (w 640), 'Lv.' box to job text 22px
+     screenshot d6-modal-1440.png
+ok   setup: import import  | 201
+ok   FN-3 'import' deleted from its card's dialog (card gone, API agrees)  | cards 0, error ''
+ok   setup: import rates  | 201
+ok   FN-3 'rates': same-origin DELETE 204, then 404  | 204, 404
+ok   1440 D5 /pocs/character 501 line: links underlined, coloured apart from the sentence  | 메인 화면: underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247); maplescouter에서 결과 열기 (새 탭): underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247)
+     screenshot d5-pchar-links-1440.png
+ok   1440 D5 /pocs/party help-line link (same markup as page.tsx:28) underlined and mint  | {"underline":true,"color":"lab(78.7012 -33.3396 9.55055)","around":"lab(76.7392 -4.37892 0.647247)"}
+ok   1440 D7 /pocs/party h1 = '파티 편성' (title '파티 편성 · Maple Boss')  | 파티 편성
+ok   1440 FN-6 구직 등록 error: .is-error, role=alert, error colour  | 등록되지 않은 캐릭터예요. | lab(66.176 41.5172 18.3622)
+ok   1440 FN-6 구직 등록 success: plain .msg, role=status  | 강은호 캐릭터를 노말 스우 구직에 등록했어요. 희망 인원은 1명이에요. | lab(76.7392 -4.37892 0.647247)
+     screenshot fn6-request-ok-1440.png
+ok   1440 FN-6 파티 편성 offline: Korean error, .is-error, role=alert  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+     screenshot fn6-form-error-1440.png
+ok   1440 FN-5 list 500: Korean alert, no '0' count  | {"alert":"캐릭터 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","count":false}
+     screenshot fn5-list-error-1440.png
+ok   1440 FN-5 list offline: the shared offline text  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1440 FN-5 다시 시도 loads the list and clears the alert
+ok   1440 FN-5 rates 500: Korean alert, not '배율 데이터가 없어요.'  | {"alert":"배율을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","empty":false}
+ok   1440 FN-4 /pocs/boss?q=하스우&q=b -> 200, 스우, field 하스우  | 200 {"panels":["스우"],"value":"하스우"}
+ok   1440 D7 /pocs/boss placeholder fits  | '보스 이름 (예: 카링, 하스우)' 182px in 462px
+     screenshot d7-pocs-boss-1440.png
+ok   1440 FN-11 no logo warning on / /pocs/* /flow /import 404  | 0 other warnings
+ok   1440 no page errors
+
+# 1100
+ok   1100 D3 logo 272x77, clear of both searches, no sideways scroll  | logo 272x77, bar 134px, doc 1100/1100
+     screenshot d3-header-1100.png
+ok   1100 D4 boss field hover: no native × or ▾ glyph  | 0 bright pixels in the strip
+ok   1100 D4 boss field focus: no native × or ▾ glyph  | 0 bright pixels in the strip
+     screenshot d4-field-focus-1100.png
+ok   1100 D4 datalist still attached  | {"id":"boss-list","n":60}
+ok   1100 D4 typed search still works (하스우 -> 하드 스우)  | 하드 스우 ?boss=hard-lotus
+ok   1100 FN-10 name: one line, ellipsis when cut  | cut true, text-overflow ellipsis
+ok   1100 FN-10 Lv · job: one line (no wrapped '·'), ellipsis on the job  | job cut true
+ok   1100 FN-10 nothing spills out of the card; the card text keeps the full name and job
+     screenshot fn10-card-1100.png
+ok   1100 FN-10 party row: the name stays inside its member column  | 0 elements
+     screenshot fn10-party-1100.png
+ok   1100 FN-10 /pocs/character row: nothing spills out  | 0 elements
+ok   1100 D6 supporting line 21.6px  | 21.6px, 1 line(s), widest 414px
+ok   1100 D6 dialog inside the viewport, no sideways scroll  | dialog 230..870..640 (w 640), 'Lv.' box to job text 22px
+     screenshot d6-modal-1100.png
+ok   1100 D5 /pocs/character 501 line: links underlined, coloured apart from the sentence  | 메인 화면: underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247); maplescouter에서 결과 열기 (새 탭): underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247)
+     screenshot d5-pchar-links-1100.png
+ok   1100 D5 /pocs/party help-line link (same markup as page.tsx:28) underlined and mint  | {"underline":true,"color":"lab(78.7012 -33.3396 9.55055)","around":"lab(76.7392 -4.37892 0.647247)"}
+ok   1100 D7 /pocs/party h1 = '파티 편성' (title '파티 편성 · Maple Boss')  | 파티 편성
+ok   1100 FN-6 구직 등록 error: .is-error, role=alert, error colour  | 등록되지 않은 캐릭터예요. | lab(66.176 41.5172 18.3622)
+ok   1100 FN-6 구직 등록 success: plain .msg, role=status  | 강은호 캐릭터를 노말 스우 구직에 등록했어요. 희망 인원은 1명이에요. | lab(76.7392 -4.37892 0.647247)
+     screenshot fn6-request-ok-1100.png
+ok   1100 FN-6 파티 편성 offline: Korean error, .is-error, role=alert  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+     screenshot fn6-form-error-1100.png
+ok   1100 FN-5 list 500: Korean alert, no '0' count  | {"alert":"캐릭터 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","count":false}
+     screenshot fn5-list-error-1100.png
+ok   1100 FN-5 list offline: the shared offline text  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   1100 FN-5 다시 시도 loads the list and clears the alert
+ok   1100 FN-5 rates 500: Korean alert, not '배율 데이터가 없어요.'  | {"alert":"배율을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","empty":false}
+ok   1100 FN-4 /pocs/boss?q=하스우&q=b -> 200, 스우, field 하스우  | 200 {"panels":["스우"],"value":"하스우"}
+ok   1100 D7 /pocs/boss placeholder fits  | '보스 이름 (예: 카링, 하스우)' 182px in 462px
+     screenshot d7-pocs-boss-1100.png
+ok   1100 FN-11 no logo warning on / /pocs/* /flow /import 404  | 0 other warnings
+ok   1100 no page errors
+
+# 375
+ok   375 D3 logo 272x77, clear of both searches, no sideways scroll  | logo 272x77, bar 314px, doc 375/375
+     screenshot d3-header-375.png
+ok   375 D4 boss field hover: no native × or ▾ glyph  | 0 bright pixels in the strip
+ok   375 D4 boss field focus: no native × or ▾ glyph  | 0 bright pixels in the strip
+     screenshot d4-field-focus-375.png
+ok   375 D4 datalist still attached  | {"id":"boss-list","n":60}
+ok   375 D4 typed search still works (하스우 -> 하드 스우)  | 하드 스우 ?boss=hard-lotus
+ok   375 FN-10 name: one line, ellipsis when cut  | cut true, text-overflow ellipsis
+ok   375 FN-10 Lv · job: one line (no wrapped '·'), ellipsis on the job  | job cut true
+ok   375 FN-10 nothing spills out of the card; the card text keeps the full name and job
+     screenshot fn10-card-375.png
+ok   375 FN-10 party row: the name stays inside its member column  | 0 elements
+     screenshot fn10-party-375.png
+ok   375 FN-10 /pocs/character row: nothing spills out  | 0 elements
+ok   375 D6 supporting line 21.6px  | 21.6px, 2 line(s), widest 276px
+ok   375 D6 dialog inside the viewport, no sideways scroll  | dialog 19..356..337 (w 337), 'Lv.' box to job text 22px
+     screenshot d6-modal-375.png
+ok   375 D5 /pocs/character 501 line: links underlined, coloured apart from the sentence  | 메인 화면: underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247); maplescouter에서 결과 열기 (새 탭): underline lab(78.7012 -33.3396 9.55055) vs lab(76.7392 -4.37892 0.647247)
+     screenshot d5-pchar-links-375.png
+ok   375 D5 /pocs/party help-line link (same markup as page.tsx:28) underlined and mint  | {"underline":true,"color":"lab(78.7012 -33.3396 9.55055)","around":"lab(76.7392 -4.37892 0.647247)"}
+ok   375 D7 /pocs/party h1 = '파티 편성' (title '파티 편성 · Maple Boss')  | 파티 편성
+ok   375 FN-6 구직 등록 error: .is-error, role=alert, error colour  | 등록되지 않은 캐릭터예요. | lab(66.176 41.5172 18.3622)
+ok   375 FN-6 구직 등록 success: plain .msg, role=status  | 강은호 캐릭터를 노말 스우 구직에 등록했어요. 희망 인원은 1명이에요. | lab(76.7392 -4.37892 0.647247)
+     screenshot fn6-request-ok-375.png
+ok   375 FN-6 파티 편성 offline: Korean error, .is-error, role=alert  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+     screenshot fn6-form-error-375.png
+ok   375 FN-5 list 500: Korean alert, no '0' count  | {"alert":"캐릭터 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","count":false}
+     screenshot fn5-list-error-375.png
+ok   375 FN-5 list offline: the shared offline text  | 서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요.
+ok   375 FN-5 다시 시도 loads the list and clears the alert
+ok   375 FN-5 rates 500: Korean alert, not '배율 데이터가 없어요.'  | {"alert":"배율을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.","empty":false}
+ok   375 FN-4 /pocs/boss?q=하스우&q=b -> 200, 스우, field 하스우  | 200 {"panels":["스우"],"value":"하스우"}
+ok   375 D7 /pocs/boss placeholder fits  | '보스 이름 (예: 카링, 하스우)' 182px in 218px
+     screenshot d7-pocs-boss-375.png
+ok   375 FN-11 no logo warning on / /pocs/* /flow /import 404  | 0 other warnings
+ok   375 no page errors
+
+# D3 band
+ok   band 961: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+     screenshot d3-header-961.png
+ok   band 1000: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+ok   band 1024: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+     screenshot d3-header-1024.png
+ok   band 1100: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+ok   band 1180: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+ok   band 1240: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+ok   band 1280: logo 272x77, searches clear of it and each other, boss field 198px  | bar 134px, 1440 field 198px
+ok   band 1281: logo 272x77, searches clear of it and each other, boss field 198px  | bar 80px, 1440 field 198px
+ok   band 1366: logo 272x77, searches clear of it and each other, boss field 198px  | bar 80px, 1440 field 198px
+ok   band 1100 /import: logo-only bar stays 80px  | 80px
+ok   band 1100 /no-such-page: logo-only bar stays 80px  | 80px
+
+# FN-7 cross-site
+ok   FN-7 cross-site text/plain POST from http://127.0.0.1:54700 does not import 'csrftj05'  | fetch opaque, stored false
+ok   FN-7 cross-site text/plain form POST (valid JSON body) does not import 'formtj05'  | stored false
+ok   FN-7 the same POST from http://localhost:3000 itself is accepted  | 201
+ok   FN-7 control: the same text/plain form from http://localhost:3000 imports 'formoktj05'  | stored true
+(node:69598) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/jeongyounglee/work/repo/maple-boss/pocs/app/import/bookmarklet.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/jeongyounglee/work/repo/maple-boss/pocs/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ok   FN-7 bookmarklet from http://127.0.0.1:54700: /import saves '북마클릿tj05' and lands on /  | navigations http://localhost:3000/import -> http://localhost:3000/import -> http://localhost:3000/import -> http://localhost:3000/, card 1
+cleanup WWWWWWWWWWWW: 204
+cleanup 스윕tj05: 204
+cleanup sametj05: 204
+cleanup formoktj05: 204
+cleanup 북마클릿tj05: 204
+
+# all passed
+exit=0
+logo warnings in /tmp/maple-dev.log: before this run 462, after it 462

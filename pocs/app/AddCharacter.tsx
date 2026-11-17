@@ -10,7 +10,8 @@ import { CloseIcon } from "./ui";
 // check in the browser window it opens. Without it (Vercel), the nickname opens the import guide instead.
 // The nickname field is uncontrolled: hydration keeps what was typed before it, which a controlled field's empty
 // state would throw away.
-export default function AddCharacter({ crawler }: { crawler: boolean }) {
+// persistent false (temporary storage): the guide and its result say an import will most likely not show up.
+export default function AddCharacter({ crawler, persistent }: { crawler: boolean; persistent: boolean }) {
   const router = useRouter();
   const field = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -72,6 +73,7 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
       {guide && (
         <ImportGuide
           name={guide}
+          persistent={persistent}
           onClose={() => {
             setGuide("");
             field.current?.focus();
@@ -80,7 +82,7 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
           onImported={(n) => {
             setGuide("");
             if (field.current) field.current.value = "";
-            setDone(`‘${n}’ 캐릭터를 가져왔어요.`);
+            setDone(`‘${n}’ 캐릭터를 가져왔어요.${persistent ? "" : " 임시 저장소라 카드는 보통 안 나와요."}`);
             field.current?.focus();
             router.refresh();
           }}
@@ -92,7 +94,7 @@ export default function AddCharacter({ crawler }: { crawler: boolean }) {
 
 // Two steps on maplescouter (open the result, press the bookmarklet), plus pasting the store by hand for browsers
 // where bookmarklets do not run. Both end in POST /api/character/import.
-function ImportGuide({ name, onClose, onImported }: { name: string; onClose: () => void; onImported: (name: string) => void }) {
+function ImportGuide({ name, persistent, onClose, onImported }: { name: string; persistent: boolean; onClose: () => void; onImported: (name: string) => void }) {
   const title = useRef<HTMLHeadingElement>(null);
   const link = useRef<HTMLAnchorElement>(null);
   const [hint, setHint] = useState(false);
@@ -135,7 +137,10 @@ function ImportGuide({ name, onClose, onImported }: { name: string; onClose: () 
           <CloseIcon />
         </button>
       </div>
-      <p className="section-help">이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 단계를 거치면 카드가 생겨요.</p>
+      <p className="section-help">
+        이 서버는 닉네임으로 바로 불러오지 못해요.{" "}
+        {persistent ? "아래 두 단계를 거치면 카드가 생겨요." : "아래 두 단계로 가져올 수는 있지만, 임시 저장소라서 가져온 캐릭터가 보통 화면에 나오지 않아요."}
+      </p>
       <ol className="steps">
         <li className="step">
           <span className="step-num" aria-hidden="true">1</span>

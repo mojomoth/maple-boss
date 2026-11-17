@@ -2,6 +2,7 @@ import { getCharacter, getClearRates } from "@/character";
 import { getBoss } from "@/boss";
 import { bossLabel } from "@/boss/search";
 import { notAllowed } from "@/lib/http";
+import { removeCharacter } from "../remove";
 
 // GET ?name=<character> -> its clear rates, hardest boss first, each with a display label. 400 | 404
 export async function GET(req: Request) {
@@ -21,5 +22,8 @@ export async function GET(req: Request) {
   }
 }
 
-const no = notAllowed("GET");
-export { no as POST, no as PUT, no as PATCH, no as DELETE };
+const no = notAllowed("GET, DELETE");
+export { no as POST, no as PUT, no as PATCH };
+
+// DELETE /api/character/rates is the character named 'rates' (see ../remove.ts).
+export const DELETE = () => removeCharacter("rates");

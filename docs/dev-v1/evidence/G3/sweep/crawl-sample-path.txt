@@ -1,0 +1,10 @@
+# FN-7 crawler sample file name, 2026-11-17T04:54:19+0900: python3 -I imports pocs/crawler/crawl.py (no crawl runs) and prints sample_path(name)
+'../../dev-v1/flow' -> docs/research/samples/______dev-v1_flow.json | stays in samples: True
+'아델' -> docs/research/samples/아델.json | stays in samples: True
+'WWWWWWWWWWWW' -> docs/research/samples/WWWWWWWWWWWW.json | stays in samples: True
+'..' -> docs/research/samples/__.json | stays in samples: True
+'/etc/passwd' -> docs/research/samples/_etc_passwd.json | stays in samples: True
+'a\\b' -> docs/research/samples/a_b.json | stays in samples: True
+'cr4xk5%2F' -> docs/research/samples/cr4xk5_2F.json | stays in samples: True
+'강은호 x' -> docs/research/samples/강은호_x.json | stays in samples: True
+'－／．' -> docs/research/samples/___.json | stays in samples: True

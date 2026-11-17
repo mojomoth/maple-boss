@@ -5,6 +5,8 @@ import { listBosses } from "@/boss";
 import { listParties, listSeekers } from "@/party";
 import { bossLabel } from "@/boss/search";
 import { pct } from "@/character/format";
+import { dbInfo } from "@/lib/db";
+import { TEMP_STORAGE } from "../../messages";
 import { DeleteParty, PartyBuilder, RequestForm } from "./PartyClient";
 
 export const dynamic = "force-dynamic";
@@ -17,8 +19,11 @@ export default async function PartyPage() {
 
   return (
     <main className="shell main">
-      <div className="section-head">
-        <h1>파티 구직·편성</h1>
+      <div>
+        <div className="section-head">
+          <h1>파티 편성</h1>
+        </div>
+        {!dbInfo.persistent && <p className="section-help">{TEMP_STORAGE}</p>}
       </div>
 
       <section className="panel" aria-labelledby="request-title">

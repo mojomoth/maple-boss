@@ -1,0 +1,74 @@
+# G3 deployed critic, RECHECK 1 (independent, gauntlet-loop) on https://maple-boss-livid.vercel.app
+# Run 2026-11-17T07:09Z-07:22Z (KST 16:09-16:22). System Chrome via playwright-core, curl --http1.1, Node 24.10.0.
+# Judged only on what ran against the alias. No source/doc edits, no redeploy. Test characters *qa<random>, smoke's *smoke<tag>.
+# Seeds 강은호/아델/고딩 never deleted (modal opened on 강은호 only for keyboard checks, closed with Esc/X/취소/backdrop).
+# Secrets: .env read only inside a bash subshell, compared with grep -F; only counts printed (logs/keys-scan.txt).
+
+== VERDICT: PASS (P1-1 fixed, P1-2 fixed; no open P0/P1) ==
+D-1 pass (1440 + 375) | D-2 pass, persistence/card-on-/ and modal delete of imports blocked by B1 | D-3 pass for
+/pocs/character, /pocs/boss and the notice; forming/saving/deleting a party in the UI blocked by B1 | D-4 pass (P2-1, P2-2
+still open) | D-5 pass | D-6 blocked by B1, notice now shown where data is made and truthful | D-7 pass | D-8 pass
+
+== RECHECK OF ROUND-1 DEFECTS ==
+P1-1 FIXED. Health {"ok":true,"db":"pglite","persistent":false} (B1 still open, DECISIONS.md / STATUS.md).
+  /                notice once: "임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도
+                   언제든 사라질 수 있어요."
+  import guide     "이 서버는 닉네임으로 바로 불러오지 못해요. 아래 두 단계로 가져올 수는 있지만, 임시 저장소라서 가져온 캐릭터가
+                   보통 화면에 나오지 않아요." (no "카드가 생겨요")
+  bookmarklet      localhost mock -> /import#<payload> (POST 201) -> stays on /import: "‘아델qa…’ 캐릭터를 가져왔어요. 임시
+                   저장소라 메인 화면에는 보통 안 나와요." + [메인 화면으로] -> / (card not shown; 0/10 reloads, both widths)
+  paste            "‘고딩qa…’ 캐릭터를 가져왔어요. 임시 저장소라 카드는 보통 안 나와요." (card not shown; 0/10 reloads)
+  /pocs/party      notice under the h1, before the forms; 2 x "…구직에 등록했어요." (201) -> 구직 현황 0 rows, 0/8 reloads
+  /pocs/character  notice under the h1; 등록 -> 501 explained ("바로 불러오지 못해요" + way to import)
+  /pocs/boss, /import at rest, 404: no notice (they make nothing)
+  => every success line now agrees with what the screen then shows. Observed behaviour unchanged (B1): API reads of an
+     import 10/10 sequential, 4/30 and 3/30 parallel; pages 0/10.
+  logs/d2-1440.txt, logs/d2-375.txt, logs/d3.txt; shots/d2-*, shots/d3-party-after-requests-1440.png
+P1-2 FIXED. `BASE_URL=https://maple-boss-livid.vercel.app npm run smoke` 07:09:33Z-07:10:02Z: 86 ok, 0 FAIL, exit 0
+  ("DELETE /api/character/%E0%A4%A (bad encoding) -> 400 from the platform before the app (status only)  400 400 Bad Request").
+  The relaxation is narrow (smoke.mjs:104: exactly 400 + text/plain + body "400 Bad Request"); anything else still needs the
+  app's 400 { error }. Local dev (:3000, persistent:true): smoke exit 0, 86 ok, that line "400 {"error":"주소에 잘못된 % 인코딩이
+  있어요."}" i.e. the full JSON check still runs where the app answers. logs/smoke-prod-1.txt, logs/smoke-local.txt
+
+== REGRESSION D-1..D-8 ==
+D-1 scripts/d1.mjs at 1440 and 375: all passed both (default 익스트림 카링, 3 seeded parties 176.7/172.8/162.5% >= 110% verdict,
+    검은 마법사 / 검마 / 하스우 / 노칼 / 하드 데미안 exact label, unknown boss message, 12 Back/Forward steps consistent,
+    /?q=검마 rewritten, /?boss=<unknown> default, no page errors). logs/d1-*.txt
+D-2 scripts/d2r.mjs at 1440 and 375: guide + focus, maplescouter link (new tab, noopener), bookmarklet javascript: for the
+    production origin, drag hint on click, real bookmarklet on localhost mock -> /import, no hash left, paste error + success,
+    modal: focus on 취소, :modal + title, Tab ring stays in the dialog (BODY = native <dialog> handing focus to browser chrome,
+    same as round 1; logs/modal-keys.txt), Esc / X / backdrop / Enter-on-취소 close, focus back on the card, no page errors.
+    (1440 run printed one FAIL for the Tab ring only because the helper printed body.textContent; fixed the helper, 375 run and
+    modal-keys.txt show OUT:BODY only.) Blocked by B1: card on /, persistence, modal delete of the two imports.
+D-3 scripts/d3r.mjs: see P1-1; /pocs/character and /pocs/boss (검마 -> 검은 마법사 table) pass. Blocked by B1: party from the UI.
+    The two seed requests were closed by 1-member parties #1/#2 and those deleted (logs/cleanup-d3.txt).
+D-4 scripts/d4.mjs 1440x900, 1920x1080, 375x812 x 12 views: docW == viewport everywhere; the 18 CHECK lines are the same as
+    round 1 (sprites cropped by overflow:hidden frames, /flow ellipsis, search icon inside the field) plus P2-1 below.
+    Side-by-side: compare-main-prod.png, compare-modal-prod.png (same layout, colours, type scale, modal composition; the new
+    notice line sits under 내 캐릭터 like before).
+D-5 smoke above + scripts/hostile.sh (logs/hostile.txt): bad JSON 400 x4, 1.1 MB import 413, unknown /api 404, wrong method
+    405 x5, cross-site POST/DELETE 403 x6 (Origin evil, lookalike, null, Sec-Fetch-Site cross-site/same-site); all Korean
+    { error } JSON. Bad %-encoding -> Vercel's own 400 text/plain (accepted, see P1-2).
+D-6 blocked (B1) - notice shown and truthful, see P1-1.
+D-7 scripts/fetch-assets.mjs: 13 pages/API bodies + RSC + 16 JS + 5 CSS: 0 files with any .env value (full or first 12 chars),
+    0 secret patterns (only Next's *_SEGMENT_KEY constants match "_KEY"), 0 source maps; working tree docs/ + pocs/: 0 values.
+    /.env /pocs/.env /.env.local /pocs/.env.local /.vercel/project.json /.git/config /package.json /pocs/package.json
+    /docs/dev-v1/flow.json /.vercelignore -> 404.
+D-8 deploy-1.txt sections 6/6b document cold start (6.5-9 s), region iad1, 4.5 MB platform cap vs our 1 MB, 300 s duration.
+    Spot checks now: x-vercel-id icn1::iad1::…; 5 MB POST -> 413 text/plain FUNCTION_PAYLOAD_TOO_LARGE.
+
+== STILL OPEN (P2, unchanged from round 1) ==
+P2-1 import guide at 375 with an 18-char unbroken nickname: box 33..387, close button 369..395 (off-screen), help line clipped
+     (shots/d4-guide-375.png).
+P2-2 /flow 375: B3 row's key list runs past the edge (shots/flow-375-blockers.png).
+P2-3 no frame-ancestors / X-Frame-Options; x-powered-by: Next.js (logs/prod-headers.txt).
+P2-4 /api/party has no body cap (1.1 MB parsed -> 400, logs/hostile.txt).
+
+== NOT EXECUTED (note for the next round, not a filed defect) ==
+Deleting a card from / on this deployment was not tried: only seeds are on / and seeds must not be deleted. By the mechanism
+seen above (pages and API on different instances, deploy-1.txt 5b), a delete there would likely leave the card on screen; the
+notice speaks about imports/requests/parties, not deletes. Goes away with B1.
+
+== CLEANUP ==
+d2 runs: DELETE bursts {"204":1,"404":59} per character, 0/30 GETs list them afterwards. Final sweep (logs/sweep1.txt, two
+scans of 30 parallel): seeds 30/30, non-seed names {}, parties 0 and requests 0 on every instance.

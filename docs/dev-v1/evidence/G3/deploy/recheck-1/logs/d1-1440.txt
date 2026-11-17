@@ -1,0 +1,55 @@
+# / loaded in 2379 ms {"url":"/","field":"익스트림 카링","h3":"카링","diff":"익스트림","parties":["1순위 가장 추천 강은호 칼리 93.5% 아델 아델 83.2% 합계 176.7% 2인 파티","2순위 강은호 칼리 93.5% 고딩 팔라딘 79.2% 합계 172.8% 2인 파티","3순위 아델 아델 83.2% 고딩 팔라딘 79.2% 합계 162.5% 2인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+ok   default boss is 익스트림 카링
+ok   seeded characters shown  강은호,아델,고딩
+ok   3 recommended parties with sums  1순위 가장 추천 강은호 칼리 93.5% 아델 아델 83.2% 합계 176.7% 2인 파티 | 2순위 강은호 칼리 93.5% 고딩 팔라딘 79.2% 합계 172.8% 2인 파티 | 3순위 아델 아델 83.2% 고딩 팔라딘 79.2% 합계 162.5% 2인 파티
+ok   parties are >= 110% (verdict)
+ok   verdict copy present  등록한 캐릭터로 공략 가능한 조합이에요
+ok   temporary storage notice shown  임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요.
+# search '검은 마법사' settled in 814 ms
+# name 검은 마법사 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","h3":"검은 마법사","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 11,727.6% 1인 파티","2순위 아델 아델 합계 10,252.2% 1인 파티","3순위 고딩 팔라딘 합계 9,971.0% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+ok   name search '검은 마법사' -> 검은 마법사 boss  하드 검은 마법사 /?boss=hard-black-mage
+ok   field shows the boss label  하드 검은 마법사
+# search '검마' settled in 783 ms
+# alias 검마 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","h3":"검은 마법사","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 11,727.6% 1인 파티","2순위 아델 아델 합계 10,252.2% 1인 파티","3순위 고딩 팔라딘 합계 9,971.0% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+ok   alias '검마' -> 검은 마법사  하드 검은 마법사 /?boss=hard-black-mage
+# search '하스우' settled in 995 ms
+# shorthand 하스우 {"url":"/?boss=hard-lotus","field":"하드 스우","h3":"스우","diff":"하드","parties":["1순위 가장 추천 강은호 칼리 합계 83,571.7% 1인 파티","2순위 아델 아델 합계 73,057.9% 1인 파티","3순위 고딩 팔라딘 합계 71,053.9% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+ok   shorthand '하스우' -> 하드 스우  하드 스우 /?boss=hard-lotus
+ok   results update for 하드 스우 (parties or empty state)  1순위 가장 추천 강은호 칼리 합계 83,571.7% 1인 파티 | 2순위 아델 아델 합계 73,057.9% 1인 파티 | 3순위 고딩 팔라딘 합계 71,053.9% 1인 파티
+# search '카링' settled in 761 ms
+# 카링 {"url":"/?boss=easy-kaling","field":"이지 카링","h3":"카링","diff":"이지","parties":["1순위 가장 추천 강은호 칼리 합계 5,121.4% 1인 파티","2순위 아델 아델 합계 4,574.1% 1인 파티","3순위 고딩 팔라딘 합계 4,350.3% 1인 파티"],"empty":"","msg":"","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+# search '없는보스zz' settled in 548 ms
+# missing {"url":"/?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz","field":"없는보스zz","h3":"카링","diff":"이지","parties":["1순위 가장 추천 강은호 칼리 합계 5,121.4% 1인 파티","2순위 아델 아델 합계 4,574.1% 1인 파티","3순위 고딩 팔라딘 합계 4,350.3% 1인 파티"],"empty":"","msg":"‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요.","cards":["강은호","아델","고딩"],"notice":"임시 저장소를 쓰고 있어요. 가져온 캐릭터와 등록한 구직·파티는 보통 화면에 나오지 않고, 나와도 언제든 사라질 수 있어요."}
+ok   unknown boss -> message, field keeps typed text, boss unchanged  ‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요. field=없는보스zz 카링
+# datalist exact label typed {"url":"/?boss=hard-damien","h3":"데미안","diff":"하드","field":"하드 데미안"}
+ok   exact label submits (datalist pick path)  하드 데미안 /?boss=hard-damien
+# back 1 {"url":"/?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz","field":"없는보스zz","diff":"이지","h3":"카링","msg":"‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요."}
+# back 2 {"url":"/?boss=easy-kaling","field":"이지 카링","diff":"이지","h3":"카링","msg":""}
+# back 3 {"url":"/?boss=hard-lotus","field":"하드 스우","diff":"하드","h3":"스우","msg":""}
+# back 4 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","diff":"하드","h3":"검은 마법사","msg":""}
+# back 5 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","diff":"하드","h3":"검은 마법사","msg":""}
+# back 6 {"url":"/","field":"익스트림 카링","diff":"익스트림","h3":"카링","msg":""}
+# fwd 1 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","diff":"하드","h3":"검은 마법사","msg":""}
+# fwd 2 {"url":"/?boss=hard-black-mage","field":"하드 검은 마법사","diff":"하드","h3":"검은 마법사","msg":""}
+# fwd 3 {"url":"/?boss=hard-lotus","field":"하드 스우","diff":"하드","h3":"스우","msg":""}
+# fwd 4 {"url":"/?boss=easy-kaling","field":"이지 카링","diff":"이지","h3":"카링","msg":""}
+# fwd 5 {"url":"/?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz","field":"없는보스zz","diff":"이지","h3":"카링","msg":"‘없는보스zz’에 맞는 보스가 없어요. 목록에서 골라 주세요."}
+# fwd 6 {"url":"/?boss=hard-damien","field":"하드 데미안","diff":"하드","h3":"데미안","msg":""}
+ok   back/forward /?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz: field '없는보스zz' matches page '이지 카링'
+ok   back/forward /?boss=easy-kaling: field '이지 카링' matches page '이지 카링'
+ok   back/forward /?boss=hard-lotus: field '하드 스우' matches page '하드 스우'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /: field '익스트림 카링' matches page '익스트림 카링'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-black-mage: field '하드 검은 마법사' matches page '하드 검은 마법사'
+ok   back/forward /?boss=hard-lotus: field '하드 스우' matches page '하드 스우'
+ok   back/forward /?boss=easy-kaling: field '이지 카링' matches page '이지 카링'
+ok   back/forward /?boss=easy-kaling&q=%EC%97%86%EB%8A%94%EB%B3%B4%EC%8A%A4zz: field '없는보스zz' matches page '이지 카링'
+ok   back/forward /?boss=hard-damien: field '하드 데미안' matches page '하드 데미안'
+# search '노칼' settled in 827 ms
+ok   노칼 -> 노말 칼로스, focus stays in field  노말 감시자 칼로스 focus=boss-q
+ok   shared /?q=검마 link -> boss shown, URL rewritten to ?boss=  /?boss=hard-black-mage
+ok   /?boss=<unknown> falls back to default  익스트림 카링
+ok   no page errors
+# all passed

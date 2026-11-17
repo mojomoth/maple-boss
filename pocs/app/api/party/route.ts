@@ -1,5 +1,5 @@
 import { formParty, listParties, PartyError } from "@/party";
-import { notAllowed } from "@/lib/http";
+import { notAllowed, readSmallJson, TOO_LARGE, tooLarge } from "@/lib/http";
 
 export async function GET() {
   try {
@@ -13,10 +13,13 @@ export async function GET() {
 // body: { bossId, members: string[] } -> 201 { id, sum, clearable }
 export async function POST(req: Request) {
   try {
-    const b = await req.json().catch(() => null);
-    if (!Array.isArray(b?.members) || !b.members.every((m: unknown) => typeof m === "string"))
+    const raw = await readSmallJson(req);
+    if (raw === TOO_LARGE) return tooLarge("요청이 너무 커요.");
+    const b = raw as { bossId?: unknown; members?: unknown } | null;
+    const members = b?.members;
+    if (!Array.isArray(members) || !members.every((m): m is string => typeof m === "string"))
       throw new PartyError("members에 캐릭터 이름 배열을 넣어 주세요.");
-    return Response.json(await formParty(String(b.bossId), b.members), { status: 201 });
+    return Response.json(await formParty(String(b?.bossId), members), { status: 201 });
   } catch (e) {
     if (e instanceof PartyError) return Response.json({ error: e.message }, { status: 400 });
     console.error("POST /api/party:", e);

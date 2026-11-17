@@ -36,7 +36,7 @@ async function call(method, path, body, headers = {}) {
   try {
     json = text ? JSON.parse(text) : null;
   } catch {}
-  return { status: res.status, json, text };
+  return { status: res.status, json, text, type: res.headers.get("content-type") ?? "" };
 }
 
 const short = (r) => (r.text.length > 140 ? r.text.slice(0, 140) + "…" : r.text);
@@ -73,13 +73,18 @@ async function main() {
   console.log(`# smoke ${BASE}  temp characters: ${A}, ${B}`);
 
   // health
-  await expect("GET /api/health -> { ok, db, persistent }", call("GET", "/api/health"), 200, (j) =>
+  const health = await expect("GET /api/health -> { ok, db, persistent }", call("GET", "/api/health"), 200, (j) =>
     j.ok === true && ["postgres", "pglite"].includes(j.db) && typeof j.persistent === "boolean");
 
-  // pages: v1 at /, the PoCs under /pocs, the bookmarklet's landing page
-  for (const p of ["/", "/pocs/character", "/pocs/boss", "/pocs/boss?q=%EC%B9%B4%EB%A7%81", "/pocs/party", "/import"]) {
-    const r = await fetch(BASE + p).catch((e) => ({ status: e.message, headers: new Headers() }));
-    check(`page ${p}`, r.status === 200 && /text\/html/.test(r.headers.get("content-type") ?? ""), String(r.status));
+  // pages: v1 at /, the PoCs under /pocs, the bookmarklet's landing page. The ones that show or make characters,
+  // requests and parties carry the temporary storage notice exactly when the storage is not persistent.
+  const NOTICE = "임시 저장소를 쓰고 있어요";
+  const noticed = new Set(["/", "/pocs/character", "/pocs/party"]);
+  for (const p of ["/", "/pocs/character", "/pocs/boss", "/pocs/boss?q=%EC%B9%B4%EB%A7%81", "/pocs/boss?q=a&q=b", "/pocs/party", "/import"]) {
+    const r = await fetch(BASE + p).catch((e) => ({ status: e.message, headers: new Headers(), text: async () => "" }));
+    const want = noticed.has(p) && health?.persistent === false;
+    const has = (await r.text()).includes(NOTICE);
+    check(`page ${p}${want ? " with the temporary storage notice" : ""}`, r.status === 200 && /text\/html/.test(r.headers.get("content-type") ?? "") && (!health || has === want), `${r.status} notice ${has}`);
   }
   for (const p of ["/character", "/boss", "/party", "/pocs"]) {
     const r = await fetch(BASE + p).catch((e) => ({ status: e.message, text: async () => "" }));
@@ -91,7 +96,29 @@ async function main() {
   await expect("PUT /api/party -> 405 { error }", call("PUT", "/api/party"), 405);
   await expect("GET /api/character/import -> 405 { error }", call("GET", "/api/character/import"), 405);
   await expect("GET /api/no-such-route -> 404 { error }", call("GET", "/api/no-such-route"), 404);
-  await expect("DELETE /api/character/%E0%A4%A (bad encoding) -> 400 { error }", call("DELETE", "/api/character/%E0%A4%A"), 400);
+  // On Vercel the edge refuses a broken percent-encoding itself, before proxy.ts: a plain-text "400 Bad Request"
+  // (HTTP/2: a stream reset). The app never sees it, so there only the status is checked. Anywhere else (next dev,
+  // next start) the app answers, and its answer must be the { error } JSON.
+  const badPath = call("DELETE", "/api/character/%E0%A4%A");
+  const bad = await badPath.catch(() => null);
+  if (bad?.status === 400 && /^text\/plain/.test(bad.type) && bad.text.trim() === "400 Bad Request")
+    check("DELETE /api/character/%E0%A4%A (bad encoding) -> 400 from the platform before the app (status only)", true, `${bad.status} ${short(bad)}`);
+  else await expect("DELETE /api/character/%E0%A4%A (bad encoding) -> 400 { error }", badPath, 400);
+
+  // a POST or DELETE another site started is refused before any handler; the app's own origin and non-browser
+  // clients (no Origin, no Sec-Fetch-Site) go through
+  const evil = { origin: "https://evil.example" };
+  await expect("POST /api/character/import, Origin of another site -> 403", call("POST", "/api/character/import", seedA, evil), 403);
+  await expect("POST /api/character/import text/plain, Sec-Fetch-Site: cross-site -> 403", call("POST", "/api/character/import", JSON.stringify(seedA), { "content-type": "text/plain", "sec-fetch-site": "cross-site" }), 403);
+  await expect("POST /api/character, Origin of another site -> 403 (never starts the crawler)", call("POST", "/api/character", { name: A }, evil), 403);
+  await expect("POST /api/party/requests, Sec-Fetch-Site: same-site -> 403", call("POST", "/api/party/requests", {}, { "sec-fetch-site": "same-site" }), 403);
+  await expect("DELETE /api/party/abc, Origin of another site -> 403", call("DELETE", "/api/party/abc", undefined, evil), 403);
+  await expect("DELETE /api/character/x, Origin null -> 403", call("DELETE", "/api/character/x", undefined, { origin: "null" }), 403);
+  await expect("GET /api/character, Origin of another site -> 200 (reads are not blocked)", call("GET", "/api/character", undefined, evil), 200);
+  await expect("POST /api/character/import empty, Origin of this server -> 400 (reaches the handler)", call("POST", "/api/character/import", "", { origin: new URL(BASE).origin }), 400);
+  await expect("POST /api/character/import empty, Sec-Fetch-Site: same-origin -> 400 (reaches the handler)", call("POST", "/api/character/import", "", { "sec-fetch-site": "same-origin" }), 400);
+  const leaked = (await call("GET", "/api/character")).json?.some?.((c) => c.name === A);
+  check(`no ${A} after the refused imports`, leaked === false, String(leaked));
 
   // bosses
   await expect("GET /api/boss -> Boss[]", call("GET", "/api/boss"), 200, (j) => Array.isArray(j) && j.length >= 60 && j.every((b) => b.id && b.name));
@@ -114,6 +141,21 @@ async function main() {
   await expect("POST /api/character/import wrong shape -> 400", call("POST", "/api/character/import", { v: 1, info: { character_name: "x" } }), 400);
   await expect("POST /api/character/import out-of-range value -> 400", call("POST", "/api/character/import", { ...seedA, info: { ...seedA.info, character_level: 999 } }), 400);
   await expect("POST /api/character/import name '..' -> 400 (could never be deleted)", call("POST", "/api/character/import", renamed(seedA, "..")), 400);
+  // 'import' and 'rates' are also sibling routes of /api/character/[name]: they answer DELETE for their own name.
+  // A real character with that name is left alone.
+  const existing = new Set(((await call("GET", "/api/character")).json ?? []).map((c) => c.name));
+  for (const n of ["import", "rates"]) {
+    if (!(await expect(`DELETE /api/character/${n} with no such character -> 404 (not 405)`, call("DELETE", `/api/character/${n}`), 404))) continue;
+    if (existing.has(n)) {
+      console.log(`     a character named ${n} exists: its round trip is skipped`);
+      continue;
+    }
+    if (await expect(`POST /api/character/import as '${n}' -> 201`, call("POST", "/api/character/import", renamed(seedA, n)), 201, (j) => j.name === n)) {
+      created.add(n);
+      await expect(`DELETE /api/character/${n} -> 204`, call("DELETE", `/api/character/${n}`), 204);
+      if (await expect(`GET /api/character no longer lists '${n}'`, call("GET", "/api/character"), 200, (j) => !j.some((c) => c.name === n))) created.delete(n);
+    }
+  }
   await expect("POST /api/character/import NUL in a name -> 400, not 500", call("POST", "/api/character/import", renamed(seedA, "a\u0000b")), 400);
   await expect("POST /api/character/import maplescouter placeholder -> 400", call("POST", "/api/character/import", {
     state: { searchResult: { userApiData: { info: { ...seedA.info, character_name: "으낭다" } }, calculatedData: { ...seedA.calc, bossCuts: [] } } },

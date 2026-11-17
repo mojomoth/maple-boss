@@ -1,0 +1,8 @@
+JEV_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+GOOGLE_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+OPENAI_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+CLAUDE_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+VERCEL_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+RENDER_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+OPENROUTER_KEY: files with full value 0, with first 12 chars 0; working tree docs/+pocs/ files with full value 0
+

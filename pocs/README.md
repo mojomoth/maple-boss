@@ -41,12 +41,16 @@ npm run dev   # http://localhost:3000
 | `npm run shots [폴더]` | 시스템 Chrome(`CHROME_PATH`)으로 `/`, `/pocs/*`를 1440·375px로 찍는다 |
 | `npm run flow:sync` | `flow.json`을 검사하고 `STATUS.md` 게이트 표와 `PLAN.md` TODO를 다시 쓴다 |
 | `node scripts/import-e2e.mjs [폴더]` | 크롤러 없는 서버에서 북마클릿·붙여넣기 가져오기 전체. 서버 띄우는 법은 파일 머리말 |
+| `node scripts/nav-walk.mjs` | 화면 사이 링크를 1440·375px로 모두 눌러 보고, 북마클릿으로 `/import`를 거쳐 돌아오는지 확인한다 |
+| `node scripts/flow-check.mjs [폴더]` | `/flow`의 노드·연결선 수를 `flow.json`과 맞춰 보고, 키보드 열기·닫기, 근거 링크, 패널, 레이아웃 이동을 확인한다. 폴더를 주면 스크린샷도 남긴다 |
+
+`docs/dev-v1/evidence/G2/scripts/`의 `nav-walk.mjs`, `flow-shots.mjs`는 G2 당시 기록이다. G3에서 바뀐 링크 이름과 노드 수 때문에 지금은 실패하므로, 회귀 확인에는 위의 두 스크립트를 쓴다.
 
 ## 배포
 
 - Vercel 프로젝트 `maple-boss`, Root Directory는 `pocs`다. `vercel deploy`는 저장소 루트에서 실행한다. 루트의 `.vercelignore`가 `.env*`, 근거·시안 문서, 로컬 DB, 크롤러 venv를 올리지 않는다.
 - 환경 변수는 서버 전용 `DATABASE_URL` 하나다. `NEXT_PUBLIC_` 변수는 없다.
-- `DATABASE_URL`이 없으면 `/tmp`의 PGlite를 쓴다. 인스턴스마다 따로라 저장한 내용이 다음 요청에서 안 보이거나 사라질 수 있다. 이때 `/api/health`는 `persistent: false`이고 메인 화면에 임시 저장소 안내가 뜬다. Neon 연결은 차단 B1([`DECISIONS.md`](../docs/dev-v1/DECISIONS.md)).
+- `DATABASE_URL`이 없으면 `/tmp`의 PGlite를 쓴다. 인스턴스마다 따로라 저장한 내용이 다음 요청에서 안 보이거나 사라질 수 있다. 이때 `/api/health`는 `persistent: false`이고, 메인 화면·가져오기 안내와 결과·`/pocs/character`·`/pocs/party`에 임시 저장소 안내가 뜬다(`/import`는 이때 메인 화면으로 저절로 넘어가지 않는다). Neon 연결은 차단 B1([`DECISIONS.md`](../docs/dev-v1/DECISIONS.md)).
 - Vercel에는 크롤러가 없다. 캐릭터는 북마클릿이나 붙여넣기로 가져온다(DECISIONS D2).
 
 ## 문서

@@ -52,10 +52,15 @@
 - 결정: 의존성을 추가하지 않고 Node 24 `node --test`를 쓴다. `--conditions=react-server`로 `server-only`를 빈 모듈로 해석하고, `resolve-hooks.mjs`로 `@/` 별칭을 푼다.
 - 확인: `npm test` 32/32 통과(2026-11-17). pg 경로는 임시 PostgreSQL 18.6에서 8/8 통과(`evidence/G0/pg-path.txt`).
 
+## D11 보안 헤더와 본문 크기
+
+- 결정: 모든 응답에 `X-Frame-Options: DENY`, `frame-ancestors 'none'`, `nosniff`를 붙이고 `x-powered-by`를 끈다. 파티 API 본문은 16KB, 가져오기는 1MB로 자른다. 다른 사이트에서 시작된 변경 요청(POST·DELETE 등)은 `proxy.ts`가 403으로 막는다.
+- 근거: 삭제 확인 모달을 다른 사이트가 iframe으로 띄울 수 없게 하고, 플랫폼 한도(4.5MB)까지 본문을 파싱하지 않게 한다.
+
 ## 차단 목록
 
 | ID | 내용 | 해결 방법 | 상태 |
 |---|---|---|---|
-| B1 | Neon 약관 동의 필요 | 사용자가 https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli 에서 동의 → `vercel integration add neon --name maple-boss-db --billing-plan free_v3` | 열림 |
+| B1 | 영구 DB 없음. Neon은 약관 동의 필요, Render 무료 자리는 다른 프로젝트(physiognomists-v1-db, 2026-12-06 만료)가 사용 중, Upstash는 유료만 있음 | (권장) 사용자가 https://vercel.com/mojomoths-projects/~/integrations/accept-terms/neon?source=cli 에서 동의 → `evidence/G3/deploy/db.txt`의 A 단계(Neon sin1, 함수 리전 sin1, 재배포). 또는 유료 DB 승인 | 열림 |
 | B2 | Codex(GPT) 사용량 한도 | 2026-11-20 18:31 이후 교차 Critic 재실행 | 열림 |
 | B3 | `.env` 없음 (OPENAI 등 키) | 2026-11-17 00:49 루트에 `.env` 생김(이름: JEV_KEY, GOOGLE_KEY, OPENAI_KEY, CLAUDE_KEY, VERCEL_KEY, RENDER_KEY, OPENROUTER_KEY). CLAUDE.md의 `*_API_KEY` 이름과 다르다 | 해결 |
